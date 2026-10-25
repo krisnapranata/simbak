@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block judul %}Ganti kata sandi{% endblock %}
+{% block konten %}
+<a href="{% url 'akun:profil' %}" class="small"><i class="bi bi-arrow-left"></i> Profil</a>
+<h1 class="judul-halaman mt-2 mb-3">Ganti kata sandi</h1>
+<div class="card" style="max-width: 480px"><div class="card-body">
+  <form method="post">{% csrf_token %}{{ form|crispy }}<button class="btn btn-primary">Simpan</button></form>
+</div></div>
+{% endblock %}

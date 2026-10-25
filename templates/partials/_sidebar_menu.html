@@ -1,0 +1,31 @@
+{% load izin_standar izin_penilaian %}
+{% with ns=request.resolver_match.namespace vn=request.resolver_match.view_name %}
+<div class="sidebar-group-title">UTAMA</div>
+<ul class="nav flex-column nav-pills sidebar-menu">
+  <li class="nav-item"><a class="nav-link sidebar-link{% if vn == 'beranda' %} active{% endif %}" href="{% url 'beranda' %}"><span class="sidebar-icon"><i class="bi bi-speedometer2"></i></span><span class="label">Dashboard</span></a></li>
+  <li class="nav-item"><a class="nav-link sidebar-link{% if ns == 'verifikasi' and vn != 'verifikasi:notifikasi' %} active{% endif %}" href="{% url 'verifikasi:antrian' %}"><span class="sidebar-icon"><i class="bi bi-patch-check"></i></span><span class="label">Verifikasi</span></a></li>
+  <li class="nav-item"><a class="nav-link sidebar-link{% if vn == 'verifikasi:notifikasi' %} active{% endif %}" href="{% url 'verifikasi:notifikasi' %}"><span class="sidebar-icon"><i class="bi bi-bell"></i></span><span class="label">Notifikasi{% if jumlah_notifikasi %} ({{ jumlah_notifikasi }}){% endif %}</span></a></li>
+</ul>
+<div class="sidebar-group-title">AKREDITASI</div>
+<ul class="nav flex-column nav-pills sidebar-menu">
+  <li class="nav-item"><a class="nav-link sidebar-link{% if ns == 'standar' and vn != 'standar:impor' %} active{% endif %}" href="{% url 'standar:bab_list' %}"><span class="sidebar-icon"><i class="bi bi-journal-bookmark"></i></span><span class="label">Standar</span></a></li>
+  <li class="nav-item"><a class="nav-link sidebar-link{% if ns == 'dokumen' %} active{% endif %}" href="{% url 'dokumen:list' %}"><span class="sidebar-icon"><i class="bi bi-folder2-open"></i></span><span class="label">Dokumen Bukti</span></a></li>
+  <li class="nav-item"><a class="nav-link sidebar-link{% if vn == 'penilaian:bab_list' or vn == 'penilaian:bab' or vn == 'penilaian:ep' %} active{% endif %}" href="{% url 'penilaian:bab_list' %}"><span class="sidebar-icon"><i class="bi bi-clipboard-check"></i></span><span class="label">Penilaian Mandiri</span></a></li>
+  <li class="nav-item"><a class="nav-link sidebar-link{% if 'penilaian:target' in vn %} active{% endif %}" href="{% url 'penilaian:target_list' %}"><span class="sidebar-icon"><i class="bi bi-bullseye"></i></span><span class="label">Target Pokja</span></a></li>
+  <li class="nav-item"><a class="nav-link sidebar-link{% if vn == 'penilaian:kekurangan' %} active{% endif %}" href="{% url 'penilaian:kekurangan' %}"><span class="sidebar-icon"><i class="bi bi-exclamation-diamond"></i></span><span class="label">Kekurangan Bukti</span></a></li>
+  <li class="nav-item"><a class="nav-link sidebar-link{% if ns == 'survei' %} active{% endif %}" href="{% url 'survei:bab_list' %}"><span class="sidebar-icon"><i class="bi bi-search-heart"></i></span><span class="label">Mode Survei</span></a></li>
+  <li class="nav-item"><a class="nav-link sidebar-link{% if ns == 'pps' %} active{% endif %}" href="{% url 'pps:list' %}"><span class="sidebar-icon"><i class="bi bi-graph-up-arrow"></i></span><span class="label">Rencana Perbaikan</span></a></li>
+</ul>
+{% if user|bisa_kelola_periode or user|bisa_impor_standar or user.is_staff %}
+<div class="sidebar-group-title">KELOLA</div>
+<ul class="nav flex-column nav-pills sidebar-menu">
+  {% if user|bisa_kelola_periode %}<li class="nav-item"><a class="nav-link sidebar-link{% if 'periode' in vn %} active{% endif %}" href="{% url 'penilaian:periode_list' %}"><span class="sidebar-icon"><i class="bi bi-calendar-range"></i></span><span class="label">Periode Akreditasi</span></a></li>{% endif %}
+  {% if user|bisa_impor_standar %}<li class="nav-item"><a class="nav-link sidebar-link{% if 'standar:impor' in vn %} active{% endif %}" href="{% url 'standar:impor' %}"><span class="sidebar-icon"><i class="bi bi-file-earmark-arrow-up"></i></span><span class="label">Impor Standar</span></a></li>{% endif %}
+  {% if user.is_staff %}<li class="nav-item"><a class="nav-link sidebar-link" href="{% url 'admin:index' %}"><span class="sidebar-icon"><i class="bi bi-gear"></i></span><span class="label">Admin</span></a></li>{% endif %}
+</ul>
+{% endif %}
+<div class="sidebar-group-title">BANTUAN</div>
+<ul class="nav flex-column nav-pills sidebar-menu">
+  <li class="nav-item"><a class="nav-link sidebar-link{% if vn == 'panduan' %} active{% endif %}" href="{% url 'panduan' %}"><span class="sidebar-icon"><i class="bi bi-question-circle"></i></span><span class="label">Panduan</span></a></li>
+</ul>
+{% endwith %}

@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block judul %}Tidak berhak{% endblock %}
+{% block konten %}{% include "partials/error.html" with kode=403 warna="text-warning" judul="Anda tidak berhak membuka halaman ini" pesan="Fitur ini hanya untuk peran tertentu." %}{% endblock %}
+{% block konten_tamu %}{% include "partials/error.html" with kode=403 warna="text-warning" judul="Anda tidak berhak membuka halaman ini" pesan="Silakan masuk terlebih dahulu." %}{% endblock %}

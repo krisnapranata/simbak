@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block judul %}Penilaian Mandiri{% endblock %}
+{% block konten %}
+<div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+  <div><h1 class="judul-halaman">Penilaian Mandiri</h1><p class="sub-halaman">Pilih bab untuk menilai setiap elemen penilaian.</p></div>
+  <div class="ms-auto">{% include "penilaian/partials/pilih_periode.html" %}</div>
+</div>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>Bab</th><th>Pokja</th><th>Progres dinilai</th><th>Capaian</th><th>Bukti lengkap</th></tr></thead>
+  <tbody>
+  {% for bab, c in baris_bab %}
+    <tr><td><a class="fw-semibold" href="{% url 'penilaian:bab' bab.pk %}{% if periode %}?periode={{ periode.pk }}{% endif %}">{{ bab.kode }}</a> <span class="text-secondary small">{{ bab.nama }}</span></td>
+      <td class="text-secondary">{{ bab.pokja.kode|default:"–" }}</td>
+      <td class="angka">{{ c.dinilai }}/{{ c.jumlah_ep }} <span class="text-secondary small">({{ c.persen_dinilai|floatformat:0 }}%)</span></td>
+      <td>{% include "penilaian/partials/bar.html" with nilai=c.persen %}</td>
+      <td>{% include "penilaian/partials/bar.html" with nilai=c.persen_lengkap %}</td></tr>
+  {% empty %}<tr><td colspan="5" class="text-center text-secondary py-4">Tidak ada bab yang dapat Anda akses.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% endblock %}

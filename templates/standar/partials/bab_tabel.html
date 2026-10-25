@@ -1,0 +1,19 @@
+<div class="card"><div class="table-responsive">
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>Kode</th><th>Nama bab</th><th>Kelompok</th><th>Pokja</th><th class="text-end">Standar</th><th class="text-end">EP</th></tr></thead>
+  <tbody>
+  {% for bab in daftar_bab %}
+    <tr>
+      <td class="fw-semibold"><a href="{% url 'standar:bab_detail' bab.pk %}">{{ bab.kode }}</a></td>
+      <td>{{ bab.nama }}</td>
+      <td class="text-secondary small">{{ bab.kelompok.nama }}</td>
+      <td class="text-secondary">{{ bab.pokja.kode|default:"–" }}</td>
+      <td class="text-end angka">{{ bab.jumlah_standar }}</td>
+      <td class="text-end angka">{{ bab.jumlah_ep }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6" class="text-center text-secondary py-4">Tidak ada bab.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>

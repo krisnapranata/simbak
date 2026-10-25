@@ -1,0 +1,7 @@
+<form method="get" class="d-flex align-items-center gap-2">
+  <label class="small text-secondary" for="pilih-periode">Periode</label>
+  <select id="pilih-periode" name="periode" onchange="this.form.submit()" class="form-select form-select-sm w-auto">
+    {% for p in daftar_periode %}<option value="{{ p.pk }}" {% if periode and p.pk == periode.pk %}selected{% endif %}>{{ p.nama }}{% if p.aktif %} (aktif){% endif %}</option>
+    {% empty %}<option>Belum ada periode</option>{% endfor %}
+  </select>
+</form>

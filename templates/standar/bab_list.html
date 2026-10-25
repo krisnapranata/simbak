@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block judul %}Master Standar{% endblock %}
+{% block konten %}
+<div class="mb-3"><h1 class="judul-halaman">Master Standar</h1><p class="sub-halaman">Bab, standar, dan elemen penilaian (EP) STARKES.</p></div>
+<form class="row g-2 mb-3" hx-get="{% url 'standar:bab_list' %}" hx-target="#tabel-bab"
+      hx-trigger="input changed delay:300ms from:input, change from:select" hx-push-url="true">
+  <div class="col-sm-6 col-lg-4"><input type="search" name="q" value="{{ form.q.value|default:'' }}" placeholder="Cari kode atau nama bab…" class="form-control"></div>
+  <div class="col-sm-6 col-lg-3"><select name="kelompok" class="form-select">
+    {% for value, label in form.fields.kelompok.choices %}<option value="{{ value }}" {% if form.kelompok.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select></div>
+</form>
+<div id="tabel-bab">{% include "standar/partials/bab_tabel.html" %}</div>
+{% endblock %}

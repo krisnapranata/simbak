@@ -1,0 +1,39 @@
+<div class="card h-100"><div class="card-body">
+  <h3 class="h6 fw-bold text-primary">{{ peran.label }}</h3>
+  <ol class="small mb-0 ps-3">
+  {% if peran == "anggota-pokja" %}
+    <li>Buka <a href="{% url 'beranda' %}">Dashboard</a> → <b>Tugas saya</b> untuk melihat EP yang buktinya kurang dan dokumen yang dikembalikan.</li>
+    <li>Dari <a href="{% url 'penilaian:kekurangan' %}">Kekurangan bukti</a> atau halaman EP, klik <b>+ unggah</b> pada jenis bukti yang kurang.</li>
+    <li>Bila dokumen sudah ada, buka dokumennya dan <b>tautkan ke EP lain</b>; jangan mengunggah file yang sama dua kali.</li>
+    <li>Dokumen <b>dikembalikan</b>: baca catatan di kolom Verifikasi, perbaiki (ubah data atau unggah versi baru), lalu minta ketua pokja mengajukan ulang.</li>
+  {% elif peran == "ketua-pokja" %}
+    <li>Periksa draft dari anggota, lalu klik <b>Ajukan verifikasi</b> di halaman dokumen.</li>
+    <li>Isi <a href="{% url 'penilaian:bab_list' %}">Penilaian mandiri</a> untuk setiap EP bab Anda, sertakan fakta dan analisis.</li>
+    <li>Pantau <a href="{% url 'penilaian:target_list' %}">Target pokja</a>: bila statusnya <b>Berisiko</b>, percepat pengumpulan bukti/penilaian sebelum tenggat.</li>
+    <li>Dokumen <b>kedaluwarsa</b> (lewat tanggal review): review isinya, unggah versi baru, ajukan lagi.</li>
+    <li>Kelola <a href="{% url 'pps:list' %}">PPS</a> bab Anda: rencana kegiatan, indikator, penanggung jawab, tenggat.</li>
+  {% elif peran == "komite-mutu" %}
+    <li>Persiapan: <a href="{% url 'standar:impor' %}">impor master standar</a>, buat <a href="{% url 'penilaian:periode_list' %}">periode aktif</a>, pastikan setiap bab punya pokja.</li>
+    <li>Tetapkan <a href="{% url 'penilaian:target_list' %}">target bertahap per pokja</a> (mis. bukti lengkap 100% sebelum tanggal X) agar direktur bisa memantau kemajuan terhadap jadwal.</li>
+    <li>Kerjakan <a href="{% url 'verifikasi:antrian' %}">antrian verifikasi</a>: verifikasi, setujui (bukti non-regulasi), atau kembalikan dengan catatan yang jelas.</li>
+    <li>Pantau dashboard, <a href="{% url 'penilaian:kekurangan' %}">kekurangan bukti</a>, dan unduh <a href="{% url 'penilaian:laporan' %}">laporan Excel</a> untuk rapat.</li>
+    <li>Pascasurvei: <b>Buat dari penilaian</b> di halaman PPS lalu lengkapi rekomendasi surveior.</li>
+  {% elif peran == "direktur" %}
+    <li>Buka <a href="{% url 'verifikasi:antrian' %}">Verifikasi</a>: dokumen regulasi yang sudah diverifikasi komite menunggu persetujuan final Anda.</li>
+    <li>Setujui, atau kembalikan dengan catatan bila perlu diperbaiki.</li>
+    <li>Pantau <a href="{% url 'penilaian:target_list' %}">Target pokja</a>: pokja mana yang <b>sesuai jadwal</b>, <b>berisiko</b>, atau <b>terlambat</b> terhadap target dan tenggat yang ditetapkan komite.</li>
+    <li>Pantau capaian dan perkiraan predikat di Dashboard; unduh laporan Excel bila diperlukan.</li>
+  {% elif peran == "surveior-internal" %}
+    <li>Gunakan <a href="{% url 'survei:bab_list' %}">Mode survei</a> untuk menelusuri bukti yang sudah disetujui, per bab.</li>
+    <li>Beri catatan pada EP di halaman penilaian; catatan terlihat oleh pokja dan komite.</li>
+    <li>Ekspor PDF/ZIP per bab untuk telusur offline.</li>
+  {% elif peran == "tamu-surveior" %}
+    <li>Akun Anda berlaku terbatas waktu. Gunakan <a href="{% url 'survei:bab_list' %}">Mode survei</a>.</li>
+    <li>Hanya dokumen yang sudah disetujui yang ditampilkan.</li>
+  {% elif peran == "super-admin" %}
+    <li>Kelola pengguna, grup peran, unit, pokja, dan pengaturan sistem di <a href="{% url 'admin:index' %}">Admin</a>.</li>
+    <li>Isi <b>Kriteria predikat</b> dan <b>Pengaturan sistem</b> (periode review, hari pengingat) sesuai keputusan tim mutu.</li>
+    <li>Pastikan perintah <code>kirim_pengingat</code> berjalan harian dan backup database + folder file berjalan.</li>
+  {% endif %}
+  </ol>
+</div></div>

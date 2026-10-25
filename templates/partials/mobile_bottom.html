@@ -1,0 +1,11 @@
+{% with ns=request.resolver_match.namespace vn=request.resolver_match.view_name %}
+<div class="mobile-bottom">
+  <a class="mobile-item text-decoration-none{% if vn == 'beranda' %} aktif{% endif %}" href="{% url 'beranda' %}"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
+  <a class="mobile-item text-decoration-none{% if ns == 'dokumen' %} aktif{% endif %}" href="{% url 'dokumen:list' %}"><i class="bi bi-folder2-open"></i><span>Dokumen</span></a>
+  <a class="mobile-item text-decoration-none{% if vn == 'penilaian:bab_list' or vn == 'penilaian:bab' %} aktif{% endif %}" href="{% url 'penilaian:bab_list' %}"><i class="bi bi-clipboard-check"></i><span>Penilaian</span></a>
+  <a class="mobile-item text-decoration-none{% if ns == 'verifikasi' %} aktif{% endif %}" href="{% url 'verifikasi:antrian' %}"><i class="bi bi-patch-check"></i><span>Verifikasi</span></a>
+  <div class="mobile-item mb-fab" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" role="button" aria-label="Menu">
+    <span class="mb-fab-lingkaran"><i class="bi bi-list mb-ic"></i><i class="bi bi-x-lg mb-x"></i></span><span>Menu</span>
+  </div>
+</div>
+{% endwith %}

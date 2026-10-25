@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block judul %}Panduan{% endblock %}
+{% block konten %}
+<h1 class="judul-halaman">Panduan SIMBAK</h1>
+<p class="sub-halaman mb-3">Cara kerja aplikasi dan apa yang perlu Anda lakukan sesuai peran.</p>
+
+<div class="card mb-3"><div class="card-body">
+  <h2 class="h6 fw-bold mb-3">Alur besar</h2>
+  <div class="row row-cols-1 row-cols-md-5 g-2 small">
+    <div class="col"><div class="border rounded p-3 h-100"><div class="fw-bold text-primary"><i class="bi bi-cloud-arrow-up"></i> 1. Kumpulkan bukti</div>Anggota pokja mengunggah dokumen dan menautkannya ke elemen penilaian (EP). Satu file boleh menjadi bukti banyak EP.</div></div>
+    <div class="col"><div class="border rounded p-3 h-100"><div class="fw-bold text-primary"><i class="bi bi-patch-check"></i> 2. Verifikasi</div>Ketua pokja mengajukan → komite mutu memverifikasi → direktur menyetujui regulasi (bukti lain cukup komite). Bila kurang, dokumen dikembalikan dengan catatan.</div></div>
+    <div class="col"><div class="border rounded p-3 h-100"><div class="fw-bold text-primary"><i class="bi bi-clipboard-check"></i> 3. Nilai mandiri</div>Ketua pokja menilai setiap EP: 10 tercapai penuh, 5 sebagian, 0 tidak tercapai, TDD tidak dapat diterapkan.</div></div>
+    <div class="col"><div class="border rounded p-3 h-100"><div class="fw-bold text-primary"><i class="bi bi-speedometer2"></i> 4. Pantau & perbaiki</div>Dashboard menunjukkan capaian, bukti yang kurang, dan dokumen yang akan jatuh tempo review.</div></div>
+    <div class="col"><div class="border rounded p-3 h-100"><div class="fw-bold text-primary"><i class="bi bi-search-heart"></i> 5. Survei & PPS</div>Surveior menelusuri bukti yang disetujui (mode survei). Rekomendasinya ditindaklanjuti lewat rencana perbaikan (PPS).</div></div>
+  </div>
+  <div class="row g-2 mt-2 small text-secondary">
+    <div class="col-md-6"><b>Jenis bukti:</b> R = Regulasi (kebijakan, SPO, pedoman, SK) · D = Dokumen pelaksanaan (notulen, laporan, daftar hadir) · O = Observasi · W = Wawancara · S = Simulasi.</div>
+    <div class="col-md-6"><b>Bukti lengkap</b> berarti setiap jenis bukti yang diminta EP punya minimal satu dokumen <b>berstatus disetujui</b>. Draft dan dokumen yang masih diajukan belum dihitung.</div>
+  </div>
+</div></div>
+
+<h2 class="h6 fw-bold">Peran Anda</h2>
+<div class="row g-3 mb-3">
+  {% for peran in peran_saya %}<div class="col-md-6">{% include "panduan/_peran.html" %}</div>{% empty %}
+    <div class="col-12"><div class="alert alert-danger mb-0">Akun Anda belum punya peran. Hubungi admin agar dimasukkan ke grup yang sesuai.</div></div>
+  {% endfor %}
+</div>
+
+<details class="card mb-3"><summary class="card-body fw-bold" style="cursor: pointer">Peran lain</summary>
+  <div class="card-body pt-0"><div class="row g-3">{% for peran in peran_lain %}<div class="col-md-6">{% include "panduan/_peran.html" %}</div>{% endfor %}</div></div>
+</details>
+
+<div class="alert alert-warning"><h2 class="h6 fw-bold mb-1"><i class="bi bi-shield-exclamation"></i> Data pasien</h2>
+  Samarkan identitas pasien (nama, No. RM, NIK, alamat) sebelum mengunggah. Bila tetap ada data pasien, tandai "mengandung data pasien":
+  aksesnya dibatasi untuk tamu surveior dan setiap unduhan dicatat.</div>
+{% endblock %}

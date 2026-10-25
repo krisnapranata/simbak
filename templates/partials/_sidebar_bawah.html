@@ -1,0 +1,14 @@
+<div class="sidebar-bottom">
+  <a class="sidebar-profile glass text-decoration-none" href="{% url 'akun:profil' %}">
+    <div class="sidebar-avatar"><i class="bi bi-person" aria-hidden="true"></i></div>
+    <div class="sidebar-profile-text label">
+      <div class="sidebar-profile-name">{{ user.get_full_name|default:user.username }}</div>
+      <div class="sidebar-profile-role">Profil saya</div>
+    </div>
+  </a>
+  <div class="sidebar-help-box glass label">
+    <h3>Butuh bantuan?</h3>
+    <p>Baca langkah kerja sesuai peran Anda.</p>
+    <a href="{% url 'panduan' %}" class="btn btn-primary btn-sm w-100">Buka panduan</a>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load dokumen_tag %}
+{% block judul %}Telusur {{ bab.kode }}{% endblock %}
+{% block konten %}
+<a href="{% url 'survei:bab_list' %}{% if periode %}?periode={{ periode.pk }}{% endif %}" class="small"><i class="bi bi-arrow-left"></i> Mode survei</a>
+<div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+  <h1 class="judul-halaman">{{ bab.kode }} – {{ bab.nama }}</h1>
+  <div class="ms-auto d-flex gap-2">
+    <a class="btn btn-sm btn-outline-secondary" href="{% url 'survei:pdf' bab.pk %}{% if periode %}?periode={{ periode.pk }}{% endif %}"><i class="bi bi-filetype-pdf"></i> Ekspor PDF</a>
+    <a class="btn btn-sm btn-outline-secondary" href="{% url 'survei:zip' bab.pk %}{% if periode %}?periode={{ periode.pk }}{% endif %}"><i class="bi bi-file-zip"></i> Ekspor ZIP</a>
+  </div>
+</div>
+<p class="sub-halaman mb-3">{{ periode|default:"Tanpa periode" }} · skor mandiri {% if capaian_bab.persen is None %}–{% else %}{{ capaian_bab.persen|floatformat:1 }}%{% endif %} · bukti lengkap {{ capaian_bab.persen_lengkap|floatformat:0 }}%</p>
+{% for std in daftar_standar %}
+  <div class="card mb-3"><div class="card-body">
+    <h2 class="h6 fw-bold">{{ std.kode }}</h2>
+    <p class="pre-line small">{{ std.uraian }}</p>
+    {% for ep in std.daftar_ep %}
+      <div class="border-top py-3">
+        <div class="d-flex flex-wrap align-items-start gap-3">
+          <div class="flex-grow-1 min-w-0"><a class="fw-bold" href="{% url 'penilaian:ep' ep.pk %}">EP {{ ep.kode }}</a> <span class="pre-line small">{{ ep.uraian }}</span></div>
+          <div class="small text-nowrap">Skor mandiri: <b>{% if not ep.nilai %}–{% elif ep.nilai.tdd %}TDD{% else %}{{ ep.nilai.skor }}{% endif %}</b></div>
+        </div>
+        <div class="d-flex flex-wrap gap-1 mt-1">{% for kode in ep.jenis_bukti %}<span class="chip-bukti {% if kode in ep.jenis_kurang %}kurang{% else %}ok{% endif %}">{{ kode }}</span>{% endfor %}</div>
+        <ul class="list-unstyled small mt-2 mb-0">
+          {% for b in ep.bukti_survei %}<li class="mb-1"><b>{{ b.jenis_bukti }}</b> · {{ b.dokumen }}
+            {% if b.dokumen.versi_aktif %}{% if b.dokumen.versi_aktif|bisa_dipratinjau %}<a class="ms-2" target="_blank" rel="noopener" href="{% url 'dokumen:unduh' b.dokumen_id b.dokumen.versi_aktif_id %}?lihat=1"><i class="bi bi-eye"></i> lihat</a>{% endif %}<a class="ms-2" href="{% url 'dokumen:unduh' b.dokumen_id b.dokumen.versi_aktif_id %}"><i class="bi bi-download"></i> unduh v{{ b.dokumen.versi_aktif.nomor_versi }}</a>{% endif %}</li>
+          {% empty %}<li class="text-secondary">Belum ada bukti disetujui.</li>{% endfor %}
+        </ul>
+        {% if ep.wawancara %}<div class="rounded border p-2 mt-2 small" style="background: var(--mc-sage)"><div class="fw-semibold text-secondary">Wawancara</div>
+          {% for w in ep.wawancara %}<p class="mb-1"><b>{{ w.narasumber }}</b>{% if w.daftar_pertanyaan %}: <span class="pre-line">{{ w.daftar_pertanyaan }}</span>{% endif %}</p>{% endfor %}</div>{% endif %}
+      </div>
+    {% endfor %}
+  </div></div>
+{% empty %}<div class="alert alert-info">Belum ada standar.</div>{% endfor %}
+{% endblock %}

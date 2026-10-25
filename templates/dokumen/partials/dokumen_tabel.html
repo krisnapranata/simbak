@@ -1,0 +1,29 @@
+{% load dokumen_tag %}
+<div class="card"><div class="table-responsive">
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>Judul</th><th>Jenis</th><th>Pokja</th><th>Status</th><th>Review</th><th class="text-end">EP</th></tr></thead>
+  <tbody>
+  {% for d in daftar_dokumen %}
+    <tr>
+      <td><a class="fw-semibold" href="{% url 'dokumen:detail' d.pk %}">{{ d.judul }}</a>
+        {% if d.nomor %}<div class="small text-secondary">{{ d.nomor }}</div>{% endif %}
+        {% if d.mengandung_data_pasien %}<div class="small text-danger"><i class="bi bi-shield-lock"></i> data pasien</div>{% endif %}</td>
+      <td class="text-secondary">{{ d.get_jenis_dokumen_display }}</td>
+      <td class="text-secondary">{{ d.pokja.kode }}</td>
+      <td>{% status_dokumen d %}</td>
+      <td class="text-secondary">{{ d.tanggal_review_berikutnya|date:"d M Y"|default:"–" }}</td>
+      <td class="text-end angka">{{ d.jumlah_ep }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6" class="text-center text-secondary py-4">Tidak ada dokumen.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% if is_paginated %}
+<nav class="mt-3"><ul class="pagination pagination-sm mb-0">
+  {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?{{ query_filter }}&page={{ page_obj.previous_page_number }}">‹ Sebelumnya</a></li>{% endif %}
+  <li class="page-item disabled"><span class="page-link">Halaman {{ page_obj.number }} dari {{ paginator.num_pages }}</span></li>
+  {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?{{ query_filter }}&page={{ page_obj.next_page_number }}">Berikutnya ›</a></li>{% endif %}
+</ul></nav>
+{% endif %}

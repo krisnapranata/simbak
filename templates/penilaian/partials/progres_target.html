@@ -1,0 +1,6 @@
+{# Progres terhadap target: bar aktual + penanda posisi yang seharusnya hari ini #}
+<div class="progres-target" title="Aktual {{ h.aktual|floatformat:1 }}% · seharusnya hari ini {{ h.harapan|floatformat:1 }}% · target {{ h.nilai_target|floatformat:0 }}%">
+  <div class="progress"><div class="progress-bar {% if h.status == 'tercapai' %}bg-success{% elif h.status == 'sesuai' %}bg-primary{% elif h.status == 'berisiko' %}bg-warning{% else %}bg-danger{% endif %}" style="width: {{ h.aktual|floatformat:0 }}%"></div></div>
+  <span class="penanda-harapan" style="left: {{ h.harapan|floatformat:0 }}%"></span>
+  <span class="penanda-target" style="left: {{ h.nilai_target|floatformat:0 }}%"></span>
+</div>

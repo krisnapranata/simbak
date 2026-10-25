@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><title>Telusur {{ bab.kode }}</title>
+<style>
+  @page { size: A4; margin: 18mm 15mm; @bottom-right { content: "Hal. " counter(page) " / " counter(pages); font-size: 8pt; color: #666; } }
+  body { font-family: "DejaVu Sans", sans-serif; font-size: 9pt; color: #222; }
+  h1 { font-size: 15pt; margin: 0 0 2mm; } h2 { font-size: 11pt; margin: 6mm 0 1mm; border-bottom: 1px solid #0f766e; }
+  .meta { color: #555; margin-bottom: 4mm; } table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #ccc; padding: 2mm; vertical-align: top; text-align: left; } th { background: #f1f5f9; }
+  .kurang { color: #b91c1c; font-weight: bold; } .kecil { font-size: 8pt; color: #555; }
+</style></head>
+<body>
+<h1>{{ bab.kode }} – {{ bab.nama }}</h1>
+<div class="meta">{{ periode|default:"Tanpa periode" }} · Skor mandiri: {% if capaian_bab.persen is None %}–{% else %}{{ capaian_bab.persen|floatformat:1 }}%{% endif %} · Bukti lengkap: {{ capaian_bab.persen_lengkap|floatformat:0 }}%<br>
+Dicetak {{ dicetak_pada|date:"d M Y H:i" }} oleh {{ dicetak_oleh }}. Dokumen ini hanya memuat daftar bukti, bukan isi dokumen.</div>
+{% for std in daftar_standar %}
+  <h2>{{ std.kode }}</h2>
+  <p>{{ std.uraian|linebreaksbr }}</p>
+  <table>
+    <tr><th style="width:8%">EP</th><th style="width:38%">Uraian</th><th style="width:10%">Jenis</th><th style="width:8%">Skor</th><th>Bukti disetujui</th></tr>
+    {% for ep in std.daftar_ep %}
+      <tr><td>{{ ep.kode }}</td><td>{{ ep.uraian|linebreaksbr }}</td>
+        <td>{% for k in ep.jenis_bukti %}<span {% if k in ep.jenis_kurang %}class="kurang"{% endif %}>{{ k }}</span> {% endfor %}</td>
+        <td>{% if not ep.nilai %}–{% elif ep.nilai.tdd %}TDD{% else %}{{ ep.nilai.skor }}{% endif %}</td>
+        <td>{% for b in ep.bukti_survei %}<div>[{{ b.jenis_bukti }}] {{ b.dokumen }}{% if b.dokumen.versi_aktif %} <span class="kecil">v{{ b.dokumen.versi_aktif.nomor_versi }}</span>{% endif %}</div>{% empty %}<span class="kecil">–</span>{% endfor %}
+          {% for w in ep.wawancara %}<div class="kecil">Wawancara: {{ w.narasumber }}</div>{% endfor %}</td></tr>
+    {% endfor %}
+  </table>
+{% endfor %}
+</body></html>

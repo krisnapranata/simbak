@@ -1,0 +1,15 @@
+# Dependensi produksi (dipakai Dockerfile). Development: requirements-dev.txt
+Django==5.2.*
+django-environ==0.14.*
+mysqlclient==2.3.*
+psycopg[binary]==3.3.*
+django-htmx==1.29.*
+django-crispy-forms==2.7.*
+crispy-bootstrap5==2026.*
+django-auditlog==3.4.*
+django-axes==8.3.*
+openpyxl==3.1.*
+weasyprint==70.*
+python-magic==0.4.*
+# Windows: ganti python-magic dengan python-magic-bin
+gunicorn==26.*

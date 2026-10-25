@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block judul %}Profil{% endblock %}
+{% block konten %}
+<h1 class="judul-halaman mb-3">Profil saya</h1>
+<div class="row g-3" style="max-width: 960px">
+  <div class="col-md-6"><div class="card h-100"><div class="card-body">
+    <dl class="mb-0">
+      <dt class="small text-secondary fw-normal">Nama</dt><dd class="fw-semibold">{{ user.get_full_name|default:user.username }}</dd>
+      <dt class="small text-secondary fw-normal">Nama pengguna</dt><dd>{{ user.username }}</dd>
+      <dt class="small text-secondary fw-normal">Email</dt><dd>{{ user.email|default:"–" }}</dd>
+      <dt class="small text-secondary fw-normal">Unit</dt><dd>{{ user.unit|default:"–" }}</dd>
+      <dt class="small text-secondary fw-normal">Peran</dt>
+      <dd>{% for p in daftar_peran %}<span class="badge bg-primary-subtle text-primary-emphasis me-1">{{ p }}</span>{% empty %}{% if user.is_superuser %}Superuser{% else %}<span class="text-danger">Belum punya peran — hubungi admin.</span>{% endif %}{% endfor %}</dd>
+      {% if user.aktif_sampai %}<dt class="small text-secondary fw-normal">Akun aktif sampai</dt><dd>{{ user.aktif_sampai|date:"d M Y H:i" }}</dd>{% endif %}
+    </dl>
+    <a href="{% url 'akun:kata_sandi' %}" class="btn btn-primary btn-sm mt-3"><i class="bi bi-key me-1"></i>Ganti kata sandi</a>
+  </div></div></div>
+  <div class="col-md-6"><div class="card h-100"><div class="card-body">
+    <h2 class="h6 fw-bold">Pokja saya</h2>
+    <ul class="list-unstyled mb-0">
+      {% for p in daftar_pokja %}
+        <li class="mb-2"><span class="fw-semibold">{{ p }}</span><div class="small text-secondary">Bab: {% for b in p.bab.all %}<a href="{% url 'standar:bab_detail' b.pk %}">{{ b.kode }}</a>{% if not forloop.last %}, {% endif %}{% empty %}belum ada bab{% endfor %}</div></li>
+      {% empty %}<li class="text-secondary">Tidak tergabung dalam pokja.</li>{% endfor %}
+    </ul>
+  </div></div></div>
+</div>
+{% endblock %}

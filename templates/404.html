@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block judul %}Tidak ditemukan{% endblock %}
+{% block konten %}{% include "partials/error.html" with kode=404 warna="text-primary" judul="Halaman tidak ditemukan" pesan="Halaman atau data ini tidak ada, sudah dihapus, atau berada di luar bab/pokja yang dapat Anda akses." %}{% endblock %}
+{% block konten_tamu %}{% include "partials/error.html" with kode=404 warna="text-primary" judul="Halaman tidak ditemukan" pesan="Halaman ini tidak ada." %}{% endblock %}

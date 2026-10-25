@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load dokumen_tag %}
+{% block judul %}{{ dokumen.judul }}{% endblock %}
+{% block konten %}
+<a href="{% url 'dokumen:list' %}" class="small"><i class="bi bi-arrow-left"></i> Dokumen</a>
+<div class="d-flex flex-wrap align-items-start gap-3 mt-2 mb-3">
+  <div class="min-w-0">
+    <h1 class="judul-halaman">{{ dokumen.judul }}</h1>
+    <p class="sub-halaman">{{ dokumen.nomor|default:"Tanpa nomor" }} · {{ dokumen.get_jenis_dokumen_display }} · {{ dokumen.pokja }}</p>
+  </div>
+  <div class="ms-auto d-flex flex-wrap gap-2">
+    {% if bisa_edit %}<a href="{% url 'dokumen:ubah' dokumen.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil me-1"></i>Ubah</a>{% endif %}
+    {% if bisa_unggah %}<a href="{% url 'dokumen:versi_baru' dokumen.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-upload me-1"></i>Versi baru</a>{% endif %}
+    {% if bisa_hapus %}<form method="post" action="{% url 'dokumen:hapus' dokumen.pk %}" onsubmit="return confirm('Hapus dokumen draft ini?')">{% csrf_token %}<button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i>Hapus</button></form>{% endif %}
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-8 d-flex flex-column gap-3">
+    <div class="card"><div class="card-body">
+      <div class="row row-cols-2 row-cols-sm-3 g-3 small">
+        <div class="col"><div class="text-secondary">Status</div>{% status_dokumen dokumen %}</div>
+        <div class="col"><div class="text-secondary">Tanggal terbit</div>{{ dokumen.tanggal_terbit|date:"d M Y"|default:"–" }}</div>
+        <div class="col"><div class="text-secondary">Review berikutnya</div>{{ dokumen.tanggal_review_berikutnya|date:"d M Y"|default:"–" }}</div>
+        <div class="col"><div class="text-secondary">Unit</div>{{ dokumen.unit|default:"–" }}</div>
+        <div class="col"><div class="text-secondary">Penanggung jawab</div>{{ dokumen.penanggung_jawab|default:"–" }}</div>
+        <div class="col"><div class="text-secondary">Data pasien</div>{% if dokumen.mengandung_data_pasien %}<span class="text-danger"><i class="bi bi-shield-lock"></i> Ya, akses dibatasi</span>{% else %}Tidak{% endif %}</div>
+      </div>
+      {% if dokumen.keterangan %}<p class="pre-line small mt-3 mb-0">{{ dokumen.keterangan }}</p>{% endif %}
+    </div></div>
+
+    <div class="card"><div class="card-body">
+      <h2 class="h6 fw-bold">Bukti untuk elemen penilaian</h2>
+      <div id="daftar-bukti">{% include "dokumen/partials/daftar_bukti.html" %}</div>
+      {% if bisa_tautkan and dokumen.status != "dicabut" %}
+        <div class="border-top pt-3 mt-2">
+          <label class="form-label small fw-semibold" for="cari-ep">Tautkan ke EP lain</label>
+          <input id="cari-ep" type="search" name="q" placeholder="Ketik kode standar (mis. TKRS 1), kode bab, atau kata di uraian EP…" class="form-control"
+                 hx-get="{% url 'dokumen:cari_ep' dokumen.pk %}" hx-trigger="input changed delay:300ms" hx-target="#hasil-cari-ep">
+          <div id="hasil-cari-ep" class="mt-2"></div>
+        </div>
+      {% endif %}
+    </div></div>
+
+    <div class="card"><div class="card-body">
+      <h2 class="h6 fw-bold">Versi file</h2>
+      <div class="table-responsive"><table class="table table-sm align-top mb-0">
+        <thead><tr><th>Versi</th><th>File</th><th>Ukuran</th><th>Diunggah</th><th></th></tr></thead>
+        <tbody>
+        {% for v in daftar_versi %}
+          <tr>
+            <td class="fw-semibold">v{{ v.nomor_versi }}{% if v.pk == dokumen.versi_aktif_id %} <span class="badge bg-success-subtle text-success-emphasis">aktif</span>{% endif %}</td>
+            <td>{{ v.nama_file_asli }}{% if v.catatan_perubahan %}<div class="small text-secondary">{{ v.catatan_perubahan }}</div>{% endif %}</td>
+            <td class="text-secondary">{{ v.ukuran|ukuran_file }}</td>
+            <td class="text-secondary">{{ v.diunggah_oleh }}<div class="small">{{ v.diunggah_pada|date:"d M Y H:i" }}</div></td>
+            <td class="text-end text-nowrap">{% if v|bisa_dipratinjau %}<a class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener" href="{% url 'dokumen:unduh' dokumen.pk v.pk %}?lihat=1"><i class="bi bi-eye"></i> Lihat</a>{% endif %}
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'dokumen:unduh' dokumen.pk v.pk %}"><i class="bi bi-download"></i> Unduh</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table></div>
+    </div></div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card"><div class="card-body">
+      <h2 class="h6 fw-bold">Verifikasi</h2>
+      {% for kode, label in aksi %}
+        <form method="post" action="{% url 'verifikasi:aksi' dokumen.pk kode %}" class="mb-3">{% csrf_token %}
+          <textarea name="catatan" rows="2" class="form-control form-control-sm" placeholder="Catatan{% if kode in aksi_wajib_catatan %} (wajib){% else %} (opsional){% endif %}" {% if kode in aksi_wajib_catatan %}required{% endif %}></textarea>
+          <button class="btn btn-sm w-100 mt-1 {% if kode == 'kembalikan' or kode == 'cabut' %}btn-outline-danger{% else %}btn-primary{% endif %}">{{ label }}</button>
+        </form>
+      {% empty %}
+        <p class="small text-secondary">Tidak ada aksi verifikasi untuk Anda pada status ini.</p>
+      {% endfor %}
+      <h3 class="small fw-bold text-secondary mt-3">Riwayat</h3>
+      <ol class="riwayat-log small">
+        {% for log in log_verifikasi %}
+          <li>
+            <div>{{ log.get_dari_status_display }} → <b>{{ log.get_ke_status_display }}</b></div>
+            <div class="text-secondary">{{ log.user|default:"Sistem" }} · {{ log.waktu|date:"d M Y H:i" }}</div>
+            {% if log.catatan %}<div class="pre-line mt-1">{{ log.catatan }}</div>{% endif %}
+          </li>
+        {% empty %}<li class="text-secondary">Belum ada.</li>{% endfor %}
+      </ol>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% load dokumen_tag %}
+<div id="ep-{{ ep.pk }}" class="border-top px-3 py-3"><div class="row g-3">
+  <div class="col-lg-5">
+    <div class="fw-semibold"><a href="{% url 'penilaian:ep' ep.pk %}{% if periode %}?periode={{ periode.pk }}{% endif %}">EP {{ ep.kode }}</a>
+      {% if ep.lengkap %}<span class="small text-success ms-1"><i class="bi bi-check-circle-fill"></i> bukti lengkap</span>{% endif %}</div>
+    <p class="pre-line small mb-2">{{ ep.uraian }}</p>
+    <div class="d-flex flex-wrap gap-1">{% for kode in ep.jenis_bukti %}<span class="chip-bukti{% if kode in ep.tercakup %} ok{% endif %}">{{ kode }}</span>{% endfor %}</div>
+    <ul class="list-unstyled small mt-2 mb-0">
+      {% for b in ep.bukti_terlihat %}<li class="mb-1"><b>{{ b.jenis_bukti }}</b> <a href="{% url 'dokumen:detail' b.dokumen_id %}">{{ b.dokumen.judul }}</a> {% status_dokumen b.dokumen %}</li>{% endfor %}
+    </ul>
+    {% if bisa_unggah_bukti %}<a class="small" href="{% url 'dokumen:baru' %}?ep={{ ep.pk }}">+ unggah bukti</a>{% endif %}
+  </div>
+  <div class="col-lg-7">
+    {% if galat %}<div class="alert alert-danger py-1 small">{{ galat }}</div>{% endif %}
+    {% if bisa_nilai %}
+      <form hx-post="{% url 'penilaian:nilai' periode.pk ep.pk %}" hx-target="#ep-{{ ep.pk }}" hx-swap="outerHTML" class="d-flex flex-column gap-2">
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <select name="nilai" class="form-select form-select-sm w-auto">
+            <option value="" {% if not ep.nilai %}selected{% endif %}>Belum dinilai</option>
+            {% for nilai, label in pilihan_skor %}<option value="{{ nilai }}" {% if ep.nilai and not ep.nilai.tdd and ep.nilai.skor == nilai %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            <option value="tdd" {% if ep.nilai.tdd %}selected{% endif %}>TDD – Tidak dapat diterapkan</option>
+          </select>
+          <button class="btn btn-sm btn-primary">Simpan</button>
+          {% if ep.nilai %}<span class="small text-secondary">oleh {{ ep.nilai.dinilai_oleh }} · {{ ep.nilai.dinilai_pada|date:"d M Y H:i" }}</span>{% endif %}
+        </div>
+        <textarea name="fakta_analisis" rows="2" placeholder="Fakta dan analisis" class="form-control form-control-sm">{{ ep.nilai.fakta_analisis|default:"" }}</textarea>
+        <textarea name="catatan" rows="1" placeholder="Catatan" class="form-control form-control-sm">{{ ep.nilai.catatan|default:"" }}</textarea>
+      </form>
+    {% else %}
+      <div class="small">
+        <div><span class="text-secondary">Skor:</span> <b>{% if not ep.nilai %}Belum dinilai{% elif ep.nilai.tdd %}TDD{% else %}{{ ep.nilai.skor }}{% endif %}</b></div>
+        {% if ep.nilai.fakta_analisis %}<p class="pre-line mt-1 mb-0">{{ ep.nilai.fakta_analisis }}</p>{% endif %}
+        {% if ep.nilai.catatan %}<p class="pre-line text-secondary mt-1 mb-0">{{ ep.nilai.catatan }}</p>{% endif %}
+      </div>
+    {% endif %}
+    {% if ep.catatan_periode or bisa_catat %}
+      <div class="rounded border p-2 mt-2 small" style="background: var(--mc-sage)">
+        <div class="fw-semibold text-secondary mb-1">Catatan surveior/komite</div>
+        {% for c in ep.catatan_periode %}<p class="mb-1"><span class="text-secondary">{{ c.penulis }} · {{ c.dibuat_pada|date:"d M Y" }}:</span> {{ c.isi }}</p>{% endfor %}
+        {% if bisa_catat %}
+          <form hx-post="{% url 'penilaian:catatan' periode.pk ep.pk %}" hx-target="#ep-{{ ep.pk }}" hx-swap="outerHTML" class="d-flex gap-2 mt-1">
+            <input name="isi" placeholder="Tambah catatan…" class="form-control form-control-sm" required>
+            <button class="btn btn-sm btn-outline-secondary">Kirim</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div></div>

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block judul %}Notifikasi{% endblock %}
+{% block konten %}
+<div class="d-flex align-items-center gap-3 mb-3">
+  <h1 class="judul-halaman">Notifikasi</h1>
+  <form method="post" action="{% url 'verifikasi:baca_semua' %}" class="ms-auto">{% csrf_token %}
+    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-check2-all me-1"></i>Tandai semua dibaca</button></form>
+</div>
+<div class="card"><ul class="list-group list-group-flush">
+{% for n in daftar_notifikasi %}
+  <li class="list-group-item d-flex align-items-center gap-3 {% if not n.dibaca_pada %}bg-primary-subtle{% endif %}">
+    <form method="post" action="{% url 'verifikasi:baca' n.pk %}" class="flex-grow-1">{% csrf_token %}
+      <button class="btn btn-link p-0 text-start text-decoration-none {% if not n.dibaca_pada %}fw-semibold{% endif %}">{{ n.judul }}</button>
+    </form>
+    <span class="small text-secondary text-nowrap">{{ n.dibuat_pada|date:"d M Y H:i" }}</span>
+  </li>
+{% empty %}
+  <li class="list-group-item text-center text-secondary py-4">Belum ada notifikasi.</li>
+{% endfor %}
+</ul></div>
+{% endblock %}

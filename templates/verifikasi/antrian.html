@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load dokumen_tag %}
+{% block judul %}Antrian Verifikasi{% endblock %}
+{% block konten %}
+<div class="mb-3"><h1 class="judul-halaman">Antrian Verifikasi</h1><p class="sub-halaman">Dokumen yang menunggu tindakan Anda.</p></div>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>Dokumen</th><th>Jenis</th><th>Pokja</th><th>Status</th><th>Terakhir diubah</th></tr></thead>
+  <tbody>
+  {% for d in daftar_dokumen %}
+    <tr>
+      <td><a class="fw-semibold" href="{% url 'dokumen:detail' d.pk %}">{{ d.judul }}</a></td>
+      <td class="text-secondary">{{ d.get_jenis_dokumen_display }}</td>
+      <td class="text-secondary">{{ d.pokja.kode }}</td>
+      <td>{% status_dokumen d %}</td>
+      <td class="text-secondary">{{ d.diubah_pada|date:"d M Y H:i" }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5" class="text-center text-secondary py-4">Tidak ada dokumen yang menunggu. 👍</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load dokumen_tag %}
+{% block judul %}{{ ep }}{% endblock %}
+{% block konten %}
+<nav aria-label="breadcrumb"><ol class="breadcrumb small mb-1">
+  <li class="breadcrumb-item"><a href="{% url 'standar:bab_detail' ep.standar.bab_id %}">{{ ep.standar.bab.kode }}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'penilaian:bab' ep.standar.bab_id %}{% if periode %}?periode={{ periode.pk }}{% endif %}#ep-{{ ep.pk }}">{{ ep.standar.kode }}</a></li>
+  <li class="breadcrumb-item active">EP {{ ep.kode }}</li>
+</ol></nav>
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+  <h1 class="judul-halaman">{{ ep }}</h1>
+  {% if ep.lengkap %}<span class="badge bg-success-subtle text-success-emphasis"><i class="bi bi-check-circle"></i> bukti lengkap</span>{% else %}<span class="badge bg-warning-subtle text-warning-emphasis">bukti belum lengkap</span>{% endif %}
+  <div class="ms-auto">{% include "penilaian/partials/pilih_periode.html" %}</div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-8 d-flex flex-column gap-3">
+    <div class="card"><div class="card-body">
+      <p class="pre-line mb-2">{{ ep.uraian }}</p>
+      <details class="small text-secondary"><summary>Standar {{ ep.standar.kode }}</summary>
+        <p class="pre-line mt-1">{{ ep.standar.uraian }}</p>
+        {% if ep.standar.maksud_tujuan %}<p class="pre-line mb-0"><b>Maksud dan tujuan:</b> {{ ep.standar.maksud_tujuan }}</p>{% endif %}</details>
+    </div></div>
+
+    <div class="card"><div class="card-body">
+      <h2 class="h6 fw-bold">Bukti per jenis</h2>
+      {% for kode, label, bukti in bukti_per_jenis %}
+        <div class="mb-3">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="chip-bukti{% if kode in ep.tercakup %} ok{% endif %}">{{ kode }}</span>
+            <span class="fw-semibold">{{ label }}</span>
+            {% if kode in ep.tercakup %}<span class="small text-success">terpenuhi</span>{% else %}<span class="small text-warning-emphasis">belum ada yang disetujui</span>{% endif %}
+            {% if bisa_unggah_bukti %}<a class="ms-auto small" href="{% url 'dokumen:baru' %}?ep={{ ep.pk }}&jenis={{ kode }}">+ unggah bukti {{ kode }}</a>{% endif %}
+          </div>
+          <ul class="list-group list-group-flush small">
+            {% for b in bukti %}
+              <li class="list-group-item px-0 d-flex flex-wrap align-items-center gap-2">
+                <a href="{% url 'dokumen:detail' b.dokumen_id %}">{{ b.dokumen }}</a> {% status_dokumen b.dokumen %}
+                {% if b.keterangan %}<span class="text-secondary">{{ b.keterangan }}</span>{% endif %}
+              </li>
+            {% empty %}<li class="list-group-item px-0 text-secondary">Belum ada dokumen.</li>{% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+      {% if ep.item_wawancara.all %}
+        <div class="rounded border p-2 small" style="background: var(--mc-sage)"><div class="fw-semibold mb-1">Wawancara</div>
+          {% for w in ep.item_wawancara.all %}<p class="mb-1"><b>{{ w.narasumber }}</b>{% if w.daftar_pertanyaan %}<br><span class="pre-line">{{ w.daftar_pertanyaan }}</span>{% endif %}</p>{% endfor %}</div>
+      {% endif %}
+    </div></div>
+
+    <div class="card">
+      <div class="card-body pb-0"><h2 class="h6 fw-bold">Penilaian mandiri {% if periode %}— {{ periode }}{% endif %}</h2></div>
+      {% if periode %}{% include "penilaian/partials/baris_ep.html" %}{% else %}<p class="px-3 pb-3 small text-secondary">Belum ada periode aktif.</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="col-lg-4 d-flex flex-column gap-3">
+    <div class="card"><div class="card-body">
+      <h2 class="h6 fw-bold">Riwayat skor</h2>
+      <ul class="list-unstyled small mb-0">{% for r in riwayat %}
+        <li class="d-flex justify-content-between gap-2 py-1"><span>{{ r.periode }}</span><b>{% if r.tdd %}TDD{% else %}{{ r.skor }}{% endif %}</b></li>
+      {% empty %}<li class="text-secondary">Belum pernah dinilai.</li>{% endfor %}</ul>
+    </div></div>
+    <div class="card"><div class="card-body">
+      <h2 class="h6 fw-bold">Rencana perbaikan</h2>
+      <ul class="list-unstyled small mb-0">{% for p in daftar_pps %}
+        <li class="mb-2"><a href="{% url 'pps:ubah' p.pk %}">{{ p.rekomendasi|truncatechars:80 }}</a>
+          <div class="{% if p.terlambat %}text-danger{% else %}text-secondary{% endif %}">{{ p.get_status_display }} · {{ p.pj|default:"tanpa PJ" }} · {{ p.tenggat|date:"d M Y"|default:"tanpa tenggat" }}</div></li>
+      {% empty %}<li class="text-secondary">Tidak ada.</li>{% endfor %}</ul>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

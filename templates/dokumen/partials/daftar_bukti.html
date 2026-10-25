@@ -1,0 +1,19 @@
+{% load dokumen_tag %}
+{% if galat %}<div class="alert alert-danger py-2 small">{{ galat }}</div>{% endif %}
+<ul class="list-group list-group-flush">
+{% for b in daftar_bukti %}
+  <li class="list-group-item px-0 d-flex align-items-start gap-3">
+    <span class="chip-bukti ok" title="{{ b.get_jenis_bukti_display }}">{{ b.jenis_bukti }}</span>
+    <div class="flex-grow-1 min-w-0">
+      <a class="fw-semibold" href="{% url 'penilaian:ep' b.elemen_penilaian_id %}">{{ b.elemen_penilaian }}</a>
+      <div class="small text-secondary">{{ b.elemen_penilaian.uraian|truncatechars:140 }}</div>
+      {% if b.keterangan %}<div class="small text-secondary">{{ b.keterangan }}</div>{% endif %}
+    </div>
+    {% if request.user|bisa_lepas_bukti:b %}
+      <button class="btn btn-sm btn-outline-danger" hx-post="{% url 'dokumen:lepas' dokumen.pk b.pk %}" hx-target="#daftar-bukti" hx-confirm="Lepas tautan ke {{ b.elemen_penilaian }}?">Lepas</button>
+    {% endif %}
+  </li>
+{% empty %}
+  <li class="list-group-item px-0 text-secondary">Belum ditautkan ke EP mana pun.</li>
+{% endfor %}
+</ul>

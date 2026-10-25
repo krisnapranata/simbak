@@ -1,0 +1,71 @@
+# SIMBAK — produksi. Jalankan dari folder ini:
+#   docker compose up -d --build
+# Container & volume diberi awalan "simbak" supaya tidak bentrok dengan aplikasi lain.
+name: simbak
+
+services:
+  db:
+    image: mariadb:10.11
+    container_name: simbak_db
+    restart: unless-stopped
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    env_file: .env.db
+    environment:
+      TZ: Asia/Makassar
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  web:
+    build: .
+    image: simbak-web:latest
+    container_name: simbak_web
+    restart: unless-stopped
+    command: ["web"]
+    env_file: .env.production
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - static:/app/staticfiles
+      - media_private:/app/media_private
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/sehat/', timeout=5).status == 200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  jadwal:
+    image: simbak-web:latest
+    container_name: simbak_jadwal
+    restart: unless-stopped
+    command: ["jadwal"]
+    env_file: .env.production
+    depends_on:
+      web:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: simbak_nginx
+    restart: unless-stopped
+    ports:
+      - "8030:80"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - static:/srv/static:ro
+      - media_private:/srv/media_private:ro
+    depends_on:
+      web:
+        condition: service_healthy
+
+volumes:
+  db_data:
+  static:
+  media_private:

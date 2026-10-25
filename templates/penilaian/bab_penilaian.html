@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block judul %}Penilaian {{ bab.kode }}{% endblock %}
+{% block konten %}
+<a href="{% url 'penilaian:bab_list' %}{% if periode %}?periode={{ periode.pk }}{% endif %}" class="small"><i class="bi bi-arrow-left"></i> Penilaian mandiri</a>
+<div class="d-flex flex-wrap align-items-center gap-3 mt-2">
+  <h1 class="judul-halaman">{{ bab.kode }} – {{ bab.nama }}</h1>
+  <div class="ms-auto">{% include "penilaian/partials/pilih_periode.html" %}</div>
+</div>
+<p class="sub-halaman mb-3">
+  Capaian: {% if capaian_bab.persen is None %}–{% else %}<b>{{ capaian_bab.persen|floatformat:1 }}%</b>{% endif %}
+  · {{ capaian_bab.dinilai }}/{{ capaian_bab.jumlah_ep }} EP dinilai · bukti lengkap {{ capaian_bab.persen_lengkap|floatformat:0 }}%
+  {% if periode.terkunci %}· <span class="text-danger">periode selesai (terkunci)</span>{% endif %}
+  {% if not periode %}· <span class="text-danger">belum ada periode aktif</span>{% endif %}
+</p>
+{% for std in daftar_standar %}
+  <div class="card mb-3">
+    <div class="card-body pb-2"><h2 class="h6 fw-bold mb-1">{{ std.kode }}</h2><p class="small text-secondary mb-0">{{ std.uraian|truncatechars:300 }}</p></div>
+    {% for ep in std.daftar_ep %}{% include "penilaian/partials/baris_ep.html" %}{% empty %}<p class="px-3 pb-3 small text-secondary">Belum ada EP.</p>{% endfor %}
+  </div>
+{% empty %}<div class="alert alert-info">Belum ada standar pada bab ini.</div>{% endfor %}
+<p class="small text-secondary">Bukti: <span class="chip-bukti ok">hijau</span> = ada dokumen disetujui, <span class="chip-bukti">abu</span> = belum.</p>
+{% endblock %}

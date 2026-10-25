@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block judul %}Impor Standar{% endblock %}
+{% block konten %}
+<h1 class="judul-halaman mb-3">Impor Master Standar</h1>
+<div class="row g-3">
+  <div class="col-lg-6"><div class="card h-100"><div class="card-body">
+    <p class="small text-secondary">Unggah file Excel. Sistem memvalidasi seluruh isi file dan menampilkan
+      pratinjau dulu. Data baru disimpan setelah Anda menekan tombol konfirmasi.
+      <a href="{% url 'standar:impor_template' %}"><i class="bi bi-download"></i> Unduh template kosong</a>.</p>
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+      {{ form|crispy }}
+      <button class="btn btn-primary"><i class="bi bi-eye me-1"></i>Unggah &amp; pratinjau</button>
+    </form>
+  </div></div></div>
+  <div class="col-lg-6"><div class="card h-100"><div class="card-body">
+    <h2 class="h6 fw-bold">Riwayat impor</h2>
+    <ul class="list-group list-group-flush small">
+      {% for log in riwayat %}
+        <li class="list-group-item px-0"><a href="{% url 'standar:impor_pratinjau' log.pk %}">{{ log.nama_file }}</a>
+          <span class="text-secondary">· {{ log.get_status_display }} · {{ log.diimpor_oleh|default:"CLI" }} · {{ log.dibuat_pada|date:"d M Y H:i" }}</span></li>
+      {% empty %}<li class="list-group-item px-0 text-secondary">Belum ada.</li>{% endfor %}
+    </ul>
+  </div></div></div>
+</div>
+{% endblock %}

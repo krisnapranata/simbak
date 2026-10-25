@@ -1,0 +1,38 @@
+{% load static %}<!doctype html>
+<html lang="id" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block judul %}SIMBAK{% endblock %} · SIMBAK</title>
+  {# Semua aset lokal (static/vendor), tanpa CDN. Tema: Blue Glass → @import mint-forest. #}
+  <link rel="stylesheet" href="{% static 'vendor/inter/inter.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tema/blue-glass.css' %}">
+  <link rel="stylesheet" href="{% static 'css/simbak.css' %}">
+</head>
+<body class="page-dense" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+{% if user.is_authenticated %}
+  <script>try { if (localStorage.getItem('simbak-sidebar-pinned') === '1') document.body.classList.add('sidebar-pinned'); } catch (e) {}</script>
+  <div class="bg-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
+  {% include "partials/sidebar.html" %}
+  <div class="content-area app-main">
+    {% include "partials/topbar.html" %}
+    <main id="workspace">
+      {% include "partials/pesan.html" %}
+      {% block konten %}{% endblock %}
+    </main>
+    <footer class="new-footer"><p class="mb-0">SIMBAK · Sistem Informasi Manajemen Bukti Akreditasi</p></footer>
+  </div>
+  {% include "partials/mobile_bottom.html" %}
+{% else %}
+  <div class="bg-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
+  <main class="halaman-tamu">
+    <div class="w-100" style="max-width: 400px">{% include "partials/pesan.html" %}{% block konten_tamu %}{% endblock %}</div>
+  </main>
+{% endif %}
+  <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/htmx/htmx.min.js' %}"></script>
+  <script src="{% static 'js/theme-glass.js' %}"></script>
+</body>
+</html>

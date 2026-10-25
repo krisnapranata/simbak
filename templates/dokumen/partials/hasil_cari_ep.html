@@ -1,0 +1,16 @@
+<ul class="list-group">
+{% for ep in hasil %}
+  <li class="list-group-item">
+    <form class="d-flex flex-wrap align-items-center gap-2" hx-post="{% url 'dokumen:tautkan' dokumen.pk %}" hx-target="#daftar-bukti">
+      <input type="hidden" name="elemen_penilaian" value="{{ ep.pk }}">
+      <div class="flex-grow-1 min-w-0 small"><b>{{ ep }}</b> <span class="text-secondary">{{ ep.uraian|truncatechars:100 }}</span></div>
+      <select name="jenis_bukti" class="form-select form-select-sm w-auto">
+        {% for kode in ep.jenis_bukti %}<option value="{{ kode }}">{{ kode }}</option>{% endfor %}
+      </select>
+      <button class="btn btn-sm btn-primary">Tautkan</button>
+    </form>
+  </li>
+{% empty %}
+  <li class="list-group-item small text-secondary">Ketik minimal 2 karakter. Hanya EP pada bab yang Anda kelola yang ditampilkan.</li>
+{% endfor %}
+</ul>

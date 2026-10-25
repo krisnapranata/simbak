@@ -1,0 +1,175 @@
+/* =====================================================================
+   SIMBAK — pelengkap tema Blue Glass (css/tema/blue-glass.css).
+   1. Dasar kerangka yang di proyek asal tema ada di berkas lain
+      (bilah bawah HP, dropdown profil).
+   2. Komponen kecil SIMBAK di atas Bootstrap 5.
+   Warna selalu lewat token tema (--mc-*), jangan menulis hex baru.
+   ===================================================================== */
+
+:root {
+    --bs-font-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ---------- 1. KERANGKA ---------- */
+.mobile-bottom { display: none; }
+@media (max-width: 991.98px) {
+    .mobile-bottom {
+        position: fixed;
+        display: flex !important;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1030;
+    }
+    .mobile-bottom .mobile-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        font-size: 11px;
+    }
+    .app-main > #workspace { padding-bottom: 96px !important; }
+}
+.profile-dropdown {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none !important;
+    color: inherit;
+}
+.profile-dropdown:hover { color: inherit; }
+.avatar-icon {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.topbar .profile-info h4 { margin: 0; }
+.topbar .profile-info small { display: block; font-size: 11.5px; color: var(--text-secondary); }
+
+/* Halaman tanpa kerangka (login) */
+.halaman-tamu {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+}
+.halaman-tamu .kartu-masuk { width: 100%; max-width: 400px; }
+.logo-simbak {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    color: #fff;
+    background: var(--accent-grad);
+    box-shadow: var(--accent-glow);
+}
+
+/* ---------- 2. KOMPONEN ---------- */
+.judul-halaman { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--mc-text); }
+.sub-halaman { color: var(--text-secondary); font-size: .875rem; margin: 0; }
+.pre-line { white-space: pre-line; }
+.angka { font-variant-numeric: tabular-nums; }
+.min-w-0 { min-width: 0; }
+.kartu-stat .nilai { font-size: 2rem; font-weight: 700; line-height: 1.1; color: var(--mc-text); }
+.kartu-stat .label { font-size: .85rem; color: var(--text-secondary); }
+
+/* Kotak tugas: angka besar di kiri */
+.tugas-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px;
+    border: 1px solid var(--mc-border);
+    border-radius: var(--radius-md);
+    color: inherit;
+    text-decoration: none;
+    background: var(--mc-surface);
+    transition: border-color .15s ease, background .15s ease;
+}
+.tugas-item:hover { border-color: var(--glass-border-hover); background: var(--glass-bg-hover); color: inherit; }
+.tugas-item .jumlah {
+    min-width: 44px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 700;
+    background: var(--mc-teal-soft);
+    color: var(--mc-primary-hover);
+}
+.tugas-item.penting { border-color: rgba(180, 83, 9, .35); background: #FFFBEB; }
+.tugas-item.penting .jumlah { background: #FDE68A; color: #78350F; }
+
+/* Langkah persiapan */
+.langkah-nomor {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    border: 1px solid var(--mc-border);
+    color: var(--text-secondary);
+}
+.langkah-nomor.selesai { background: var(--mc-success); border-color: var(--mc-success); color: #fff; }
+
+/* Bar capaian kecil */
+.bar-capaian { display: flex; align-items: center; gap: 8px; }
+.bar-capaian .progress { width: 96px; height: 8px; }
+
+/* Chip jenis bukti R/D/O/W/S */
+.chip-bukti {
+    display: inline-block;
+    min-width: 26px;
+    padding: 1px 7px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    background: var(--mc-sage);
+    color: var(--text-secondary);
+    border: 1px solid var(--mc-border);
+    text-decoration: none;
+}
+.chip-bukti.ok { background: #DCFCE7; color: #166534; border-color: #BBF7D0; }
+.chip-bukti.kurang { background: #FEE2E2; color: #991B1B; border-color: #FECACA; }
+.chip-bukti.proses { background: var(--mc-teal-soft); color: var(--mc-primary-hover); border-color: rgba(13, 111, 196, .25); }
+a.chip-bukti.kurang:hover { background: #FECACA; }
+
+/* Status dokumen */
+.status-dokumen { font-weight: 600; white-space: nowrap; }
+.status-dokumen.dicabut { text-decoration: line-through; }
+
+/* Garis waktu riwayat verifikasi */
+.riwayat-log { list-style: none; padding: 0; margin: 0; }
+.riwayat-log li { border-left: 2px solid var(--mc-primary); padding: 0 0 12px 12px; }
+
+/* Dropdown sidebar "Kelola" ditulis sebagai submenu Bootstrap collapse */
+.sidebar .sidebar-link .bi { font-size: 18px; }
+
+/* Progres target: bar + penanda "seharusnya hari ini" (garis) dan "target" (segitiga) */
+.progres-target { position: relative; padding: 6px 0; }
+.progres-target .progress { height: 10px; }
+.penanda-harapan,
+.penanda-target { position: absolute; transform: translateX(-50%); }
+.penanda-harapan { top: 2px; width: 2px; height: 18px; background: var(--mc-text); border-radius: 1px; }
+.penanda-target {
+    top: -4px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--mc-primary);
+}
+.penanda-contoh { display: inline-block; vertical-align: middle; margin: 0 2px; }
+.penanda-contoh.harapan { width: 2px; height: 12px; background: var(--mc-text); }
+.penanda-contoh.target {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--mc-primary);
+}

@@ -1,0 +1,22 @@
+{% comment %}
+Dua sidebar dengan menu yang sama (_sidebar_menu.html), mengikuti struktur tema:
+- #mobileSidebar: offcanvas Bootstrap, < 992px.
+- aside#sidebar.sidebar-desktop: navy, ramping 76px, melebar 240px saat hover;
+  mode pin (body.sidebar-pinned) diatur theme-glass.js.
+Offcanvas WAJIB anak <body> sebelum .mobile-bottom (aturan CSS saudara di tema).
+{% endcomment %}
+<div class="offcanvas offcanvas-start sidebar sidebar-mobile" tabindex="-1" id="mobileSidebar" aria-label="Menu navigasi">
+  <div class="offcanvas-header">
+    {% include "partials/_sidebar_brand.html" %}
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Tutup menu"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    <nav class="sidebar-nav" aria-label="Menu utama">{% include "partials/_sidebar_menu.html" %}</nav>
+    {% include "partials/_sidebar_bawah.html" %}
+  </div>
+</div>
+<aside class="sidebar sidebar-desktop glass d-none d-lg-flex flex-column" id="sidebar" aria-label="Menu navigasi">
+  {% include "partials/_sidebar_brand.html" %}
+  <nav class="sidebar-nav" aria-label="Menu utama">{% include "partials/_sidebar_menu.html" %}</nav>
+  {% include "partials/_sidebar_bawah.html" %}
+</aside>

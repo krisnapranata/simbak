@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block judul %}Mode Survei{% endblock %}
+{% block konten %}
+<div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+  <div><h1 class="judul-halaman">Mode Survei</h1>
+    <p class="sub-halaman">Telusur bukti per bab (baca saja). Hanya dokumen berstatus disetujui yang ditampilkan.</p></div>
+  <div class="ms-auto">{% include "penilaian/partials/pilih_periode.html" %}</div>
+</div>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>Bab</th><th class="text-end">EP</th><th>Skor mandiri</th><th>Bukti lengkap</th><th>Ekspor</th></tr></thead>
+  <tbody>
+  {% for bab, c in baris_bab %}
+    <tr><td><a class="fw-semibold" href="{% url 'survei:bab' bab.pk %}{% if periode %}?periode={{ periode.pk }}{% endif %}">{{ bab.kode }}</a> <span class="text-secondary small">{{ bab.nama }}</span></td>
+      <td class="text-end angka">{{ c.jumlah_ep }}</td>
+      <td>{% include "penilaian/partials/bar.html" with nilai=c.persen %}</td>
+      <td>{% include "penilaian/partials/bar.html" with nilai=c.persen_lengkap %}</td>
+      <td class="text-nowrap"><a class="btn btn-sm btn-outline-secondary" href="{% url 'survei:pdf' bab.pk %}{% if periode %}?periode={{ periode.pk }}{% endif %}"><i class="bi bi-filetype-pdf"></i> PDF</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'survei:zip' bab.pk %}{% if periode %}?periode={{ periode.pk }}{% endif %}"><i class="bi bi-file-zip"></i> ZIP</a></td></tr>
+  {% empty %}<tr><td colspan="5" class="text-center text-secondary py-4">Tidak ada bab yang dapat Anda akses.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% endblock %}

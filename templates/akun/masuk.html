@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block judul %}Masuk{% endblock %}
+{% block konten_tamu %}
+<div class="card kartu-masuk">
+  <div class="card-body p-4">
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <div class="logo-simbak"><i class="bi bi-shield-check" aria-hidden="true"></i></div>
+      <div><h1 class="h4 mb-0 fw-bold">SIMBAK</h1><div class="sub-halaman">Sistem Informasi Manajemen Bukti Akreditasi</div></div>
+    </div>
+    <form method="post">{% csrf_token %}
+      {{ form|crispy }}
+      <input type="hidden" name="next" value="{{ next }}">
+      <button class="btn btn-primary w-100 mt-2"><i class="bi bi-box-arrow-in-right me-1"></i>Masuk</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

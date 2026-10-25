@@ -1,0 +1,34 @@
+{% load dokumen_tag %}
+<nav class="navbar custom-navbar topbar" aria-label="Bilah atas">
+  <div class="topbar-left">
+    <button class="topbar-btn glass d-none d-lg-grid" type="button" id="sidebarToggle" aria-label="Sematkan menu" aria-pressed="false"><i class="bi bi-list" aria-hidden="true"></i></button>
+    <button class="topbar-btn glass d-lg-none menu-toggle-topbar" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar" aria-label="Buka menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+    <form action="{% url 'cari' %}" method="get" class="search-box glass d-none d-md-flex" role="search">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      <input type="search" id="topbarSearch" name="q" class="form-control" placeholder="Cari EP atau dokumen…" aria-label="Cari EP atau dokumen" autocomplete="off" value="{{ request.GET.q|default:'' }}">
+      <kbd class="search-kbd">Ctrl K</kbd>
+    </form>
+  </div>
+  <div class="topbar-right">
+    <a href="{% url 'cari' %}" class="topbar-btn glass d-grid d-md-none text-decoration-none" aria-label="Cari"><i class="bi bi-search" aria-hidden="true"></i></a>
+    <a href="{% url 'verifikasi:notifikasi' %}" class="topbar-btn glass notif d-grid text-decoration-none" aria-label="Notifikasi{% if jumlah_notifikasi %} ({{ jumlah_notifikasi }} baru){% endif %}">
+      <i class="bi bi-bell" aria-hidden="true"></i>{% if jumlah_notifikasi %}<span class="badge bg-danger rounded-pill">{{ jumlah_notifikasi }}</span>{% endif %}
+    </a>
+    {% if user|bisa_buat_dokumen %}
+      <a href="{% url 'dokumen:baru' %}" class="btn btn-primary topbar-cta d-none d-md-inline-flex"><i class="bi bi-cloud-arrow-up" aria-hidden="true"></i><span>Unggah Bukti</span></a>
+    {% endif %}
+    <div class="dropdown">
+      <a class="profile-dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu pengguna">
+        <div class="avatar-icon"><i class="bi bi-person" aria-hidden="true"></i></div>
+        <div class="profile-info d-none d-sm-block"><h4>{{ user.get_full_name|default:user.username }}</h4></div>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="{% url 'akun:profil' %}"><i class="bi bi-person me-2"></i>Profil</a></li>
+        <li><a class="dropdown-item" href="{% url 'akun:kata_sandi' %}"><i class="bi bi-key me-2"></i>Ganti kata sandi</a></li>
+        <li><a class="dropdown-item" href="{% url 'panduan' %}"><i class="bi bi-question-circle me-2"></i>Panduan</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><form method="post" action="{% url 'akun:keluar' %}">{% csrf_token %}<button class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Keluar</button></form></li>
+      </ul>
+    </div>
+  </div>
+</nav>

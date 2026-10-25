@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load dokumen_tag %}
+{% block judul %}Cari{% endblock %}
+{% block konten %}
+<h1 class="judul-halaman mb-3">Cari</h1>
+<form method="get" class="d-flex gap-2 mb-3"><input type="search" name="q" value="{{ q }}" autofocus class="form-control" placeholder="Kode standar (mis. PMKP 1), kata di uraian EP, atau judul/nomor dokumen…">
+  <button class="btn btn-primary"><i class="bi bi-search"></i> Cari</button></form>
+{% if q|length < 2 %}<p class="small text-secondary">Ketik minimal 2 karakter.</p>{% else %}
+<div class="row g-3">
+  <div class="col-lg-6"><div class="card h-100"><div class="card-body"><h2 class="h6 fw-bold">Elemen penilaian ({{ daftar_ep|length }})</h2>
+    <ul class="list-group list-group-flush small">{% for ep in daftar_ep %}
+      <li class="list-group-item px-0"><a class="fw-semibold" href="{% url 'penilaian:ep' ep.pk %}">{{ ep }}</a> <span class="text-secondary">{{ ep.uraian|truncatechars:120 }}</span></li>
+    {% empty %}<li class="list-group-item px-0 text-secondary">Tidak ditemukan.</li>{% endfor %}</ul></div></div></div>
+  <div class="col-lg-6"><div class="card h-100"><div class="card-body"><h2 class="h6 fw-bold">Dokumen ({{ daftar_dokumen|length }})</h2>
+    <ul class="list-group list-group-flush small">{% for d in daftar_dokumen %}
+      <li class="list-group-item px-0 d-flex flex-wrap align-items-center gap-2"><a class="fw-semibold" href="{% url 'dokumen:detail' d.pk %}">{{ d }}</a> {% status_dokumen d %} <span class="text-secondary">{{ d.pokja.kode }}</span></li>
+    {% empty %}<li class="list-group-item px-0 text-secondary">Tidak ditemukan.</li>{% endfor %}</ul></div></div></div>
+</div>
+{% endif %}
+{% endblock %}

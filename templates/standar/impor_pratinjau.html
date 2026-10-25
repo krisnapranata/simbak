@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block judul %}Pratinjau Impor{% endblock %}
+{% block konten %}
+<a href="{% url 'standar:impor' %}" class="small"><i class="bi bi-arrow-left"></i> Impor Standar</a>
+<h1 class="judul-halaman mt-2">{{ log.nama_file }}</h1>
+<p class="sub-halaman mb-3">{{ log.get_status_display }} · oleh {{ log.diimpor_oleh|default:"CLI" }} · {{ log.dibuat_pada|date:"d M Y H:i" }}
+  {% if log.nonaktifkan_yang_hilang %} · menonaktifkan yang hilang{% endif %}</p>
+
+{% if log.galat %}
+  <div class="alert alert-danger">
+    <h2 class="h6 fw-bold">{{ log.galat|length }} error. Tidak ada data yang disimpan.</h2>
+    <ul class="mb-0 small">{% for g in log.galat %}<li>{{ g }}</li>{% endfor %}</ul>
+  </div>
+{% else %}
+  <div class="card mb-3"><div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Entitas</th><th class="text-end">Dibuat</th><th class="text-end">Diperbarui</th><th class="text-end">Tidak berubah</th></tr></thead>
+      <tbody>
+      {% for label, v in baris_ringkasan %}
+        <tr><td>{{ label }}</td><td class="text-end angka">{{ v.dibuat }}</td><td class="text-end angka">{{ v.diperbarui }}</td><td class="text-end angka">{{ v.tetap }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div></div>
+  {% if log.dinonaktifkan %}
+    <div class="alert alert-warning small">
+      <h2 class="h6 fw-bold">{{ log.dinonaktifkan|length }} akan/telah dinonaktifkan</h2>
+      <ul class="mb-0">{% for d in log.dinonaktifkan %}<li>{{ d }}</li>{% endfor %}</ul>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% if bisa_proses %}
+  <div class="d-flex gap-2">
+    <form method="post" action="{% url 'standar:impor_konfirmasi' log.pk %}">{% csrf_token %}<button class="btn btn-primary"><i class="bi bi-check2 me-1"></i>Konfirmasi &amp; simpan</button></form>
+    <form method="post" action="{% url 'standar:impor_batal' log.pk %}">{% csrf_token %}<button class="btn btn-outline-secondary">Batalkan</button></form>
+  </div>
+{% endif %}
+{% endblock %}

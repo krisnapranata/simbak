@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block judul %}Dashboard{% endblock %}
+{% block konten %}
+<div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+  <div><h1 class="judul-halaman">Dashboard Capaian</h1><p class="sub-halaman">Halo, {{ user.get_full_name|default:user.username }}.</p></div>
+  <div class="ms-auto d-flex flex-wrap align-items-center gap-2">
+    {% include "penilaian/partials/pilih_periode.html" %}
+    <a href="{% url 'penilaian:laporan' %}{% if periode %}?periode={{ periode.pk }}{% endif %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Laporan Excel</a>
+  </div>
+</div>
+{% if not periode %}<div class="alert alert-warning">Belum ada periode akreditasi aktif. Skor penilaian mandiri belum dapat dihitung{% if persiapan %} — lihat langkah persiapan di bawah{% else %}; hubungi komite mutu{% endif %}.</div>{% endif %}
+
+{% if persiapan %}
+<div class="card mb-3 border-primary-subtle"><div class="card-body">
+  <h2 class="h6 fw-bold mb-1"><i class="bi bi-list-check me-1"></i>Langkah persiapan sistem</h2>
+  <p class="small text-secondary">Selesaikan langkah berikut agar pokja dapat mulai bekerja.</p>
+  <ol class="list-unstyled mb-0 d-flex flex-column gap-2 small">
+    {% for l in persiapan %}
+      <li class="d-flex align-items-start gap-2">
+        <span class="langkah-nomor{% if l.selesai %} selesai{% endif %}">{% if l.selesai %}✓{% else %}{{ forloop.counter }}{% endif %}</span>
+        <div>{% if l.selesai %}<span class="text-secondary text-decoration-line-through">{{ l.judul }}</span>
+          {% else %}<span class="fw-semibold">{% if l.url %}<a href="{{ l.url }}">{{ l.judul }}</a>{% else %}{{ l.judul }}{% endif %}</span><div class="text-secondary">{{ l.keterangan }}</div>{% endif %}</div>
+      </li>
+    {% endfor %}
+  </ol>
+</div></div>
+{% endif %}
+
+<div class="card mb-3"><div class="card-body">
+  <div class="d-flex align-items-center gap-2 mb-3"><h2 class="h6 fw-bold mb-0"><i class="bi bi-inbox me-1"></i>Tugas saya</h2>
+    <a href="{% url 'panduan' %}" class="ms-auto small">Bingung harus mulai dari mana? Baca panduan →</a></div>
+  {% if tugas %}
+  <div class="row g-2">
+    {% for t in tugas %}
+      <div class="col-md-6"><a href="{{ t.url }}" class="tugas-item h-100{% if t.penting %} penting{% endif %}">
+        <span class="jumlah angka">{{ t.jumlah }}</span>
+        <span><span class="fw-semibold d-block">{{ t.judul }}</span><span class="small text-secondary">{{ t.keterangan }}</span></span>
+      </a></div>
+    {% endfor %}
+  </div>
+  {% else %}<p class="small text-secondary mb-0">Tidak ada pekerjaan yang menunggu Anda. 👍</p>{% endif %}
+</div></div>
+
+{% if ringkas_target %}
+<div class="card mb-3"><div class="card-body">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-3"><h2 class="h6 fw-bold mb-0"><i class="bi bi-bullseye me-1"></i>Target pokja</h2>
+    <div class="d-flex flex-wrap gap-1 ms-2">{% for kode, label, warna, n in ringkas_target %}<a href="{% url 'penilaian:target_list' %}?periode={{ periode.pk }}&status={{ kode }}" class="badge text-decoration-none {{ warna }}">{{ label }}: {{ n }}</a>{% endfor %}</div>
+    <a href="{% url 'penilaian:target_list' %}?periode={{ periode.pk }}" class="ms-auto small">Semua target →</a></div>
+  {% if target_tertinggal %}
+    <div class="table-responsive"><table class="table table-sm align-middle mb-0">
+      <thead><tr><th>Pokja</th><th>Ukuran</th><th style="min-width: 200px">Progres</th><th class="text-end">Aktual / target</th><th>Tenggat</th><th>Status</th></tr></thead>
+      <tbody>{% for h in target_tertinggal %}
+        <tr><td class="fw-semibold">{{ h.target.pokja.kode }}</td><td class="small">{{ h.target.get_ukuran_display }}</td>
+          <td>{% include "penilaian/partials/progres_target.html" %}</td>
+          <td class="text-end angka small">{{ h.aktual|floatformat:0 }}% / {{ h.nilai_target|floatformat:0 }}%</td>
+          <td class="small text-nowrap">{{ h.target.tenggat|date:"d M Y" }}</td>
+          <td><span class="badge {{ h.warna }}">{{ h.label_status }}</span></td></tr>
+      {% endfor %}</tbody>
+    </table></div>
+  {% else %}<p class="small text-success mb-0"><i class="bi bi-check-circle"></i> Semua target sesuai jadwal atau sudah tercapai.</p>{% endif %}
+</div></div>
+{% endif %}
+
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-xl-3"><div class="card h-100 kartu-stat"><div class="card-body">
+    <div class="label">Capaian penilaian mandiri</div>
+    <div class="nilai angka">{% if total.persen is None %}–{% else %}{{ total.persen|floatformat:1 }}%{% endif %}</div>
+    <div class="small text-secondary">{{ total.dinilai }} dari {{ total.jumlah_ep }} EP dinilai ({{ total.tdd }} TDD)</div></div></div></div>
+  <div class="col-sm-6 col-xl-3"><div class="card h-100 kartu-stat"><div class="card-body">
+    <div class="label">Kelengkapan bukti</div><div class="nilai angka">{{ total.persen_lengkap|floatformat:1 }}%</div>
+    <div class="small text-secondary">{{ total.ep_lengkap }} EP lengkap bukti disetujui</div></div></div></div>
+  <div class="col-sm-6 col-xl-3"><div class="card h-100 kartu-stat"><div class="card-body">
+    <div class="label">EP tanpa bukti</div><div class="nilai angka">{{ jumlah_ep_tanpa_bukti }}</div>
+    <a class="small" href="{% url 'penilaian:kekurangan' %}">Lihat kekurangan bukti →</a></div></div></div>
+  <div class="col-sm-6 col-xl-3"><div class="card h-100 kartu-stat"><div class="card-body">
+    <div class="label">Predikat (perkiraan)</div>
+    {% if tampilkan_predikat %}
+      {% if not predikat_diatur %}<div class="small text-secondary mt-1">Kriteria predikat belum diatur di admin.</div>
+      {% elif predikat %}<div class="nilai text-primary">{{ predikat.nama }}</div>
+      {% else %}<div class="nilai text-danger">Belum memenuhi</div>{% endif %}
+    {% else %}<div class="small text-secondary mt-1">Hanya untuk komite/direktur.</div>{% endif %}</div></div></div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-lg-8"><div class="card h-100">
+    <div class="card-body pb-0"><h2 class="h6 fw-bold">Capaian per bab</h2></div>
+    <div class="table-responsive"><table class="table table-hover align-middle mb-0">
+      <thead><tr><th>Bab</th><th>Pokja</th><th class="text-end">EP</th><th class="text-end">Dinilai</th><th>Skor</th><th>Bukti lengkap</th></tr></thead>
+      <tbody>
+      {% for bab, c in baris_bab %}
+        <tr><td><a class="fw-semibold" href="{% url 'penilaian:bab' bab.pk %}{% if periode %}?periode={{ periode.pk }}{% endif %}">{{ bab.kode }}</a></td>
+          <td class="text-secondary">{{ bab.pokja.kode|default:"–" }}</td>
+          <td class="text-end angka">{{ c.jumlah_ep }}</td><td class="text-end angka">{{ c.dinilai }}</td>
+          <td>{% include "penilaian/partials/bar.html" with nilai=c.persen %}</td>
+          <td>{% include "penilaian/partials/bar.html" with nilai=c.persen_lengkap %}</td></tr>
+      {% empty %}<tr><td colspan="6" class="text-center text-secondary py-4">Tidak ada bab yang dapat Anda akses.</td></tr>{% endfor %}
+      </tbody>
+    </table></div>
+  </div></div>
+  <div class="col-lg-4 d-flex flex-column gap-3">
+    <div class="card"><div class="card-body">
+      <h2 class="h6 fw-bold">Capaian per pokja</h2>
+      <ul class="list-unstyled small mb-0 d-flex flex-column gap-2">{% for pokja, c in per_pokja %}
+        <li class="d-flex align-items-center justify-content-between gap-2"><span>{{ pokja.kode|default:"Tanpa pokja" }}</span>{% include "penilaian/partials/bar.html" with nilai=c.persen %}</li>
+      {% empty %}<li class="text-secondary">–</li>{% endfor %}</ul>
+    </div></div>
+    <div class="card"><div class="card-body">
+      <h2 class="h6 fw-bold">Dokumen per status</h2>
+      <ul class="list-unstyled small mb-0">{% for label, kode, n in status_dokumen %}
+        <li class="d-flex justify-content-between py-1"><a href="{% url 'dokumen:list' %}?status={{ kode }}">{{ label }}</a><span class="angka fw-semibold">{{ n }}</span></li>{% endfor %}</ul>
+    </div></div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4"><div class="card h-100"><div class="card-body">
+    <h2 class="h6 fw-bold">Akan jatuh tempo review</h2>
+    <div class="d-flex flex-wrap gap-1 mb-2">{% for h, n in ringkas_jatuh_tempo %}<span class="badge bg-warning-subtle text-warning-emphasis">≤ {{ h }} hari: {{ n }}</span>{% endfor %}</div>
+    <ul class="list-unstyled small mb-0">{% for d in jatuh_tempo|slice:":15" %}
+      <li class="py-1"><a href="{% url 'dokumen:detail' d.pk %}">{{ d.judul }}</a> <span class="text-secondary">· {{ d.sisa_hari }} hari · {{ d.pokja.kode }}</span></li>
+    {% empty %}<li class="text-secondary">Tidak ada.</li>{% endfor %}</ul>
+  </div></div></div>
+  <div class="col-lg-4"><div class="card h-100"><div class="card-body">
+    <h2 class="h6 fw-bold d-flex">EP tanpa bukti <span class="fw-normal text-secondary ms-1">({{ jumlah_ep_tanpa_bukti }})</span>
+      <a class="ms-auto small fw-normal" href="{% url 'penilaian:kekurangan' %}">semua kekurangan →</a></h2>
+    <ul class="list-unstyled small mb-0">{% for ep in ep_tanpa_bukti %}
+      <li class="py-1"><a href="{% url 'penilaian:ep' ep.pk %}">{{ ep }}</a> <span class="text-secondary">{{ ep.uraian|truncatechars:60 }}</span></li>
+    {% empty %}<li class="text-secondary">Semua EP sudah punya bukti.</li>{% endfor %}</ul>
+  </div></div></div>
+  <div class="col-lg-4"><div class="card h-100"><div class="card-body">
+    <h2 class="h6 fw-bold">Bukti pelaksanaan usang <span class="fw-normal text-secondary">({{ jumlah_bukti_usang }})</span></h2>
+    <p class="small text-secondary">Bukti D yang terbit lebih dari {{ batas_usia_bukti }} bulan sebelum tanggal survei.</p>
+    <ul class="list-unstyled small mb-0">{% for d in bukti_usang %}
+      <li class="py-1"><a href="{% url 'dokumen:detail' d.pk %}">{{ d.judul }}</a> <span class="text-secondary">· {{ d.tanggal_terbit|date:"d M Y" }}</span></li>
+    {% empty %}<li class="text-secondary">{% if periode.tanggal_survei %}Tidak ada.{% else %}Isi tanggal survei pada periode aktif.{% endif %}</li>{% endfor %}</ul>
+  </div></div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block judul %}Rencana Perbaikan{% endblock %}
+{% block konten %}
+<div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+  <div><h1 class="judul-halaman">Perencanaan Perbaikan Strategis</h1><p class="sub-halaman">Tindak lanjut rekomendasi survei per elemen penilaian.</p></div>
+  <div class="ms-auto d-flex flex-wrap align-items-center gap-2">
+    {% include "penilaian/partials/pilih_periode.html" %}
+    <a href="{% url 'pps:ekspor' %}?{{ query }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Ekspor Excel</a>
+    {% if bisa_otomatis and periode %}<form method="post" action="{% url 'pps:otomatis' %}?periode={{ periode.pk }}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary" title="Buat draft untuk EP berskor 0 atau 5"><i class="bi bi-magic me-1"></i>Buat dari penilaian</button></form>{% endif %}
+    {% if bisa_buat %}<a href="{% url 'pps:baru' %}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>PPS baru</a>{% endif %}
+  </div>
+</div>
+<form method="get" class="d-flex flex-wrap align-items-center gap-3 mb-3">
+  {% if periode %}<input type="hidden" name="periode" value="{{ periode.pk }}">{% endif %}
+  <div class="form-check mb-0"><input class="form-check-input" type="checkbox" id="pj-saya" name="pj" value="saya" onchange="this.form.submit()" {% if request.GET.pj == "saya" %}checked{% endif %}>
+    <label class="form-check-label small" for="pj-saya">Hanya PPS yang saya pegang</label></div>
+  <select name="status" onchange="this.form.submit()" class="form-select form-select-sm w-auto">
+    {% for v, l in form.fields.status.choices %}<option value="{{ v }}" {% if form.status.value == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+  </select>
+</form>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover align-top mb-0">
+  <thead><tr><th>EP</th><th>Rekomendasi</th><th>Rencana kegiatan</th><th>PJ</th><th>Tenggat</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for p in daftar_pps %}
+    <tr>
+      <td class="text-nowrap"><a class="fw-semibold" href="{% url 'pps:ubah' p.pk %}">{{ p.elemen_penilaian }}</a></td>
+      <td class="small">{{ p.rekomendasi|truncatechars:120 }}</td>
+      <td class="small text-secondary">{{ p.rencana_kegiatan|truncatechars:120|default:"–" }}</td>
+      <td class="small">{{ p.pj|default:"–" }}</td>
+      <td class="text-nowrap small {% if p.terlambat %}fw-semibold text-danger{% endif %}">{{ p.tenggat|date:"d M Y"|default:"–" }}{% if p.terlambat %} <i class="bi bi-exclamation-triangle-fill"></i>{% endif %}</td>
+      <td><span class="badge {% if p.status == 'selesai' %}bg-success-subtle text-success-emphasis{% elif p.status == 'berjalan' %}bg-info-subtle text-info-emphasis{% else %}bg-secondary-subtle text-secondary-emphasis{% endif %}">{{ p.get_status_display }}</span></td>
+    </tr>
+  {% empty %}<tr><td colspan="6" class="text-center text-secondary py-4">Belum ada rencana perbaikan.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% endblock %}

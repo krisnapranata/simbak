@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block judul %}Periode Akreditasi{% endblock %}
+{% block konten %}
+<div class="d-flex align-items-center gap-3 mb-3">
+  <h1 class="judul-halaman">Periode Akreditasi</h1>
+  <a href="{% url 'penilaian:periode_baru' %}" class="btn btn-primary ms-auto"><i class="bi bi-plus-lg me-1"></i>Periode baru</a>
+</div>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>Nama</th><th>Mulai</th><th>Survei</th><th>Status</th><th class="text-end">EP dinilai</th><th></th></tr></thead>
+  <tbody>
+  {% for p in daftar_periode %}
+    <tr><td class="fw-semibold">{{ p.nama }}{% if p.aktif %} <span class="badge bg-success-subtle text-success-emphasis">aktif</span>{% endif %}</td>
+      <td>{{ p.tanggal_mulai|date:"d M Y" }}</td><td>{{ p.tanggal_survei|date:"d M Y"|default:"–" }}</td>
+      <td>{{ p.get_status_display }}</td><td class="text-end angka">{{ p.jumlah_penilaian }}</td>
+      <td class="text-end text-nowrap">
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'penilaian:periode_ubah' p.pk %}">Ubah</a>
+        {% if not p.aktif %}<form class="d-inline" method="post" action="{% url 'penilaian:periode_aktifkan' p.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-primary">Aktifkan</button></form>{% endif %}
+      </td></tr>
+  {% empty %}<tr><td colspan="6" class="text-center text-secondary py-4">Belum ada periode.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% endblock %}

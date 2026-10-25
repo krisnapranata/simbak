@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block judul %}Dokumen Bukti{% endblock %}
+{% block konten %}
+<div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+  <div><h1 class="judul-halaman">Dokumen Bukti</h1><p class="sub-halaman">Regulasi dan bukti pelaksanaan beserta status verifikasinya.</p></div>
+  {% if bisa_buat %}<a href="{% url 'dokumen:baru' %}" class="btn btn-primary ms-auto"><i class="bi bi-cloud-arrow-up me-1"></i>Unggah dokumen</a>{% endif %}
+</div>
+<form class="row g-2 mb-3" hx-get="{% url 'dokumen:list' %}" hx-target="#tabel-dokumen"
+      hx-trigger="input changed delay:300ms from:input, change from:select" hx-push-url="true">
+  <div class="col-md-4"><input type="search" name="q" value="{{ form.q.value|default:'' }}" placeholder="Cari judul atau nomor…" class="form-control"></div>
+  {% for f in form %}{% if f.name != "q" %}
+    <div class="col-sm-6 col-md-3"><select name="{{ f.name }}" class="form-select">
+      {% for value, label in f.field.choices %}<option value="{{ value }}" {% if f.value == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select></div>
+  {% endif %}{% endfor %}
+</form>
+<div id="tabel-dokumen">{% include "dokumen/partials/dokumen_tabel.html" %}</div>
+{% endblock %}

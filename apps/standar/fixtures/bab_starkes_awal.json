@@ -1,0 +1,250 @@
+[
+  {
+    "model": "standar.kelompokstandar",
+    "fields": {
+      "kode": "KMRS",
+      "nama": "Kelompok Manajemen Rumah Sakit",
+      "urutan": 1,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.kelompokstandar",
+    "fields": {
+      "kode": "KPBP",
+      "nama": "Kelompok Pelayanan Berfokus pada Pasien",
+      "urutan": 2,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.kelompokstandar",
+    "fields": {
+      "kode": "KSKP",
+      "nama": "Kelompok Sasaran Keselamatan Pasien",
+      "urutan": 3,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.kelompokstandar",
+    "fields": {
+      "kode": "KPN",
+      "nama": "Kelompok Program Nasional",
+      "urutan": 4,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KMRS"
+      ],
+      "kode": "TKRS",
+      "nama": "Tata Kelola Rumah Sakit",
+      "urutan": 1,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KMRS"
+      ],
+      "kode": "KPS",
+      "nama": "Kompetensi dan Kewenangan Staf",
+      "urutan": 2,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KMRS"
+      ],
+      "kode": "MFK",
+      "nama": "Manajemen Fasilitas dan Keselamatan",
+      "urutan": 3,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KMRS"
+      ],
+      "kode": "PPI",
+      "nama": "Pencegahan dan Pengendalian Infeksi",
+      "urutan": 4,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KMRS"
+      ],
+      "kode": "PPK",
+      "nama": "Pendidikan dalam Pelayanan Kesehatan",
+      "urutan": 5,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KMRS"
+      ],
+      "kode": "PMKP",
+      "nama": "Peningkatan Mutu dan Keselamatan Pasien",
+      "urutan": 6,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KMRS"
+      ],
+      "kode": "MRMIK",
+      "nama": "Manajemen Rekam Medis dan Informasi Kesehatan",
+      "urutan": 7,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KPBP"
+      ],
+      "kode": "AKP",
+      "nama": "Akses dan Kontinuitas Pelayanan",
+      "urutan": 8,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KPBP"
+      ],
+      "kode": "HPK",
+      "nama": "Hak Pasien dan Keluarga",
+      "urutan": 9,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KPBP"
+      ],
+      "kode": "PP",
+      "nama": "Pengkajian Pasien",
+      "urutan": 10,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KPBP"
+      ],
+      "kode": "PAP",
+      "nama": "Pelayanan dan Asuhan Pasien",
+      "urutan": 11,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KPBP"
+      ],
+      "kode": "PAB",
+      "nama": "Pelayanan Anestesi dan Bedah",
+      "urutan": 12,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KPBP"
+      ],
+      "kode": "PKPO",
+      "nama": "Pelayanan Kefarmasian dan Penggunaan Obat",
+      "urutan": 13,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KPBP"
+      ],
+      "kode": "KE",
+      "nama": "Komunikasi dan Edukasi",
+      "urutan": 14,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KSKP"
+      ],
+      "kode": "SKP",
+      "nama": "Sasaran Keselamatan Pasien",
+      "urutan": 15,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "standar.bab",
+    "fields": {
+      "kelompok": [
+        "KPN"
+      ],
+      "kode": "PROGNAS",
+      "nama": "Program Nasional",
+      "urutan": 16,
+      "dibuat_pada": "2026-01-01T00:00:00Z",
+      "diubah_pada": "2026-01-01T00:00:00Z"
+    }
+  }
+]

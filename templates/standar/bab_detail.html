@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block judul %}{{ bab.kode }}{% endblock %}
+{% block konten %}
+<a href="{% url 'standar:bab_list' %}" class="small"><i class="bi bi-arrow-left"></i> Master Standar</a>
+<h1 class="judul-halaman mt-2">{{ bab.kode }} – {{ bab.nama }}</h1>
+<p class="sub-halaman mb-3">{{ bab.kelompok.nama }}{% if bab.pokja %} · {{ bab.pokja }}{% endif %}
+  · <a href="{% url 'penilaian:bab' bab.pk %}">Penilaian mandiri</a> · <a href="{% url 'survei:bab' bab.pk %}">Telusur survei</a></p>
+
+{% for std in bab.standar.all %}
+  <div class="card mb-3"><div class="card-body">
+    <h2 class="h6 fw-bold">{{ std.kode }}</h2>
+    <p class="pre-line">{{ std.uraian }}</p>
+    {% if std.maksud_tujuan %}
+      <details class="small text-secondary mb-2"><summary>Maksud dan tujuan</summary><p class="pre-line mt-1 mb-0">{{ std.maksud_tujuan }}</p></details>
+    {% endif %}
+    <div class="table-responsive"><table class="table table-sm align-top mb-0">
+      <thead><tr><th style="width: 4rem">EP</th><th>Uraian</th><th style="width: 11rem">Jenis bukti</th></tr></thead>
+      <tbody>
+      {% for ep in std.elemen_penilaian.all %}
+        <tr>
+          <td class="fw-semibold"><a href="{% url 'penilaian:ep' ep.pk %}">{{ ep.kode }}</a></td>
+          <td class="pre-line">{{ ep.uraian }}</td>
+          <td>{% for kode in ep.jenis_bukti %}<span class="chip-bukti me-1">{{ kode }}</span>{% endfor %}
+            {% if bisa_unggah_bukti %}<a class="d-block small mt-1" href="{% url 'dokumen:baru' %}?ep={{ ep.pk }}">+ unggah bukti</a>{% endif %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3" class="text-secondary">Belum ada EP.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </div></div>
+{% empty %}
+  <div class="alert alert-info">Belum ada standar pada bab ini. Impor master standar dari Excel.</div>
+{% endfor %}
+<p class="small text-secondary">R = Regulasi · D = Dokumen · O = Observasi · W = Wawancara · S = Simulasi</p>
+{% endblock %}

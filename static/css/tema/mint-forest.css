@@ -1,0 +1,2677 @@
+/* =====================================================================
+   Tema "Mint & Forest Green" (UI TERANG, profesional & sederhana)
+   Spesifikasi: Theme_Mint_Forest_Green.md §15b. Dimuat PALING AKHIR di
+   setiap base, setelah semua CSS modul, supaya override di sini menang.
+
+   Area yang SENGAJA tetap KERTAS (putih, teks gelap) dan tidak ikut tema:
+   .paper, .document-page, .surat-page, .pgp-page, .sgp-page, .bv-doc,
+   kanvas TTD, grafik monitoring. Lihat AGENTS.md §15/§15b.
+   ===================================================================== */
+
+/* ---------- 1. TOKENS ---------- */
+/* Token kanon §15b lebih dulu; token lama dipetakan ke nilai itu supaya
+   CSS modul yang masih memakai nama lamanya ikut terang. */
+:root {
+    /* palet kanon */
+    --mc-page: #E8F8F1;
+    --mc-surface: #FFFFFF;
+    --mc-primary: #087F5B;
+    --mc-primary-hover: #066649;
+    --mc-forest: #173F35;
+    --mc-teal-soft: #DDF4F0;
+    --mc-sage: #F0F5F2;
+    --mc-text: #17352D;
+    --mc-text-muted: #52665E;
+    --mc-border: #CFE3D9;
+    --mc-focus: #0F9F75;
+    --mc-success: #15803D;
+    --mc-warning: #B45309;
+    --mc-danger: #B91C1C;
+    --mc-info: #0E7490;
+
+    --bg-base: var(--mc-page);
+    --bg-elevated: var(--mc-surface);
+    /* Permukaan = putih di atas latar mint (bukan alpha putih di atas gelap) */
+    --glass-bg: rgba(255, 255, 255, 0.92);
+    --glass-bg-hover: #F4FBF8;
+    --glass-bg-strong: #FFFFFF;
+    --glass-border: var(--mc-border);
+    --glass-border-hover: #A9D3C4;
+    --glass-blur: blur(10px) saturate(115%);
+    --glass-shadow: 0 1px 2px rgba(23, 63, 53, .06), 0 6px 16px rgba(23, 63, 53, .06);
+    /* lapisan melayang (modal, dropdown, popup autocomplete) */
+    --glass-solid: rgba(255, 255, 255, 0.98);
+    --accent: var(--mc-primary);
+    --accent-2: var(--mc-forest);
+    --accent-light: var(--mc-focus);
+    --accent-grad: linear-gradient(135deg, #0E9F6E 0%, #087F5B 100%);
+    --accent-glow: 0 6px 16px rgba(8, 127, 91, .22);
+    --accent-soft: rgba(8, 127, 91, .12);
+    --text-primary: var(--mc-text);
+    --text-secondary: var(--mc-text-muted);
+    --text-muted: #5A7269;
+    --success: var(--mc-success);
+    --danger: var(--mc-danger);
+    --warning: var(--mc-warning);
+    --info: var(--mc-info);
+    --radius-xl: 18px;
+    --radius-lg: 14px;
+    --radius-md: 10px;
+    --sidebar-w: 76px;
+    --sidebar-w-open: 240px;
+
+    /* Variabel tema lama dipetakan ke token baru, supaya CSS modul yang
+       masih memakainya ikut terang. */
+    --bg-main: var(--bg-base);
+    --mc-sidebar: #087F5B;
+    --bg-sidebar: linear-gradient(180deg, #087F5B 0%, #087F5B 62%, #0A6B4C 100%);
+    --bg-card: var(--glass-bg);
+    --bg-topbar: var(--mc-surface);
+    --border: var(--glass-border);
+    --text-main: var(--text-primary);
+    --text-light: var(--text-primary);
+    --panel-bg: var(--glass-bg);
+    --panel-text: var(--text-primary);
+    --stat-bg: var(--glass-bg);
+    --icon-gradient: var(--accent-grad);
+}
+
+/* Palet warna modul: <el data-tone="..."> -> --tone-rgb / --tone-fg.
+   Di tema TERANG `--tone-fg` = versi GELAP dari tone (dulu versi terang),
+   karena tint-nya sekarang terang. */
+[data-tone="indigo"], .icon-tile { --tone-rgb: 79, 70, 229; --tone-fg: #4338CA; }
+[data-tone="sky"] { --tone-rgb: 2, 132, 199; --tone-fg: #0369A1; }
+[data-tone="violet"] { --tone-rgb: 124, 58, 237; --tone-fg: #6D28D9; }
+[data-tone="rose"] { --tone-rgb: 225, 29, 72; --tone-fg: #BE123C; }
+[data-tone="amber"] { --tone-rgb: 217, 119, 6; --tone-fg: #B45309; }
+[data-tone="emerald"] { --tone-rgb: 5, 150, 105; --tone-fg: #047857; }
+[data-tone="cyan"] { --tone-rgb: 14, 116, 144; --tone-fg: #0E7490; }
+[data-tone="fuchsia"] { --tone-rgb: 192, 38, 211; --tone-fg: #A21CAF; }
+[data-tone="blue"] { --tone-rgb: 29, 78, 216; --tone-fg: #1D4ED8; }
+[data-tone="orange"] { --tone-rgb: 234, 88, 12; --tone-fg: #C2410C; }
+
+[data-bs-theme="light"] {
+    --bs-body-bg: var(--bg-base);
+    --bs-body-bg-rgb: 232, 248, 241;
+    --bs-body-color: var(--text-primary);
+    --bs-body-color-rgb: 23, 53, 45;
+    --bs-emphasis-color: var(--mc-forest);
+    --bs-secondary-color: var(--text-secondary);
+    --bs-tertiary-color: var(--text-muted);
+    --bs-secondary-bg: var(--mc-sage);
+    --bs-tertiary-bg: #F7FBF9;
+    --bs-border-color: var(--glass-border);
+    --bs-border-color-translucent: var(--glass-border);
+    --bs-primary: var(--mc-primary);
+    --bs-primary-rgb: 8, 127, 91;
+    --bs-primary-text-emphasis: var(--mc-primary-hover);
+    --bs-primary-bg-subtle: rgba(8, 127, 91, .12);
+    --bs-primary-border-subtle: rgba(8, 127, 91, .35);
+    --bs-success: var(--mc-success);
+    --bs-success-rgb: 21, 128, 61;
+    --bs-danger: var(--mc-danger);
+    --bs-danger-rgb: 185, 28, 28;
+    --bs-warning: var(--mc-warning);
+    --bs-warning-rgb: 180, 83, 9;
+    --bs-info: var(--mc-info);
+    --bs-info-rgb: 14, 116, 144;
+    --bs-link-color: var(--mc-primary);
+    --bs-link-color-rgb: 8, 127, 91;
+    --bs-link-hover-color: var(--mc-primary-hover);
+    --bs-link-hover-color-rgb: 6, 102, 73;
+    --bs-border-radius: 10px;
+    --bs-border-radius-lg: var(--radius-lg);
+    --bs-font-sans-serif: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    --bs-focus-ring-color: rgba(15, 159, 117, .35);
+    /* Badge/alert tema gelap (table-*, badge bg-*) tidak boleh pakai krem
+       terang sebagai HOVER di atas teks gelap — lihat bagian 6c. */
+    --bs-table-hover-bg: var(--mc-teal-soft);
+    --bs-table-hover-color: var(--mc-text);
+}
+
+/* Palet lama di CSS legacy (simrs-enterprise.css, baseklaimidrg.css) */
+html[data-bs-theme="light"] {
+    --simrs-bg: var(--bg-base);
+    --simrs-surface: var(--mc-surface);
+    --simrs-primary: var(--mc-primary);
+    --simrs-accent: var(--mc-forest);
+    --simrs-soft: var(--mc-sage);
+    --simrs-border: var(--glass-border);
+    --simrs-shadow: var(--glass-shadow);
+    --light-bg: var(--mc-sage);
+    --border-soft: var(--glass-border);
+}
+
+/* ---------- 2. DASAR ---------- */
+html[data-bs-theme="light"] body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--bs-font-sans-serif);
+}
+
+.glass {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--glass-shadow);
+    color: var(--text-primary);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass { background: var(--mc-surface) !important; }
+}
+
+.icon-tile {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    color: var(--tone-fg);
+    background: rgba(var(--tone-rgb), 0.10);
+    border: 1px solid rgba(var(--tone-rgb), 0.22);
+}
+
+/* Latar mint polos. Bulatan cahaya radial (glow) dari tema gelap SUDAH
+   dihapus — §15b: "hilangkan ... dekorasi radial glow yang berasal dari
+   tema lama". */
+.bg-orbs {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    background: var(--bg-base);
+}
+.bg-orbs span { display: none; }
+
+:focus-visible {
+    outline: 2px solid var(--mc-focus) !important;
+    outline-offset: 2px;
+}
+::selection { background: rgba(8, 127, 91, .22); color: var(--mc-text); }
+* { scrollbar-color: rgba(23, 63, 53, .22) transparent; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: rgba(23, 63, 53, .20); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- 3. SHELL: app-main, sidebar, topbar, footer ---------- */
+/* new_base.css memposisikan navbar/footer `fixed` dan memberi .content-area
+   margin-left 72px + padding atas 60px. Di tema ini topbar/konten/footer
+   mengalir di dalam .app-main, dan hanya sidebar yang fixed. */
+.content-area.app-main {
+    margin-left: calc(var(--sidebar-w) + 32px) !important;
+    padding: 16px 20px 16px 0 !important;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: transparent !important;
+    color: var(--text-primary);
+    transition: margin-left 220ms ease !important;
+}
+.content-area { background: transparent !important; color: var(--text-primary); }
+.app-main > #workspace {
+    flex: 1 0 auto;
+    padding: 0 !important;
+}
+
+/* --- sidebar desktop: HOVER-EXPAND ---
+   Ramping 76px; melebar 240px saat :hover / :focus-within dan MENUTUPI
+   konten (overlay). .app-main tidak ikut bergeser, kecuali mode pin.
+   Lebar sengaja TANPA !important: aturan :hover di bawah harus bisa
+   menang. Versi sebelumnya mengunci `width: ... !important`, dan new_base.css
+   punya `.sidebar-desktop:not(.collapsed){width:270px}` — keduanya membuat
+   :hover tidak berefek. */
+/* --- Latar sidebar: Mint & Forest Green (permintaan user 2026-10-19).
+   Semua teks turunan (link, group title, brand, submenu, kartu profil &
+   bantuan) harus ikut jadi putih/putih-transparan — warna gelap yang
+   sekarang menimpa dipakai hanya untuk mode terang. Kontras putih di atas
+   gradasi ini: 5.0:1 (atas) .. 10.6:1 (bawah), semua >= 4.5:1. */
+.sidebar-desktop.sidebar,
+.offcanvas.sidebar {
+    background-color: var(--mc-sidebar) !important;
+    background-image: var(--bg-sidebar) !important;
+    color: #fff;
+    border-right: 1px solid rgba(255, 255, 255, .14);
+}
+.sidebar-desktop.sidebar:hover,
+body.sidebar-expanded .sidebar-desktop.sidebar,
+body.sidebar-pinned .sidebar-desktop.sidebar { box-shadow: 0 18px 44px rgba(6, 60, 44, .28) !important; }
+
+.sidebar-desktop.sidebar {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    bottom: 16px;
+    z-index: 1040;
+    width: var(--sidebar-w);
+    height: auto;
+    padding: 18px 14px;
+    gap: 16px;
+    border-radius: 16px !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+    transition: width 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+.sidebar-desktop.sidebar::-webkit-scrollbar { display: none; }
+.sidebar-desktop .sidebar-nav { flex: 1 0 auto; }
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+.sidebar-logo-box {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .92);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    color: var(--mc-primary);
+    font-size: 22px;
+}
+.sidebar-logo-box img { width: 100%; height: 100%; object-fit: contain; }
+.sidebar-brand-text { min-width: 0; }
+.sidebar-brand-name {
+    font-weight: 800;
+    font-size: 15px;
+    line-height: 1.2;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sidebar-brand-sub { font-size: 12px; color: rgba(255, 255, 255, .78); white-space: nowrap; }
+
+.sidebar-group-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: rgba(255, 255, 255, .78);
+    padding: 14px 10px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.sidebar-nav > .sidebar-group-title:first-child { padding-top: 0; }
+
+.sidebar .sidebar-menu,
+.sidebar .sidebar-submenu {
+    list-style: none;
+    padding: 0 !important;
+    margin: 0;
+    gap: 2px;
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    overflow: visible !important;
+    min-height: 0;
+}
+.sidebar .nav-pills.sidebar-menu .nav-link,
+.sidebar .sidebar-link {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 !important;
+    border-radius: 12px !important;
+    border: 1px solid transparent;
+    color: rgba(255, 255, 255, .92) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    background: transparent !important;
+    box-shadow: none !important;
+    transition: background .2s ease, color .2s ease, border-color .2s ease !important;
+}
+.sidebar .sidebar-icon {
+    width: 44px;
+    height: 100%;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+}
+.sidebar .sidebar-link .label { overflow: hidden; text-overflow: ellipsis; }
+.sidebar .sidebar-link:hover {
+    background: rgba(255, 255, 255, .14) !important;
+    color: #fff !important;
+}
+/* --- hover menu MEWAH (permintaan user 2026-10-17) ---
+   1) `.sb-sorot`: SATU pil bercahaya per <nav class="sidebar-nav"> yang MELUNCUR
+      ke menu di bawah mouse (theme-glass.js::sorotSidebar). Dipasang JS; tanpa
+      JS (atau HP/offcanvas) hover per-link di atas tetap jalan.
+   2) Saat JS aktif (`.sb-sorot-on` di nav) latar hover per-link dimatikan
+      supaya tidak dobel dengan pil; link + ikon tetap bereaksi (geser, ikon
+      membesar, bilah aksen kiri).
+   Link `overflow:hidden` + latar `transparent !important` (aturan di atas):
+   pil harus di BELAKANG link (z-index 0 vs link 1), bukan di dalamnya. */
+.sidebar .sidebar-nav { position: relative; }
+.sidebar .sb-sorot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 44px;
+    width: 100%;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 12px;
+    opacity: 0;
+    background: rgba(255, 255, 255, .14);
+    border: 1px solid rgba(255, 255, 255, .22);
+    box-shadow: 0 4px 12px rgba(6, 60, 44, .22);
+    transition: transform .28s cubic-bezier(.22, 1, .36, 1), height .28s cubic-bezier(.22, 1, .36, 1),
+                width .28s cubic-bezier(.22, 1, .36, 1), opacity .2s ease;
+}
+.sidebar .sb-sorot::before {
+    /* bilah aksen kiri (forest green) */
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 22%;
+    bottom: 22%;
+    width: 3px;
+    border-radius: 3px;
+    background: #7BE8C4;
+}
+.sidebar .sb-sorot::after {
+    /* kilau tipis yang lewat setiap kali pil berpindah */
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .30) 50%, transparent 70%);
+    background-size: 220% 100%;
+    background-position: 120% 0;
+}
+.sidebar .sb-sorot.kilau::after { animation: sbKilau .6s ease-out; }
+@keyframes sbKilau { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+.sidebar .sb-sorot.tampil { opacity: 1; }
+.sidebar .sidebar-nav .sidebar-link { position: relative; z-index: 1; }
+.sidebar .sidebar-nav.sb-sorot-on .sidebar-link:hover:not(.active) {
+    background: transparent !important;
+}
+.sidebar .sidebar-link .sidebar-icon {
+    transition: transform .25s cubic-bezier(.34, 1.56, .64, 1), filter .2s ease;
+}
+.sidebar .sidebar-link:hover .sidebar-icon {
+    transform: scale(1.2) rotate(-6deg);
+}
+.sidebar .sidebar-link .label { transition: transform .25s ease, letter-spacing .25s ease; }
+.sidebar .sidebar-link:hover .label { transform: translateX(3px); letter-spacing: .01em; }
+.sidebar .sidebar-link:hover { color: #fff !important; }
+@media (prefers-reduced-motion: reduce) {
+    .sidebar .sb-sorot, .sidebar .sidebar-link .sidebar-icon, .sidebar .sidebar-link .label { transition: none; }
+    .sidebar .sb-sorot.kilau::after { animation: none; }
+    .sidebar .sidebar-link:hover .sidebar-icon { transform: none; }
+}
+/* Bootstrap: `.nav-pills .show > .nav-link` = latar primary. Submenu yang
+   terbuka (.collapse.show) kena aturan itu, jadi tanpa ini SEMUA anaknya biru. */
+.sidebar .show > .nav-link:not(.active),
+.sidebar .show .nav-link:not(.active) { background: transparent !important; }
+/* Aktif = pil PUTIS di atas sidebar hijau. Warna hijau solid (#087F5B) dulu
+  emdok dengan latar sidebar yang sekarang sama-sama hijau — indikator
+   "halaman aktif" hilang tanpa error. */
+.sidebar .sidebar-link.active,
+.sidebar .nav-pills .sidebar-link.active {
+    background: #fff !important;
+    border-color: #fff;
+    color: var(--mc-forest) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(6, 60, 44, .28) !important;
+}
+.sidebar .sidebar-link.active .sidebar-icon,
+.sidebar .nav-pills .sidebar-link.active .sidebar-icon { filter: none; }
+.sidebar .sidebar-dropdown-toggle.child-active { color: #A7F3D0 !important; }
+.sidebar-dropdown-toggle .chevron-icon {
+    font-size: 12px !important;
+    margin: 0 12px 0 auto;
+    transition: transform .2s ease, opacity 150ms ease, visibility 150ms ease !important;
+}
+.sidebar-dropdown-toggle[aria-expanded="true"] .chevron-icon { transform: rotate(180deg); }
+.sidebar .sidebar-menu .collapse,
+.sidebar .sidebar-menu .collapsing {
+    margin: 0 !important;
+    border: 0 !important;
+}
+.sidebar .sidebar-submenu {
+    margin: 2px 0 4px 21px;
+    padding-left: 6px !important;
+    border-left: 1px solid rgba(255, 255, 255, .26);
+}
+.sidebar .sidebar-submenu .sidebar-link { height: 40px; min-height: 40px; font-size: 13.5px !important; }
+.sidebar .sidebar-submenu .sidebar-icon { width: 36px; font-size: 15px; }
+
+.sidebar-bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+/* kartu profil & bantuan: permukaan mint lembut */
+.sidebar-profile,
+.sidebar-help-box {
+    background: rgba(255, 255, 255, .12) !important;
+    border: 1px solid rgba(255, 255, 255, .16);
+}
+.sidebar-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px !important;
+    border-radius: var(--radius-md) !important;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.sidebar-avatar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--accent-grad);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+}
+.sidebar-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sidebar-profile-text { min-width: 0; }
+.sidebar-profile-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sidebar-profile-role { font-size: 11.5px; color: rgba(255, 255, 255, .80); }
+.sidebar-help-box {
+    padding: 14px !important;
+    margin: 0 !important;
+    border-radius: var(--radius-md) !important;
+    overflow: hidden;
+}
+.sidebar-help-box h3 { font-size: 14px !important; font-weight: 700; margin-bottom: 4px; color: #fff; white-space: nowrap; }
+.sidebar-help-box p { font-size: 12px !important; line-height: 1.5 !important; color: rgba(255, 255, 255, .80) !important; opacity: 1 !important; margin-bottom: 10px; min-width: 180px; }
+/* Tombol "Hubungi IT" di sidebar hijau: .btn-primary = #087F5B, warna yang
+   SAMA dengan latar sidebar -> 1:1. Pakai putih solid + teks forest. */
+.sidebar .sidebar-help-box .btn-primary,
+.offcanvas.sidebar .sidebar-help-box .btn-primary {
+    background: #fff !important;
+    border-color: #fff !important;
+    color: var(--mc-forest) !important;
+}
+.sidebar .sidebar-help-box .btn-primary:hover { background: var(--mc-teal-soft) !important; }
+
+/* responsive-small.css (max-width:1200px) mengecilkan link sidebar lama
+   (`.sidebar-desktop:not(.collapsed) .sidebar-menu .nav-link {font-size:11px!important}`)
+   dan ikonnya; tanpa ini menu jadi 11px di laptop <= 1200px. */
+.sidebar.sidebar-desktop .sidebar-menu .sidebar-link,
+.offcanvas.sidebar .sidebar-menu .sidebar-link { font-size: 14px !important; padding: 0 !important; }
+.sidebar.sidebar-desktop .sidebar-submenu .sidebar-link,
+.offcanvas.sidebar .sidebar-submenu .sidebar-link { font-size: 13.5px !important; }
+.sidebar .sidebar-menu .sidebar-link .sidebar-icon i { font-size: inherit !important; width: auto !important; }
+
+/* --- keadaan RAMPING (bawaan desktop) ---
+   Disembunyikan dengan opacity + visibility + width/max-height 0, bukan
+   display:none, supaya bisa dianimasikan. */
+@media (min-width: 992px) {
+    .sidebar-desktop .label,
+    .sidebar-desktop .sidebar-group-title {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 150ms ease, visibility 150ms ease;
+    }
+    .sidebar-desktop .sidebar-link .label,
+    .sidebar-desktop .sidebar-brand-text,
+    .sidebar-desktop .sidebar-profile-text,
+    .sidebar-desktop .chevron-icon {
+        width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .sidebar-desktop .sidebar-help-box,
+    .sidebar-desktop .sidebar-menu .collapse {
+        max-height: 0;
+        overflow: hidden;
+        transition: opacity 150ms ease, visibility 150ms ease, max-height 220ms ease;
+    }
+    .sidebar-desktop .sidebar-menu .collapse { opacity: 0; visibility: hidden; }
+    .sidebar-desktop .sidebar-help-box { padding-top: 0 !important; padding-bottom: 0 !important; border-width: 0 !important; }
+
+    /* --- keadaan MELEBAR: pin --- */
+    body.sidebar-pinned .sidebar-desktop.sidebar { width: var(--sidebar-w-open); }
+    body.sidebar-pinned .content-area.app-main { margin-left: calc(var(--sidebar-w-open) + 32px) !important; }
+    body.sidebar-pinned .sidebar-desktop :is(.label, .sidebar-group-title),
+    body.sidebar-pinned .sidebar-desktop .sidebar-menu .collapse {
+        opacity: 1;
+        visibility: visible;
+    }
+    body.sidebar-pinned .sidebar-desktop :is(.sidebar-link .label, .sidebar-brand-text, .sidebar-profile-text) { width: auto; }
+    body.sidebar-pinned .sidebar-desktop .chevron-icon { width: auto; }
+    body.sidebar-pinned .sidebar-desktop .sidebar-menu .collapse { max-height: 400px; }
+    body.sidebar-pinned .sidebar-desktop .sidebar-help-box { max-height: 220px; padding-top: 14px !important; padding-bottom: 14px !important; border-width: 1px !important; }
+}
+
+/* --- keadaan MELEBAR: hover / fokus keyboard -> sidebar melebar DAN konten
+   ikut bergeser ke kanan (perilaku asli sebelum tema); mouse keluar ->
+   sidebar mengecil dan konten kembali ke kiri.
+   Pemicu utama: body.sidebar-expanded dari theme-glass.js (mouseenter /
+   mouseleave / focusin / focusout). :hover dan body:has() = cadangan CSS.
+   SENGAJA tanpa @media (hover: hover): laptop layar sentuh melaporkan
+   hover:none sehingga sidebar tidak pernah melebar.
+   JANGAN pakai :focus-within: setelah menu diklik mouse, link tetap fokus,
+   jadi sidebar tidak mau mengecil walau mouse sudah di konten. Fokus
+   keyboard ditangani JS (:focus-visible). --- */
+@media (min-width: 992px) {
+    .sidebar-desktop.sidebar:hover ,
+    body.sidebar-expanded .sidebar-desktop.sidebar  { width: var(--sidebar-w-open); }
+    body.sidebar-expanded .content-area.app-main {
+        margin-left: calc(var(--sidebar-w-open) + 32px) !important;
+    }
+    /* cadangan tanpa JS. Aturan TERPISAH: browser tanpa :has() membuang
+       seluruh daftar selektor kalau satu anggotanya tidak dikenal. */
+    body:has(#sidebar:hover) .content-area.app-main { margin-left: calc(var(--sidebar-w-open) + 32px) !important; }
+    body:has(#sidebar :focus-visible) .content-area.app-main { margin-left: calc(var(--sidebar-w-open) + 32px) !important; }
+    .sidebar-desktop.sidebar:hover :is(.label, .sidebar-group-title),
+    body.sidebar-expanded .sidebar-desktop.sidebar :is(.label, .sidebar-group-title),
+    .sidebar-desktop.sidebar:hover .sidebar-menu .collapse,
+    body.sidebar-expanded .sidebar-desktop.sidebar .sidebar-menu .collapse {
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 80ms;
+    }
+    .sidebar-desktop.sidebar:hover :is(.sidebar-link .label, .sidebar-brand-text, .sidebar-profile-text),
+    body.sidebar-expanded .sidebar-desktop.sidebar :is(.sidebar-link .label, .sidebar-brand-text, .sidebar-profile-text) { width: auto; }
+    .sidebar-desktop.sidebar:hover .chevron-icon,
+    body.sidebar-expanded .sidebar-desktop.sidebar .chevron-icon { width: auto; }
+    .sidebar-desktop.sidebar:hover .sidebar-menu .collapse,
+    body.sidebar-expanded .sidebar-desktop.sidebar .sidebar-menu .collapse { max-height: 400px; }
+    .sidebar-desktop.sidebar:hover .sidebar-help-box,
+    body.sidebar-expanded .sidebar-desktop.sidebar .sidebar-help-box { max-height: 220px; padding-top: 14px !important; padding-bottom: 14px !important; border-width: 1px !important; }
+}
+
+/* --- offcanvas mobile (< 992px) --- */
+/* `.offcanvas.sidebar-mobile` specificity-nya SAMA dengan `.offcanvas.sidebar`
+   dan datang LEBIH AKHIR di berkas ini, jadi `background` yang di sini yang
+   menang — bukan yang di aturan sidebar hijau. Karena itu latar Forest Green
+   harus diulang di sini; menyalinnya hanya di satu tempat bikin sidebar HP
+   tetap putih tanpa error apa pun. */
+.offcanvas.sidebar-mobile {
+    --bs-offcanvas-width: min(300px, 86vw) !important;
+    background-color: var(--mc-sidebar) !important;
+    background-image: var(--bg-sidebar) !important;
+    border: 1px solid rgba(255, 255, 255, .14) !important;
+    border-radius: 0 22px 22px 0 !important;
+    box-shadow: 18px 0 44px rgba(6, 60, 44, .28) !important;
+    color: #fff;
+}
+.offcanvas.sidebar-mobile .offcanvas-header { padding: 18px 16px 6px; border: 0; }
+.offcanvas.sidebar-mobile .offcanvas-header .sidebar-brand { padding: 0; flex: 1; }
+.offcanvas.sidebar-mobile .offcanvas-body {
+    padding: 4px 12px 16px;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+.offcanvas.sidebar-mobile .sidebar-bottom { margin-top: 18px; }
+/* Bilah navigasi bawah (.mobile-bottom: melayang 14px dari tepi, tinggi 64px,
+   z-index 9999) menutupi bagian bawah offcanvas; tanpa ruang ini kartu
+   "Hubungi IT" tidak pernah bisa di-scroll sampai terlihat. Angka di sini
+   mengikuti geometri bar di blok @media 991.98px di bawah (64 + 14). */
+@media (max-width: 991.98px) {
+    .offcanvas.sidebar-mobile .offcanvas-body { padding-bottom: calc(64px + 14px + 20px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* --- topbar: transparan, elemennya kaca melayang --- */
+.custom-navbar.topbar {
+    position: sticky !important;
+    top: 16px;
+    left: auto !important;
+    right: auto !important;
+    z-index: 1020;
+    height: auto !important;
+    min-height: 44px;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+.topbar .topbar-left { display: flex; align-items: center; gap: 12px; flex: 1 1 auto; min-width: 0; }
+.topbar .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.topbar-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    place-items: center;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    font-size: 20px;
+    cursor: pointer;
+    position: relative;
+    transition: background .2s ease, border-color .2s ease;
+}
+.topbar-btn:hover { background: var(--glass-bg-hover) !important; border-color: var(--glass-border-hover) !important; }
+.topbar-btn.menu-toggle-topbar { display: grid; }
+.topbar-btn[aria-pressed="true"] { border-color: rgba(8, 127, 91, .45) !important; }
+.topbar .notif .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 18px;
+    display: block;
+    background: var(--mc-danger) !important;
+    color: #fff !important;
+    border-radius: 50rem !important;
+}
+.topbar .search-box {
+    height: 44px;
+    width: 100%;
+    max-width: 420px;
+    flex: 1 1 auto;
+    padding: 0 10px 0 14px;
+    gap: 10px;
+    align-items: center;
+    border-radius: var(--radius-md) !important;
+    cursor: text;
+    margin: 0;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.topbar .search-box > i { color: var(--text-secondary); font-size: 16px; }
+.topbar .search-box:focus-within {
+    border-color: var(--mc-focus) !important;
+    box-shadow: 0 0 0 .25rem rgba(15, 159, 117, .22);
+}
+.custom-navbar .search-box input.form-control,
+.custom-navbar .search-box input.form-control:focus {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0;
+    color: var(--text-primary) !important;
+    font-size: 14px;
+}
+.search-box input::placeholder { color: var(--text-muted) !important; }
+.search-box input::-webkit-search-cancel-button { filter: none; opacity: .5; }
+.search-kbd {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--mc-sage);
+    border: 1px solid var(--glass-border);
+    border-radius: 7px;
+    padding: 2px 7px;
+    white-space: nowrap;
+    box-shadow: none;
+}
+.topbar-cta { height: 44px; align-items: center; gap: 8px; padding: 0 18px; border-radius: var(--radius-md) !important; font-weight: 600; font-size: 14px; white-space: nowrap; }
+.topbar .profile-dropdown { gap: 10px; }
+.avatar-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 17px !important;
+    background: var(--accent-grad) !important;
+    box-shadow: none !important;
+    color: #fff;
+}
+.topbar .profile-info h4 { font-size: 13px; font-weight: 700; color: var(--text-primary); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* --- footer: transparan, mengalir di bawah konten --- */
+.new-footer {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    background: transparent !important;
+    border: 0 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 20px 0 4px !important;
+    text-align: center;
+}
+.new-footer p { color: var(--text-muted) !important; font-size: 12px !important; }
+
+@media (max-width: 991.98px) {
+    .content-area.app-main { margin-left: 16px !important; padding: 12px 16px 12px 0 !important; gap: 14px; }
+    .custom-navbar.topbar { top: 12px; }
+    /* --- Bilah bawah HP: FLOATING & MORPHING (permintaan user 2026-10-19) ---
+       Bar MELAYANG: jarak 14px dari tepi (kiri/kanan/bawah + safe-area),
+       sudut membulat, bayangan jatuh — terlihat sebagai lapisan di atas
+       konten, bukan menempel tepi layar. Muncul dengan slide-up (`mb-naik`).
+       Item aktif BERUBAH BENTUK jadi pil PUTIH + teks/ikon forest (pola
+       sama dengan menu sidebar aktif §2a: putih + --mc-primary = 5.0:1).
+       Tombol utama "Menu" naik keluar bar sebagai lingkaran putih
+       (`.mb-fab`) dengan spring `mb-pop`; ikonnya berganti ☰ -> ✕ saat
+       offcanvas terbuka (`#mobileSidebar.show ~ …` — offcanvas itu anak
+       <body> TEPAT SEBELUM bar ini, jadi pemilih saudara bekerja tanpa JS).
+       Putih di atas Forest Green tetap 5.0:1. Tiga hal yang mudah dirusak:
+       (1) animasi memakai properti `scale`, BUKAN transform — fill-mode
+           `both` MENGUNCI transform di keyframe terakhir selamanya, jadi
+           `:active` dan rotasi ikon ☰/✕ setelahnya mati diam-diam;
+       (2) `.mobile-item` = `flex: 1 1 0` (slot sama rata); dengan
+           space-around saja label "R. Jalan" membungkus di layar 360px;
+       (3) `#mobileSidebar.show ~ …` bergantung pada URUTAN include di
+           new_base.html: sidebar (baris 57) sebelum mobile_bottom (81). */
+    .mobile-bottom {
+        left: 14px;
+        right: 14px;
+        bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+        height: 64px;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, .18);
+        background-color: var(--mc-sidebar) !important;
+        background-image: var(--bg-sidebar) !important;
+        box-shadow: 0 12px 26px rgba(6, 60, 44, .30), 0 3px 8px rgba(6, 60, 44, .20);
+        animation: mb-naik .5s cubic-bezier(.22, 1.45, .36, 1) both;
+    }
+    .mobile-bottom .mobile-item {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 4px 6px;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: transform .18s ease, background-color .25s ease, box-shadow .25s ease;
+    }
+    /* Putih PENUH (#fff), bukan .92: diukur 4.50:1 dengan .92 — pas di ambang
+       WCAG AA, dan label 12px butuh 4.5. Dengan #fff = 5.0:1. Pembedaan item
+       aktif tetap dari pil putih + tebal, bukan dari meredupkan yang lain. */
+    .mobile-bottom .mobile-item,
+    .mobile-bottom .mobile-item span,
+    .mobile-bottom .mobile-item i { color: #fff !important; }
+    .mobile-bottom .mobile-item i { font-size: 21px; }
+    .mobile-bottom .mobile-item:active { transform: scale(.94); }
+    .mobile-bottom .mobile-item.aktif {
+        background: #fff;
+        box-shadow: 0 6px 14px rgba(6, 60, 44, .28);
+        animation: mb-bentuk .45s cubic-bezier(.2, 1.55, .4, 1) .22s both;
+    }
+    .mobile-bottom .mobile-item.aktif,
+    .mobile-bottom .mobile-item.aktif span,
+    .mobile-bottom .mobile-item.aktif i { color: var(--mc-primary) !important; }
+    .mobile-bottom .mobile-item.aktif span { font-weight: 700; }
+    .mobile-bottom .mobile-item.aktif:active { box-shadow: 0 2px 6px rgba(6, 60, 44, .32); }
+    .mobile-bottom .mobile-item.mb-fab { padding: 0 4px; }
+    /* Tombol utama "Menu": lingkaran --mc-forest (GELAP) + ikon putih.
+       Sengaja BUKAN putih: pil item AKTIF juga putih, jadi lingkaran putih
+       selalu terbaca "sedang aktif" (dikeluhkan user 2026-10-19: "menu
+       samping kanan selalu seperti active"). Cincin putih tipis
+       memisahkannya dari bar hijau: putih .38 di atas #087F5B ≈ **4.5:1**
+       terhadap lingkaran gelap. Putih di atas #173F35 = **11.5:1**. */
+    .mobile-bottom .mb-fab-lingkaran {
+        position: relative;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 52px;
+        height: 52px;
+        margin-top: -18px;
+        border-radius: 50%;
+        background: var(--mc-forest);
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, .38), 0 8px 18px rgba(6, 60, 44, .38);
+        animation: mb-pop .6s cubic-bezier(.2, 1.6, .4, 1) .16s both;
+    }
+    .mobile-bottom .mobile-item.mb-fab i {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-size: 24px !important;
+        color: #fff !important;
+        transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), opacity .2s ease;
+    }
+    .mobile-bottom .mobile-item.mb-fab .mb-x { opacity: 0; transform: rotate(-90deg) scale(.4); }
+    #mobileSidebar.show ~ .mobile-bottom .mb-ic { opacity: 0; transform: rotate(90deg) scale(.4); }
+    #mobileSidebar.show ~ .mobile-bottom .mb-x { opacity: 1; transform: rotate(0deg) scale(1); }
+    @keyframes mb-naik {
+        from { opacity: 0; transform: translateY(calc(100% + 26px)); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes mb-pop {
+        from { scale: .4; }
+        55%  { scale: 1.16; }
+        78%  { scale: .95; }
+        to   { scale: 1; }
+    }
+    @keyframes mb-bentuk {
+        from { scale: .66; }
+        62%  { scale: 1.05; }
+        to   { scale: 1; }
+    }
+}
+/* Animasi entrance/spring dimatikan kalau user minta gerakan minimal —
+   bilah tetap tampil normal, hanya tanpa slide-up/bounce. */
+@media (max-width: 991.98px) and (prefers-reduced-motion: reduce) {
+    .mobile-bottom,
+    .mobile-bottom .mobile-item.aktif,
+    .mobile-bottom .mb-fab-lingkaran { animation: none; }
+    .mobile-bottom .mobile-item,
+    .mobile-bottom .mb-fab-lingkaran,
+    .mobile-bottom .mobile-item.mb-fab i { transition: none; }
+}
+@media (max-width: 575.98px) {
+    .app-main > #workspace { padding-top: 14px !important; }
+}
+
+/* Shell legacy (templates/base.html): navbar bg-dark + .simrs-footer */
+.dashboard-body > .navbar.bg-dark,
+.dashboard-body .navbar.bg-dark {
+    background: var(--mc-surface) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: none !important;
+}
+/* Navbar itu tetap memakai kelas Bootstrap `bg-dark`, jadi `.navbar-dark
+   .navbar-brand`/`.nav-link` menulis teks putih — di latar putih itu 1:1.
+   yang perlu diluruskan teksnya, bukan lagi latar. */
+.dashboard-body .navbar.bg-dark .navbar-brand,
+.dashboard-body .navbar.bg-dark .navbar-nav .nav-link,
+.dashboard-body .navbar.bg-dark .navbar-toggler,
+.dashboard-body .navbar.bg-dark .navbar-text {
+    color: var(--mc-text) !important;
+}
+.dashboard-body .navbar.bg-dark .navbar-brand:hover,
+.dashboard-body .navbar.bg-dark .navbar-nav .nav-link:hover,
+.dashboard-body .navbar.bg-dark .nav-link:focus {
+    color: var(--mc-primary) !important;
+}
+.dashboard-body .navbar.bg-dark .navbar-nav .nav-link.active {
+    color: var(--mc-primary) !important;
+}
+.dashboard-body .navbar.bg-dark .navbar-toggler { border-color: var(--mc-border); }
+.simrs-footer {
+    background: transparent !important;
+    border-top: 0 !important;
+    color: var(--text-muted) !important;
+}
+.simrs-footer p { color: var(--text-muted) !important; font-size: 12px; }
+
+/* ---------- 4. DASHBOARD (bento) ---------- */
+.dash-bento { display: flex; flex-direction: column; gap: 20px; }
+.dash-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 34px 36px !important;
+    border-radius: var(--radius-xl) !important;
+    background: linear-gradient(120deg, var(--mc-teal-soft) 0%, #FFFFFF 68%) !important;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    border-color: rgba(8, 127, 91, .22) !important;
+    box-shadow: var(--glass-shadow);
+}
+/* Cahaya emanasi di kiri bawah: bikin kartu terasa "menyala", bukan datar.
+   Dipisah dari background supaya bisa beranimasi tanpa menimpa gradasi. */
+.dash-hero-glow {
+    position: absolute;
+    left: -10%;
+    bottom: -60%;
+    width: 60%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(15, 159, 117, .10), transparent 68%);
+    filter: blur(24px);
+    pointer-events: none;
+}
+/* Dua bulat warna yang melayang pelan (aurora). */
+.dash-hero-aurora {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(42px);
+    opacity: .5;
+}
+.aurora-1, .aurora-2 { display: none; }
+@keyframes dash-glow-breathe {
+    0%, 100% { opacity: .75; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.06); }
+}
+@keyframes dash-aurora {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-18px, 16px) scale(1.12); }
+}
+/* Isi hero harus di atas cahaya/aurora, tidak choked oleh position absolute. */
+.dash-hero-main { position: relative; z-index: 2; min-width: 0; }
+
+.pill-glass {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 50rem;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mc-primary);
+    background: var(--mc-teal-soft);
+    border: 1px solid rgba(8, 127, 91, .22);
+}
+.dash-pill {
+    color: var(--mc-primary);
+    background: rgba(255, 255, 255, .72);
+    border-color: rgba(8, 127, 91, .28);
+    padding: 5px 14px;
+    font-size: 12.5px;
+    letter-spacing: .02em;
+}
+.dash-hero h1 {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.14;
+    margin: 12px 0 12px;
+    color: var(--mc-forest);
+    text-shadow: none;
+}
+.dash-hero p { font-size: 15px; color: var(--text-secondary); margin: 0; }
+
+/* Kartu penyemate: kotak kaca kecil dengan emoji + judul tebal. */
+.dash-semangat {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 620px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: var(--radius-lg);
+    background: var(--mc-sage);
+    border: 1px solid var(--mc-border);
+}
+.dash-semangat-ikon {
+    font-size: 24px;
+    line-height: 1.2;
+    flex-shrink: 0;
+}
+.dash-semangat-judul {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--mc-forest);
+    margin-bottom: 2px;
+}
+.dash-semangat-kalimat {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--mc-text-muted);
+    margin: 0;
+}
+
+/* Dua motto kecil di bawah, separator berupa bullet. */
+.dash-motto {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    font-size: 12.5px;
+    color: var(--mc-text-muted);
+}
+.dash-motto i { color: var(--mc-primary); }
+
+/* Tiga chip ringkasan di hero. Angkanya (`b`) putih polos: gradasi teks di
+   sini tidak perlu — kontras putih di atas gradasi hero sudah cukup, dan
+   `background-clip:text` mudah ikut rusak kalau ada override warisan. */
+.dash-cek { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.dash-cek-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--mc-text-muted);
+    background: var(--mc-surface);
+    border: 1px solid var(--mc-border);
+}
+.dash-cek-item i { color: var(--mc-primary); font-size: 14px; }
+.dash-cek-item b {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--mc-forest);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+.dash-clock {
+    position: relative;
+    z-index: 2;
+    min-width: 220px;
+    padding: 18px 24px !important;
+    background: var(--glass-bg-strong) !important;
+    border-radius: var(--radius-lg) !important;
+}
+.dash-clock-date { font-size: 13px; color: var(--text-secondary); }
+.dash-clock-time {
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em;
+    margin: 4px 0 6px;
+    /* Warna dasar DULUAN ditulis sebagai `color`, bukan `transparent` polos.
+       Gradasi teks diaktifkan hanya di dalam `@supports` — kalau
+       `background-clip:text` tidak didukung (atau ada leluhur yang providing
+       `background-image` sehingga clip-nya tidak kena), jam akan hilang
+       TOTAL tanpa error: teks transparan di atas transparan. Gejalanya
+       "jam tidak tampil" yang tidak punya penyebab di log mana pun. */
+    color: #173F35;
+}
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .dash-clock-time {
+        background: linear-gradient(135deg, #0E9F6E 0%, #087F5B 55%, #173F35 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+}
+.dash-clock-wib {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    color: var(--mc-primary);
+}
+/* Titik "live" di sebelah WIB: denyut pelan sebagai penanda jam ini berjalan. */
+.dash-live {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--mc-success);
+    box-shadow: 0 0 0 0 rgba(21, 128, 61, .5);
+    animation: dash-live-pulse 2.4s ease-out infinite;
+}
+@keyframes dash-live-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, .55); }
+    70% { box-shadow: 0 0 0 9px rgba(52, 211, 153, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}
+
+/* Kartu statistik: warna DATANYA sendiri dari `data-tone` di markup.
+   `--tone-rgb` hanya ada kalau elemen itu (atau leluhurnya) punya
+   `data-tone`; tanpa itu gradasi hilang dan kartu jadi abu-abu. */
+.dash-stat {
+    position: relative;
+    display: flex;
+    flex-direction: column !important;
+    align-items: stretch;
+    gap: 14px;
+    padding: 20px !important;
+    height: 100%;
+    overflow: hidden;
+    background:
+        linear-gradient(160deg, rgba(var(--tone-rgb, 8, 127, 91), .07), transparent 62%),
+        var(--glass-bg) !important;
+    border-color: rgba(var(--tone-rgb, 8, 127, 91), .22) !important;
+    transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.dash-stat::after {
+    content: '';
+    position: absolute;
+    inset: auto -30% -70% auto;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--tone-rgb, 8, 127, 91), .10), transparent 70%);
+    pointer-events: none;
+}
+.dash-stat:hover {
+    transform: translateY(-4px);
+    border-color: rgba(var(--tone-rgb, 8, 127, 91), .40) !important;
+    box-shadow: 0 12px 28px rgba(23, 63, 53, .12);
+}
+.dash-stat .icon-tile {
+    width: 46px;
+    height: 46px;
+    font-size: 21px;
+    position: relative;
+    z-index: 1;
+}
+.dash-stat-body { position: relative; z-index: 1; min-width: 0; }
+.dash-stat-num {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em;
+}
+.dash-stat-num small { font-size: 18px; font-weight: 700; color: var(--tone-fg); }
+.dash-stat-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 2px;
+}
+/* Baris kecil: metadata. Module kecil + redup (bukan warna gelap) supaya
+   tetap terbaca di kartu kaca. */
+.dash-stat-sub { font-size: 11.5px; line-height: 1.4; color: var(--text-muted); margin-top: 2px; }
+
+/* Meter okupansi kamar. Lebar dikirim inline (`style="width: N%"`) dari
+   Python sebagai ANGKA bulat — float akan jadi koma oleh locale dan
+   aturannya jadi tidak berlaku tanpa error. */
+.dash-meter {
+    height: 6px;
+    margin-top: 8px;
+    border-radius: 99px;
+    background: var(--mc-sage);
+    overflow: hidden;
+}
+.dash-meter span {
+    display: block;
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, rgb(var(--tone-rgb, 5, 150, 105)) 0%, rgb(var(--tone-rgb, 5, 150, 105)) 100%);
+}
+
+.dash-panel { padding: 26px !important; border-radius: var(--radius-xl) !important; }
+.dash-panel-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 18px; }
+.dash-panel-head h2 { font-size: 20px; font-weight: 800; margin: 0; color: var(--text-primary); }
+.dash-panel-head small { font-size: 12.5px; color: var(--text-muted); }
+
+/* --- Grafik tren kunjungan (7 hari) ---
+   Angka label di-posisi absolut DI ATAS batang (bottom: tinggi% + 6px),
+   bukan elemen flow di atas slot: kalau flow, semua angka akan sejajar di
+   puncak panel berapa pun BATANGNYA SEBERAPA PENDEK, dan hari nol terlihat
+   punya angka tinggi. Slot-nya `position:relative`; tinggi bar tetap persen
+   dari tinggi slot. */
+.dash-tren {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    height: 230px;
+    padding: 16px 16px 10px;
+    border-radius: var(--radius-md);
+    background:
+        repeating-linear-gradient(180deg,
+            rgba(23, 63, 53, .10) 0 1px,
+            transparent 1px 25%),
+        linear-gradient(180deg, rgba(var(--tone-rgb, 8, 127, 91), .06), rgba(255, 255, 255, 0));
+    border: 1px solid var(--glass-border);
+}
+.dash-tren-col {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+.dash-tren-slot {
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.dash-tren-val {
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+.dash-tren-bar {
+    width: min(38px, 100%);
+    border-radius: 8px 8px 4px 4px;
+    background: linear-gradient(180deg, rgb(var(--tone-rgb, 5, 150, 105)) 0%, rgba(var(--tone-rgb, 5, 150, 105), .55) 100%);
+    border: 1px solid rgba(var(--tone-rgb, 5, 150, 105), .45);
+    transition: filter .2s ease;
+}
+.dash-tren-col:hover .dash-tren-bar { filter: brightness(.94); }
+.dash-tren-label { font-size: 11.5px; font-weight: 600; color: var(--text-muted); }
+/* Hari ini = kolom aktif: nilai terang + label accent, bukan cuma beda warna
+   (diotherwise bar pertama terlihat "yang beda" tanpa alasan). */
+.dash-tren-col.is-now .dash-tren-val { color: var(--tone-fg); }
+.dash-tren-col.is-now .dash-tren-label { color: var(--tone-fg); }
+.dash-tren-col.is-now .dash-tren-bar {
+    background: linear-gradient(180deg, rgb(var(--tone-rgb, 5, 150, 105)), rgba(var(--tone-rgb, 5, 150, 105), .45));
+}
+.dash-tren-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+}
+.dash-tren-foot i { color: var(--tone-fg); }
+.dash-tren-now { color: var(--text-muted); }
+.dash-tren-now i { color: var(--text-muted); }
+
+/* --- Distribusi poliklinik (bar horizontal) --- */
+.dash-poli { display: flex; flex-direction: column; gap: 14px; }
+.dash-poli-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 10px 1fr auto;
+    align-items: center;
+    gap: 4px 10px;
+}
+.dash-poli-dot {
+    grid-row: 1;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: hsl(var(--poli-h, 232) 62% 48%);
+}
+.dash-poli-nama {
+    grid-row: 1;
+    font-size: 13.5px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.dash-poli-val {
+    grid-row: 1;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+}
+.dash-poli-track {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    height: 6px;
+    border-radius: 99px;
+    background: var(--mc-sage);
+    overflow: hidden;
+}
+.dash-poli-track span {
+    display: block;
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, hsl(var(--poli-h, 232) 62% 46%), hsl(var(--poli-h, 232) 70% 62%));
+}
+/* Warna tiap bar diputar lewat hue -- bukan `data-tone` per baris: daftar
+   poliklinik berubah setiap render, jadi palet tetap harus di CSS. */
+.dash-poli-row:nth-child(1) { --poli-h: 232; }
+.dash-poli-row:nth-child(2) { --poli-h: 199; }
+.dash-poli-row:nth-child(3) { --poli-h: 160; }
+.dash-poli-row:nth-child(4) { --poli-h: 42; }
+.dash-poli-row:nth-child(5) { --poli-h: 330; }
+.dash-poli-row:nth-child(6) { --poli-h: 268; }
+
+.dash-kosong {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 42px 10px;
+    text-align: center;
+    color: var(--text-muted);
+}
+.dash-kosong i { font-size: 34px; opacity: .6; }
+.dash-kosong p { margin: 0; font-size: 13.5px; }
+
+.menu-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 132px;
+    height: 100%;
+    padding: 16px !important;
+    text-decoration: none !important;
+    color: var(--text-primary) !important;
+    overflow: hidden;
+    background:
+        linear-gradient(165deg, rgba(var(--tone-rgb, 8, 127, 91), .06), transparent 58%),
+        var(--glass-bg) !important;
+    border-color: rgba(var(--tone-rgb, 8, 127, 91), .20) !important;
+    transition: transform .22s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.menu-tile:hover,
+.menu-tile:focus-visible {
+    transform: translateY(-4px);
+    background:
+        linear-gradient(165deg, rgba(var(--tone-rgb, 8, 127, 91), .12), transparent 62%),
+        var(--glass-bg-hover) !important;
+    border-color: rgba(var(--tone-rgb, 8, 127, 91), .40) !important;
+    box-shadow: 0 12px 26px rgba(23, 63, 53, .12);
+}
+.menu-tile .icon-tile {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 12px;
+    font-size: 20px;
+}
+.menu-tile h3 { font-size: 15px; font-weight: 700; margin: 0 0 4px; color: var(--text-primary); }
+.menu-tile p { font-size: 12.5px; line-height: 1.45; color: var(--text-secondary); margin: 0; }
+
+/* ---------- 4a. IKON DASHBOARD: kotak kaca berwarna + glyph gradasi ----------
+   Cuma di dalam `.dash-bento` — aturan `.icon-tile` global dipakai dozens of
+   modul lain dan sengaja tidak diubah, supaya treatment "mewah" ini tidak
+   bocor ke seluruh aplikasi.
+
+   `--tone-rgb` diwarisi dari `data-tone` di leluhur (kartu statistik / tile
+   menu / baris aktivitas). Tanpa `data-tone` itu, nilai kembaliannya dipakai
+   sehingga kartu tetap berwarna — bukan jadi abu-abu. */
+.dash-bento .icon-tile {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    color: var(--tone-fg, #4338CA);
+    background:
+        linear-gradient(150deg,
+            rgba(var(--tone-rgb, 8, 127, 91), .16) 0%,
+            rgba(var(--tone-rgb, 8, 127, 91), .10) 48%,
+            rgba(var(--tone-rgb, 8, 127, 91), .06) 100%);
+    border-color: rgba(var(--tone-rgb, 8, 127, 91), .26);
+    transition: transform .26s cubic-bezier(.2, .9, .3, 1.5),
+                box-shadow .26s ease,
+                background .26s ease;
+}
+/* Kilau yang menyapu saat hover. `.icon-tile` sudah `position:relative`, jadi
+   pseudo-element ini aman tanpa Markus posisi tambahan. */
+.dash-bento .icon-tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(115deg, transparent 34%, rgba(255, 255, 255, .75) 50%, transparent 66%);
+    transform: translateX(-130%);
+    transition: transform .65s ease;
+    pointer-events: none;
+}
+.dash-bento .icon-tile > i { position: relative; z-index: 1; }
+
+/* Glyph-nya sendiri ikut gradasi putih -> warna tone.
+   Warna dasar ditulis polos DI LUAR `@supports`; kalau `background-clip:text`
+   tidak didukung, ikon berubah jadi putih solid — bukan HILANG.
+
+   WAJIB dibungkus `rgb(...)`: `--tone-rgb` berisi "99, 102, 241" (tanpa
+   fungsi), jadi `var(--tone-rgb) 135%` menjadi `99, 102, 241 135%` yang BUKAN
+   nilai warna — seluruh deklarasi `background-image` dibuang diam-diam.
+   Gejalanya: `color: transparent` tetap berlaku, ikon jadi tak terlihat sama
+   sekali, dan `getComputedStyle(el).backgroundImage` = "none" satu-satunya
+   petunjuknya. */
+.dash-bento .icon-tile > i { color: #4338CA; }
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .dash-bento .icon-tile > i {
+        background-image: linear-gradient(158deg,
+            var(--tone-fg, #4338CA) 0%,
+            rgb(var(--tone-rgb, 8, 127, 91)) 120%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+}
+/* Hover: sedikit membesar + berputar, kilau menyapu. */
+.dash-stat:hover .icon-tile,
+.dash-stat:focus-within .icon-tile {
+    transform: translateY(-2px) scale(1.07) rotate(-5deg);
+    box-shadow: 0 10px 22px -10px rgba(23, 63, 53, .28);
+}
+.dash-stat:hover .icon-tile::after,
+.dash-stat:focus-within .icon-tile::after { transform: translateX(130%); }
+
+.menu-tile:hover .icon-tile,
+.menu-tile:focus-visible .icon-tile {
+    transform: translateY(-2px) scale(1.10) rotate(-6deg);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .50),
+        inset 0 -12px 22px -14px rgba(0, 0, 0, .5),
+        0 16px 32px -10px rgba(var(--tone-rgb, 99, 102, 241), .70);
+}
+.menu-tile:hover .icon-tile::after,
+.menu-tile:focus-visible .icon-tile::after { transform: translateX(130%); }
+
+/* Catatan: aturan `.chart` / `.chart-bar` yang dulu ada di bagian ini sudah
+   DIHAPUS — dashboard sekarang memakai `.dash-tren*`. Tidak ada template yang
+   memakai kelas `.chart` lagi (dicek `class="chart"` = 0), jadi membiarkannya
+   hanya menyesatkan grep. Definisi lamanya masih ada di
+   `dashboard/dashboard.css` dan `global/new_base.css`; kalau suatu saat kelas
+   itu dipakai lagi, simpan gaya kacanya DI SINI, bukan andalkan file lama
+   yang dimuat lebih awal. */
+:is(.content-area, .tg-scope) .activity-item {
+    background:
+        linear-gradient(150deg, rgba(var(--tone-rgb, 8, 127, 91), .06), transparent 58%),
+        var(--glass-bg) !important;
+    border: 1px solid rgba(var(--tone-rgb, 8, 127, 91), .20);
+}
+:is(.content-area, .tg-scope) .activity-left h4 { color: var(--text-primary); }
+:is(.content-area, .tg-scope) .activity-left p,
+:is(.content-area, .tg-scope) .activity-when,
+:is(.content-area, .tg-scope) .activity-empty { color: var(--text-secondary) !important; }
+:is(.content-area, .tg-scope) .activity-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 34px 10px;
+    font-size: 13.5px;
+}
+:is(.content-area, .tg-scope) .activity-empty i { font-size: 38px; opacity: .55; }
+:is(.content-area, .tg-scope) .activity-time {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+:is(.content-area, .tg-scope) .activity-when { font-size: 11.5px; }
+:is(.content-area, .tg-scope) .activity-clock {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 5. PANEL PUTIH LAMA -> GLASS ----------
+   new_base.css membuat .bg-white/.card/.panel/.menu-section/.menu-card putih
+   dengan teks gelap. Semua dibalik di sini. */
+:is(.content-area, .tg-scope) .bg-white,
+:is(.content-area, .tg-scope) .bg-light,
+:is(.content-area, .tg-scope) .bg-body,
+:is(.content-area, .tg-scope) .bg-body-tertiary,
+:is(.content-area, .tg-scope) .bg-body-secondary,
+:is(.content-area, .tg-scope) .card,
+:is(.content-area, .tg-scope) .panel,
+:is(.content-area, .tg-scope) .menu-section,
+:is(.content-area, .tg-scope) .ok-card,
+.modal .bg-white,
+.modal .bg-light {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--text-primary) !important;
+}
+:is(.content-area, .tg-scope) .card,
+:is(.content-area, .tg-scope) .panel,
+:is(.content-area, .tg-scope) .menu-section {
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--glass-shadow);
+}
+/* blur hanya di wadah tingkat atas; blur bertumpuk mahal & bikin sticky aneh */
+#workspace > .card,
+#workspace > .container-fluid > .card,
+#workspace > div > .card,
+:is(.content-area, .tg-scope) .panel,
+:is(.content-area, .tg-scope) .menu-section {
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+}
+:is(.content-area, .tg-scope) .menu-card {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--mc-text) !important;
+}
+:is(.content-area, .tg-scope) .menu-card h3 { color: var(--mc-forest) !important; }
+:is(.content-area, .tg-scope) .menu-card p { color: var(--text-secondary) !important; }
+:is(.content-area, .tg-scope) .menu-icon { background: var(--accent-grad) !important; }
+
+/* Teks di dalam panel: new_base.css memaksa #1e293b */
+:is(.content-area, .tg-scope) .bg-white label, :is(.content-area, .tg-scope) .bg-white .form-label, :is(.content-area, .tg-scope) .bg-white .small,
+:is(.content-area, .tg-scope) .bg-white .fw-semibold, :is(.content-area, .tg-scope) .bg-white td, :is(.content-area, .tg-scope) .bg-white th,
+:is(.content-area, .tg-scope) .bg-white h5, :is(.content-area, .tg-scope) .bg-white h6, :is(.content-area, .tg-scope) .bg-white p, :is(.content-area, .tg-scope) .bg-white span,
+:is(.content-area, .tg-scope) .card label, :is(.content-area, .tg-scope) .card .form-label, :is(.content-area, .tg-scope) .card .small,
+:is(.content-area, .tg-scope) .card .fw-semibold, :is(.content-area, .tg-scope) .card td, :is(.content-area, .tg-scope) .card th,
+:is(.content-area, .tg-scope) .card h5, :is(.content-area, .tg-scope) .card h6, :is(.content-area, .tg-scope) .card p, :is(.content-area, .tg-scope) .card span,
+:is(.content-area, .tg-scope) .ok-card td, :is(.content-area, .tg-scope) .ok-card th, :is(.content-area, .tg-scope) .ok-card span, :is(.content-area, .tg-scope) .ok-card p,
+:is(.content-area, .tg-scope) .ok-pasien-item,
+:is(.content-area, .tg-scope) .panel, :is(.content-area, .tg-scope) .menu-section {
+    color: inherit !important;
+}
+:is(.content-area, .tg-scope) .card label,
+:is(.content-area, .tg-scope) .card .form-label,
+:is(.content-area, .tg-scope) .bg-white label,
+:is(.content-area, .tg-scope) .bg-white .form-label,
+:is(.content-area, .tg-scope) .form-label,
+.modal .form-label { color: var(--text-secondary) !important; }
+
+:is(.content-area, .tg-scope) .text-muted,
+:is(.content-area, .tg-scope) .bg-white .text-muted,
+:is(.content-area, .tg-scope) .card .text-muted,
+:is(.content-area, .tg-scope) .ok-card .text-muted,
+.modal .text-muted,
+.dropdown-menu .text-muted { color: var(--text-muted) !important; }
+:is(.content-area, .tg-scope) .text-secondary { color: var(--text-secondary) !important; }
+:is(.content-area, .tg-scope) .text-dark,
+:is(.content-area, .tg-scope) .text-black,
+:is(.content-area, .tg-scope) .text-body,
+:is(.content-area, .tg-scope) .text-body-emphasis,
+.modal .text-dark { color: var(--text-primary) !important; }
+:is(.content-area, .tg-scope) .text-primary,
+:is(.content-area, .tg-scope) .bg-white .text-primary,
+:is(.content-area, .tg-scope) .card .text-primary,
+.modal .text-primary { color: var(--mc-primary) !important; }
+:is(.content-area, .tg-scope) .text-success, .modal .text-success { color: var(--success) !important; }
+:is(.content-area, .tg-scope) .text-danger, .modal .text-danger { color: var(--danger) !important; }
+:is(.content-area, .tg-scope) .text-warning, .modal .text-warning { color: var(--warning) !important; }
+:is(.content-area, .tg-scope) .text-info, .modal .text-info { color: var(--info) !important; }
+:is(.content-area, .tg-scope) .link-primary { color: var(--mc-primary) !important; }
+:is(.content-area, .tg-scope) h1, :is(.content-area, .tg-scope) h2, :is(.content-area, .tg-scope) h3,
+:is(.content-area, .tg-scope) h4, :is(.content-area, .tg-scope) h5, :is(.content-area, .tg-scope) h6 { color: inherit; }
+
+/* bg-* lembut Bootstrap: versi gelap */
+:is(.content-area, .tg-scope) .bg-primary-subtle, .modal .bg-primary-subtle { background: rgba(8, 127, 91, .10) !important; color: var(--mc-primary-hover) !important; }
+:is(.content-area, .tg-scope) .bg-success-subtle, .modal .bg-success-subtle { background: rgba(21, 128, 61, .10) !important; color: #14532D !important; }
+:is(.content-area, .tg-scope) .bg-danger-subtle, .modal .bg-danger-subtle { background: rgba(185, 28, 28, .10) !important; color: #991B1B !important; }
+:is(.content-area, .tg-scope) .bg-warning-subtle, .modal .bg-warning-subtle { background: rgba(180, 83, 9, .10) !important; color: #92400E !important; }
+:is(.content-area, .tg-scope) .bg-info-subtle, .modal .bg-info-subtle { background: rgba(14, 116, 144, .10) !important; color: #155E75 !important; }
+:is(.content-area, .tg-scope) .bg-secondary-subtle, .modal .bg-secondary-subtle { background: var(--mc-sage) !important; color: var(--mc-text) !important; }
+:is(.content-area, .tg-scope) .border, :is(.content-area, .tg-scope) .border-top, :is(.content-area, .tg-scope) .border-bottom,
+:is(.content-area, .tg-scope) .border-start, :is(.content-area, .tg-scope) .border-end { border-color: var(--glass-border) !important; }
+:is(.content-area, .tg-scope) .border-primary { border-color: rgba(8, 127, 91, .55) !important; }
+
+/* ---------- 6. KOMPONEN BOOTSTRAP ---------- */
+/* Card */
+.card {
+    --bs-card-bg: var(--glass-bg);
+    --bs-card-color: var(--text-primary);
+    --bs-card-border-color: var(--glass-border);
+    --bs-card-border-radius: var(--radius-lg);
+    --bs-card-inner-border-radius: calc(var(--radius-lg) - 1px);
+    --bs-card-cap-bg: transparent;
+    --bs-card-cap-color: var(--text-primary);
+    --bs-card-title-color: var(--text-primary);
+}
+:is(.content-area, .tg-scope) .card-header,
+:is(.content-area, .tg-scope) .card-footer,
+.modal .card-header,
+.modal .card-footer {
+    background: transparent !important;
+    border-color: var(--glass-border) !important;
+    color: var(--text-primary) !important;
+}
+:is(.content-area, .tg-scope) .card-header.bg-primary,
+:is(.content-area, .tg-scope) .card-header.bg-info,
+:is(.content-area, .tg-scope) .card-header.bg-success,
+:is(.content-area, .tg-scope) .card-header.bg-danger,
+:is(.content-area, .tg-scope) .card-header.bg-warning,
+:is(.content-area, .tg-scope) .card-header.bg-dark,
+:is(.content-area, .tg-scope) .card-header.bg-secondary {
+    background: var(--mc-teal-soft) !important;
+    color: var(--mc-forest) !important;
+}
+
+/* Buttons */
+.btn { border-radius: 12px; }
+.btn-primary {
+    --bs-btn-bg: var(--mc-primary);
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-bg: var(--mc-primary-hover);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-bg: #044734;
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-disabled-bg: #DCEAE4;
+    --bs-btn-disabled-border-color: transparent;
+    --bs-btn-focus-shadow-rgb: 15, 159, 117;
+    background: var(--mc-primary) !important;
+    border: 0 !important;
+    color: #fff !important;
+    box-shadow: var(--accent-glow);
+    transition: box-shadow .2s ease, filter .2s ease, transform .2s ease;
+}
+.btn-primary:hover,
+.btn-primary:focus-visible { filter: brightness(.92); }
+/* Nonaktif: teks gelap di atas hijau pucat — putih di atas #DCEAE4 cuma ~1.2:1. */
+.btn-primary:disabled, .btn-primary.disabled,
+.btn-primary:active:disabled, .btn-primary.disabled:active {
+    background: #DCEAE4 !important;
+    color: var(--mc-text-muted) !important;
+    box-shadow: none !important;
+    opacity: 1;
+}
+.btn-sm.btn-primary { box-shadow: 0 2px 8px rgba(8, 127, 91, .28); }
+.btn-outline-secondary,
+.btn-light,
+.btn-outline-dark,
+.btn-outline-light {
+    --bs-btn-color: var(--mc-text);
+    --bs-btn-border-color: var(--glass-border-hover);
+    --bs-btn-hover-color: var(--mc-forest);
+    --bs-btn-hover-bg: var(--mc-teal-soft);
+    --bs-btn-hover-border-color: rgba(8, 127, 91, .35);
+    --bs-btn-active-color: var(--mc-forest);
+    --bs-btn-active-bg: var(--mc-sage);
+    --bs-btn-active-border-color: rgba(8, 127, 91, .35);
+    --bs-btn-disabled-color: var(--text-muted);
+    --bs-btn-disabled-border-color: var(--glass-border);
+}
+.btn-light {
+    --bs-btn-bg: var(--glass-bg);
+    --bs-btn-disabled-bg: var(--glass-bg);
+}
+.btn-secondary {
+    --bs-btn-bg: var(--mc-sage);
+    --bs-btn-border-color: var(--glass-border);
+    --bs-btn-hover-bg: var(--mc-teal-soft);
+    --bs-btn-hover-border-color: rgba(8, 127, 91, .3);
+    --bs-btn-active-bg: var(--mc-teal-soft);
+    --bs-btn-color: var(--mc-text);
+    --bs-btn-hover-color: var(--mc-forest);
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--mc-primary);
+    --bs-btn-border-color: rgba(8, 127, 91, .5);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--mc-primary);
+    --bs-btn-hover-border-color: var(--mc-primary);
+    --bs-btn-active-bg: var(--mc-primary-hover);
+    --bs-btn-active-border-color: var(--mc-primary-hover);
+}
+.btn-close { filter: none; }
+
+/* Outline berwarna: teks Bootstrap bawaan terlalu gelap di latar gelap.
+   Tint latar tipis supaya tombol jelas berwarna; hover mengisi warna solid. */
+.btn-outline-success {
+    --bs-btn-color: var(--mc-success);
+    --bs-btn-border-color: rgba(21, 128, 61, .45);
+    --bs-btn-hover-bg: #059669;
+    --bs-btn-hover-border-color: #059669;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #047857;
+    --bs-btn-active-border-color: #047857;
+    --bs-btn-active-color: #fff;
+    --bs-btn-disabled-color: rgba(21, 128, 61, .45);
+    --bs-btn-disabled-border-color: rgba(21, 128, 61, .25);
+    background: rgba(21, 128, 61, .06);
+}
+.btn-outline-danger {
+    --bs-btn-color: var(--mc-danger);
+    --bs-btn-border-color: rgba(185, 28, 28, .45);
+    --bs-btn-hover-bg: #DC2626;
+    --bs-btn-hover-border-color: #DC2626;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #B91C1C;
+    --bs-btn-active-border-color: #B91C1C;
+    --bs-btn-active-color: #fff;
+    background: rgba(185, 28, 28, .06);
+}
+.btn-outline-warning {
+    --bs-btn-color: var(--mc-warning);
+    --bs-btn-border-color: rgba(180, 83, 9, .45);
+    --bs-btn-hover-bg: #D97706;
+    --bs-btn-hover-border-color: #D97706;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #B45309;
+    --bs-btn-active-border-color: #B45309;
+    --bs-btn-active-color: #fff;
+    background: rgba(180, 83, 9, .06);
+}
+.btn-outline-info {
+    --bs-btn-color: var(--mc-info);
+    --bs-btn-border-color: rgba(14, 116, 144, .45);
+    --bs-btn-hover-bg: #0284C7;
+    --bs-btn-hover-border-color: #0284C7;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #0369A1;
+    --bs-btn-active-border-color: #0369A1;
+    --bs-btn-active-color: #fff;
+    background: rgba(14, 116, 144, .06);
+}
+
+/* Filled berwarna: gradasi + glow, serasi dengan btn-primary */
+.btn-success {
+    --bs-btn-bg: #059669;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-bg: #10B981;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-bg: #047857;
+    --bs-btn-active-border-color: transparent;
+    background: var(--mc-success) !important;
+    border: 0 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(21, 128, 61, .22);
+}
+.btn-danger {
+    --bs-btn-bg: #DC2626;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-bg: #EF4444;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-bg: #B91C1C;
+    --bs-btn-active-border-color: transparent;
+    background: var(--mc-danger) !important;
+    border: 0 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(185, 28, 28, .22);
+}
+.btn-info {
+    --bs-btn-bg: #0EA5E9;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-bg: #38BDF8;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-bg: #0284C7;
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+    background: var(--mc-info) !important;
+    border: 0 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(14, 116, 144, .22);
+}
+.btn-warning {
+    --bs-btn-bg: #F59E0B;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-bg: #FBBF24;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-bg: #D97706;
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-color: #451A03;
+    --bs-btn-hover-color: #451A03;
+    background: var(--mc-warning) !important;
+    border: 0 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(180, 83, 9, .22);
+}
+.btn-success:hover,
+.btn-danger:hover,
+.btn-info:hover,
+.btn-warning:hover,
+.btn-success:focus-visible,
+.btn-danger:focus-visible,
+.btn-info:focus-visible,
+.btn-warning:focus-visible { filter: brightness(.92); }
+.btn-link { --bs-btn-color: var(--mc-primary); --bs-btn-hover-color: var(--mc-primary-hover); }
+
+/* Tables */
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text-primary);
+    --bs-table-border-color: var(--glass-border);
+    --bs-table-striped-bg: var(--mc-sage);
+    --bs-table-striped-color: var(--text-primary);
+    --bs-table-hover-bg: var(--mc-teal-soft);
+    --bs-table-hover-color: var(--text-primary);
+    --bs-table-active-bg: var(--mc-teal-soft);
+    --bs-table-active-color: var(--mc-forest);
+}
+:is(.content-area, .tg-scope) .table > :not(caption) > * > *,
+.modal .table > :not(caption) > * > * {
+    color: var(--bs-table-color);
+    border-color: var(--glass-border);
+}
+:is(.content-area, .tg-scope) .table thead,
+:is(.content-area, .tg-scope) .table thead th,
+:is(.content-area, .tg-scope) .table thead td,
+.modal .table thead th {
+    background: var(--mc-sage) !important;
+    color: var(--mc-forest) !important;
+}
+:is(.content-area, .tg-scope) .table-light,
+:is(.content-area, .tg-scope) .table-light > th,
+:is(.content-area, .tg-scope) .table-light > td,
+:is(.content-area, .tg-scope) thead.table-light th,
+:is(.content-area, .tg-scope) tr.table-light > *,
+:is(.content-area, .tg-scope) .table-secondary,
+:is(.content-area, .tg-scope) .table-secondary > *,
+.modal .table-light,
+.modal thead.table-light th {
+    --bs-table-bg: var(--mc-sage);
+    --bs-table-color: var(--text-secondary);
+    --bs-table-border-color: var(--glass-border);
+    background: var(--mc-sage) !important;
+    color: var(--text-secondary) !important;
+}
+:is(.content-area, .tg-scope) .table-primary > *, :is(.content-area, .tg-scope) tr.table-primary > * { --bs-table-bg: rgba(8, 127, 91, .14); --bs-table-color: var(--mc-forest); }
+:is(.content-area, .tg-scope) .table-info > *, :is(.content-area, .tg-scope) tr.table-info > * { --bs-table-bg: rgba(14, 116, 144, .12); --bs-table-color: #155E75; }
+:is(.content-area, .tg-scope) .table-success > *, :is(.content-area, .tg-scope) tr.table-success > * { --bs-table-bg: rgba(21, 128, 61, .12); --bs-table-color: #14532D; }
+:is(.content-area, .tg-scope) .table-warning > *, :is(.content-area, .tg-scope) tr.table-warning > * { --bs-table-bg: rgba(180, 83, 9, .12); --bs-table-color: #92400E; }
+:is(.content-area, .tg-scope) .table-danger > *, :is(.content-area, .tg-scope) tr.table-danger > * { --bs-table-bg: rgba(185, 28, 28, .12); --bs-table-color: #991B1B; }
+:is(.content-area, .tg-scope) .table-dark { --bs-table-bg: var(--mc-sage); --bs-table-color: var(--mc-text); }
+
+/* HOVER baris `table-*` (status/warning/success/danger) -- 2026-10-18.
+   Bootstrap mendefinisikan `--bs-table-hover-bg` untuk baris-baris ini di
+   mode gelap sebagai KREM TERANG (`#ece1be` untuk warning, `#e5c7ca` untuk
+   danger, dst) plus teks hitam. Itu disetel untuk baris BERTERANG. Di tema ini
+   teks baris selalu putih, jadi hovernya meletakkan teks putih di atas krem =
+   tak terlihat.
+
+   Gejalanya persis seperti tabel Monitoring OK (bagian 15): baris tetap
+   "terlihat benar" sampai mouse masuk, lalu teksnya hilang. Terverifikasi di
+   `_resep_pane.html`: sebelum hover gelap + teks putih (baca), di hover krem
+   `#ece1be` + teks putih (hilang).
+
+   Yang perlu diluruskan ADALAH variabel hover-nya, bukan `background-color`
+   per-selector: bug-nya muncul karena sel `td` berlatar TRANSSPARAN
+   (`rgba(251,191,36,.14)`), jadi warna krem pada `tr` ikut terlihat THROUGH-nya.
+   Menghapus `table-hover` tidak akan menolong, dan menaikkan opasitas sel
+   hanya menyembunyikan gejala.
+
+   Nilai di sini netral (putih transparan) supaya BERLAKU untuk keenam varian
+   tanpa perlu satu aturan per warna; `!important` karena Bootstrap memakai
+   `[data-bs-theme=dark]` yang spesifisitasnya sama dan bisa dimuat belakangan.
+
+   PENTING: aturan ini TIDAK boleh menyentuh area kertas. Di kertas baris
+   terang + teks gelap, jadi hover putih transparan + teks putih = putih di
+   atas putih. `berkasdigital/partials/_berkas_lab.html` memakai
+   `<tr class="table-warning">` DALAM `.document-page`, jadi tanpa pengecualian
+   di bawah, Hover di sana justru membuat baris tak terlihat. Daftar
+   area kertas sama seperti bagian 6c dan 7. */
+:is(.content-area, .tg-scope, .modal) tr:is(.table-primary, .table-info, .table-success, .table-warning, .table-danger, .table-dark):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *),
+:is(.content-area, .tg-scope, .modal) tr:is(.table-primary, .table-info, .table-success, .table-warning, .table-danger, .table-dark):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > * {
+    --bs-table-hover-bg: var(--mc-teal-soft) !important;
+    --bs-table-hover-color: var(--mc-forest) !important;
+}
+
+/* tabel pasien di new_base.css */
+:is(.content-area, .tg-scope) .patient-table,
+:is(.content-area, .tg-scope) .soap-history-table,
+:is(.content-area, .tg-scope) .pasien-row { color: var(--text-primary) !important; }
+:is(.content-area, .tg-scope) .patient-table thead,
+:is(.content-area, .tg-scope) .soap-history-table thead { background: var(--mc-sage) !important; color: var(--mc-forest) !important; }
+:is(.content-area, .tg-scope) .patient-table th,
+:is(.content-area, .tg-scope) .patient-table td,
+:is(.content-area, .tg-scope) .soap-history-table td { border-color: var(--glass-border) !important; }
+:is(.content-area, .tg-scope) .patient-table tbody tr:hover,
+:is(.content-area, .tg-scope) .pasien-row:hover { background: var(--glass-bg-hover) !important; }
+
+:is(.content-area, .tg-scope) .pasien-tab .nav-link { color: var(--text-secondary) !important; }
+:is(.content-area, .tg-scope) .pasien-tab .nav-link:hover { background: var(--mc-teal-soft) !important; color: var(--mc-forest) !important; }
+:is(.content-area, .tg-scope) .pasien-tab .nav-link.active { background: var(--mc-primary) !important; color: #fff !important; }
+
+/* ---------- 6c. TABEL MEWAH (semua halaman, permintaan user 2026-10-17) ----------
+   Berlaku untuk tabel LAYAR: Bootstrap `.table`, `.k-table` (keuangan),
+   `.kd-table` (form klaim — baris IM `table-danger` dibaca guard JS, jadi
+   zebra & hover TIDAK boleh menutupi baris ber-kelas `table-*`),
+   `.patient-table`, `.soap-history-table`. Tabel DOKUMEN (`data-table`,
+   `info-table`, `askep-table`, `khanza-*`, berkas casemix, pratinjau surat)
+   TIDAK ikut: dikecualikan lewat `:not(:is(<area kertas>) *)` — daftar area
+   kertas sama dengan bagian 7 + `.hospital-file-content`. Menambah area
+   kertas baru = tambahkan juga di --tg-kertas di bawah (3 tempat).
+   Header OPAK (dasar #15172e) supaya `.sticky-top` tidak tembus saat digulir.
+   Zebra hanya baris TANPA kelas `table-*` (penanda IM/status tetap menang).
+   `.table-borderless` = tata letak label/nilai, jadi tanpa zebra/hover. */
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) {
+    --tg-tabel-aksen: 8, 127, 91;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    font-variant-numeric: tabular-nums;
+}
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > thead > tr > :is(th, td) {
+    background: var(--mc-teal-soft) !important;
+    color: var(--mc-forest) !important;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    border-color: var(--mc-border) !important;
+    border-bottom: 2px solid rgba(var(--tg-tabel-aksen), .55) !important;
+    padding-top: .6rem;
+    padding-bottom: .6rem;
+    white-space: nowrap;
+}
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > thead > tr:first-child > :first-child { border-top-left-radius: 12px; }
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > thead > tr:first-child > :last-child { border-top-right-radius: 12px; }
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > tbody > tr > * {
+    border-color: var(--mc-border) !important;
+    transition: background-color .15s ease, box-shadow .15s ease;
+}
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(.table-borderless):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > tbody > tr:not([class*="table-"]):nth-child(even) > * {
+    --bs-table-bg: rgba(240, 245, 242, .75);
+    background-color: rgba(240, 245, 242, .75);
+}
+/* hover: rona indigo + garis aksen kiri (box-shadow, karena Bootstrap memakai
+   inset box-shadow untuk state baris — dua lapis digabung di sini) */
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(.table-borderless):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > tbody > tr:not([class*="table-"]):hover > * {
+    --bs-table-bg-state: var(--mc-teal-soft);
+    background-color: var(--mc-teal-soft);
+    color: var(--mc-forest);
+}
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(.table-borderless):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > tbody > tr:not([class*="table-"]):hover > :first-child {
+    box-shadow: inset 3px 0 0 rgb(var(--tg-tabel-aksen)) !important;
+}
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > tfoot > tr > * {
+    background: var(--mc-sage) !important;
+    color: var(--mc-forest) !important;
+    font-weight: 700;
+    border-top: 2px solid rgba(var(--tg-tabel-aksen), .45) !important;
+}
+/* wadah gulir tabel: kartu kaca membulat */
+:is(.content-area, .tg-scope, .modal) .table-responsive:not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) {
+    border-radius: 12px;
+    border: 1px solid var(--mc-border);
+    background: var(--mc-surface);
+    box-shadow: var(--glass-shadow);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(8, 127, 91, .35) transparent;
+}
+:is(.content-area, .tg-scope, .modal) .table-responsive:not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > .table { margin-bottom: 0; }
+
+/* Forms */
+.form-control,
+.form-select,
+.input-group-text,
+:is(.content-area, .tg-scope) :is(textarea, select):not([class]),
+:is(.content-area, .tg-scope) input:not([class]):is([type="text"], [type="search"], [type="number"], [type="date"], [type="time"], [type="datetime-local"], [type="email"], [type="password"], [type="tel"], :not([type])) {
+    background-color: var(--mc-surface) !important;
+    border: 1px solid var(--mc-border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 10px;
+}
+
+.form-control:focus,
+.form-select:focus,
+:is(.content-area, .tg-scope) :is(textarea, select):not([class]):focus,
+:is(.content-area, .tg-scope) input:not([class]):focus {
+    border-color: var(--mc-focus) !important;
+    box-shadow: 0 0 0 .25rem rgba(15, 159, 117, .20) !important;
+    background-color: var(--mc-surface) !important;
+    color: var(--text-primary) !important;
+}
+.form-control::placeholder,
+:is(.content-area, .tg-scope) input::placeholder,
+:is(.content-area, .tg-scope) textarea::placeholder,
+.bg-white input::placeholder,
+.card input::placeholder { color: var(--text-muted) !important; opacity: 1; }
+.form-control:disabled, .form-control[readonly],
+.form-select:disabled {
+    background-color: var(--mc-sage) !important;
+    color: var(--text-secondary) !important;
+}
+.form-select,
+:is(.content-area, .tg-scope) select:not([class]):not([multiple]):not([size]) {
+    --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2352665e' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+.form-select option,
+:is(.content-area, .tg-scope) select option,
+:is(.content-area, .tg-scope) select optgroup { background: #FFFFFF; color: var(--mc-text); }
+.input-group-text { color: var(--text-secondary) !important; }
+.form-check-input {
+    background-color: var(--mc-surface);
+    border-color: var(--mc-border-hover, #A9D3C4);
+}
+.form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+.form-check-input:focus { box-shadow: 0 0 0 .25rem rgba(15, 159, 117, .20); border-color: var(--accent); }
+.form-text { color: var(--text-muted) !important; }
+:is(.content-area, .tg-scope) input[type="date"]::-webkit-calendar-picker-indicator,
+:is(.content-area, .tg-scope) input[type="time"]::-webkit-calendar-picker-indicator,
+:is(.content-area, .tg-scope) input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: none; opacity: .6; }
+:is(.content-area, .tg-scope) input:-webkit-autofill {
+    -webkit-text-fill-color: var(--mc-text);
+    -webkit-box-shadow: 0 0 0 1000px #F7FBF9 inset;
+}
+
+/* Lapisan melayang: modal, dropdown, offcanvas, toast, popover */
+.modal-content,
+.dropdown-menu,
+.offcanvas:not(.sidebar),
+.toast,
+.popover {
+    background: var(--glass-solid) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius-lg) !important;
+    color: var(--text-primary) !important;
+    box-shadow: var(--glass-shadow), 0 16px 40px rgba(23, 63, 53, .14);
+}
+.dropdown-menu { border-radius: var(--radius-md) !important; padding: 6px; }
+.modal-header, .modal-footer { border-color: var(--glass-border) !important; }
+.modal-header.bg-primary, .modal-header.bg-info, .modal-header.bg-success,
+.modal-header.bg-danger, .modal-header.bg-warning, .modal-header.bg-dark,
+.modal-header.bg-secondary, .modal-header.bg-light, .modal-header.bg-white {
+    background: var(--mc-teal-soft) !important;
+    color: var(--mc-forest) !important;
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+}
+.modal-body { color: var(--text-primary); }
+.modal-backdrop.show { opacity: .40; }
+.dropdown-item {
+    color: var(--text-primary) !important;
+    border-radius: 10px;
+}
+.dropdown-item:hover,
+.dropdown-item:focus { background: var(--mc-teal-soft) !important; color: var(--mc-forest) !important; }
+.dropdown-item.active,
+.dropdown-item:active { background: var(--mc-primary) !important; color: #fff !important; }
+.dropdown-item.text-danger { color: var(--danger) !important; }
+.dropdown-header { color: var(--text-muted) !important; }
+.dropdown-divider { border-color: var(--glass-border) !important; }
+.toast-header {
+    background: transparent !important;
+    color: var(--mc-text) !important;
+    border-color: var(--glass-border) !important;
+}
+
+/* Alerts (messages framework): kaca dengan rona warna status */
+.alert {
+    --al-rgb: 14, 116, 144;
+    --al-fg: #155E75;
+    background: rgba(var(--al-rgb), .12) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(var(--al-rgb), .35) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--al-fg) !important;
+}
+.alert-success { --al-rgb: 21, 128, 61; --al-fg: #14532D; }
+.alert-danger, .alert-error { --al-rgb: 185, 28, 28; --al-fg: #991B1B; }
+.alert-warning { --al-rgb: 180, 83, 9; --al-fg: #92400E; }
+.alert-primary { --al-rgb: 8, 127, 91; --al-fg: #044734; }
+.alert-secondary, .alert-light, .alert-dark { --al-rgb: 82, 102, 94; --al-fg: var(--text-primary); }
+.alert :is(strong, b, h4, h5, h6) { color: inherit !important; }
+.alert .alert-link, .alert a { color: inherit !important; font-weight: 600; text-decoration: underline; }
+.alert .text-muted { color: var(--text-secondary) !important; }
+
+/* Pagination */
+.pagination {
+    --bs-pagination-bg: var(--glass-bg);
+    --bs-pagination-color: var(--text-primary);
+    --bs-pagination-border-color: var(--glass-border);
+    --bs-pagination-hover-bg: var(--mc-teal-soft);
+    --bs-pagination-hover-color: var(--mc-forest);
+    --bs-pagination-hover-border-color: var(--mc-border);
+    --bs-pagination-focus-bg: var(--mc-teal-soft);
+    --bs-pagination-focus-color: var(--mc-forest);
+    --bs-pagination-disabled-bg: transparent;
+    --bs-pagination-disabled-color: var(--text-muted);
+    --bs-pagination-disabled-border-color: var(--glass-border);
+    --bs-pagination-active-border-color: transparent;
+}
+.page-item.active .page-link { background: var(--mc-primary) !important; color: #fff !important; border-color: transparent !important; }
+
+/* Badges: "pill kaca" — latar rgba(warna,.16), teks warna terang */
+.badge { font-weight: 600; }
+.badge.bg-primary, .badge.text-bg-primary { background: rgba(8, 127, 91, .12) !important; color: var(--mc-primary-hover) !important; }
+.badge.bg-success, .badge.text-bg-success { background: rgba(21, 128, 61, .12) !important; color: #14532D !important; }
+.badge.bg-danger, .badge.text-bg-danger { background: rgba(185, 28, 28, .12) !important; color: #991B1B !important; }
+.badge.bg-warning, .badge.text-bg-warning { background: rgba(180, 83, 9, .12) !important; color: #92400E !important; }
+.badge.bg-info, .badge.text-bg-info { background: rgba(14, 116, 144, .12) !important; color: #155E75 !important; }
+.badge.bg-secondary, .badge.text-bg-secondary,
+.badge.bg-dark, .badge.text-bg-dark { background: var(--mc-sage) !important; color: var(--text-primary) !important; }
+:is(.content-area, .tg-scope) .badge.bg-light,
+:is(.content-area, .tg-scope) .badge.bg-white,
+:is(.content-area, .tg-scope) .badge.text-bg-light { background: var(--mc-sage) !important; color: var(--text-primary) !important; border: 0 !important; }
+:is(.content-area, .tg-scope) .badge.bg-light .text-dark,
+:is(.content-area, .tg-scope) .badge.bg-white .text-dark { color: var(--text-primary) !important; }
+:is(.content-area, .tg-scope) .badge.border { background: rgba(8, 127, 91, .10); }
+:is(.content-area, .tg-scope) .badge.border-primary { background: rgba(8, 127, 91, .10); }
+:is(.content-area, .tg-scope) .badge.border-success { background: rgba(21, 128, 61, .12); border-color: rgba(21, 128, 61, .45) !important; }
+:is(.content-area, .tg-scope) .badge.border-danger { background: rgba(185, 28, 28, .12); border-color: rgba(185, 28, 28, .45) !important; }
+:is(.content-area, .tg-scope) .badge.border-warning { background: rgba(180, 83, 9, .12); border-color: rgba(180, 83, 9, .45) !important; }
+:is(.content-area, .tg-scope) .badge.border-info { background: rgba(14, 116, 144, .12); border-color: rgba(14, 116, 144, .45) !important; }
+/* Titik notifikasi topbar tetap PADAT supaya masih terlihat di sudut tombol,
+   tapi warnanya #DC2626, bukan #EF4444: putih di #EF4444 cuma 3.76:1 (di bawah
+   WCAG AA 4.5:1) dan badge ini ada di SETIAP halaman bertema, jadi satu warna
+   salah = satu cacat aksesibilitas di seluruh aplikasi. #DC2626 memberi 4.83:1 --
+   hue-nya nyaris sama (merah 500 vs 600), jadi bedanya hampir tidak terlihat,
+   tapi sekarang aman. Jangan dikembalikan ke #EF4444 tanpa mengukur. */
+.topbar .notif .badge.bg-danger { background: #DC2626 !important; color: #fff !important; }
+/* Badge status di daftar pasien casemix: PADAT, bukan pill kaca — status klaim
+   harus terbaca sekilas. Kelas sendiri (bukan bg-*) supaya tidak tertimpa aturan di atas. */
+.badge.cm-badge { font-size: .72rem; letter-spacing: .02em; padding: .38em .62em; color: #fff; border: 1px solid rgba(255, 255, 255, .22); box-shadow: 0 1px 4px rgba(23, 63, 53, .18); }
+.badge.cm-badge-final { background: var(--mc-success); }
+.badge.cm-badge-draft { background: var(--mc-warning); color: #fff; border-color: rgba(0, 0, 0, .10); }
+.badge.cm-badge-noreg { background: var(--mc-primary); }
+.badge.cm-badge-ranap { background: #C2410C; }
+.badge.cm-badge-bayi { background: #15803D; }
+
+/* Tabs & pills konten */
+:is(.content-area, .tg-scope) .nav-tabs,
+.modal .nav-tabs { border-bottom: 1px solid var(--glass-border) !important; }
+:is(.content-area, .tg-scope) .nav-tabs .nav-link,
+.modal .nav-tabs .nav-link {
+    color: var(--text-secondary) !important;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+}
+:is(.content-area, .tg-scope) .nav-tabs .nav-link:hover,
+.modal .nav-tabs .nav-link:hover { background: var(--mc-teal-soft) !important; color: var(--mc-forest) !important; }
+:is(.content-area, .tg-scope) .nav-tabs .nav-link.active,
+.modal .nav-tabs .nav-link.active {
+    color: var(--mc-primary) !important;
+    background: transparent !important;
+    border-bottom: 2px solid var(--mc-primary) !important;
+}
+/* new_base.css memaksa .nav-link konten jadi rgb(4,4,4) (hampir hitam) */
+:is(.content-area, .tg-scope) .nav-link:not(.sidebar-menu .nav-link):not(.sidebar-bottom-menu) { color: var(--text-secondary); }
+:is(.content-area, .tg-scope) .nav-link:hover:not(.sidebar-menu .nav-link):not(.sidebar-bottom-menu) { color: var(--mc-forest); }
+:is(.content-area, .tg-scope) .nav-pills .nav-link.active,
+:is(.content-area, .tg-scope) .nav-pills .show > .nav-link { background: var(--mc-primary) !important; color: #fff !important; }
+
+/* List group */
+.list-group {
+    --bs-list-group-bg: var(--glass-bg);
+    --bs-list-group-color: var(--text-primary);
+    --bs-list-group-border-color: var(--glass-border);
+    --bs-list-group-action-hover-bg: var(--mc-teal-soft);
+    --bs-list-group-action-hover-color: var(--mc-forest);
+    --bs-list-group-action-color: var(--text-primary);
+}
+:is(.content-area, .tg-scope) .list-group-item,
+.modal .list-group-item,
+.dropdown-menu .list-group-item {
+    background: var(--glass-bg) !important;
+    border-color: var(--glass-border) !important;
+    color: var(--text-primary) !important;
+}
+:is(.content-area, .tg-scope) .list-group-item-action:hover,
+.modal .list-group-item-action:hover { background: var(--mc-teal-soft) !important; }
+:is(.content-area, .tg-scope) .list-group-item.active,
+.modal .list-group-item.active { background: var(--mc-primary) !important; border-color: transparent !important; color: #fff !important; }
+
+/* Autocomplete (new_base.css: putih) */
+:is(.content-area, .tg-scope) .autocomplete-list,
+.autocomplete-list {
+    background: var(--glass-solid) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--text-primary) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: 0 12px 32px rgba(23, 63, 53, .16) !important;
+}
+:is(.content-area, .tg-scope) .autocomplete-item { color: var(--text-primary) !important; }
+:is(.content-area, .tg-scope) .autocomplete-item:hover { background: var(--glass-bg-hover) !important; }
+:is(.content-area, .tg-scope) .autocomplete-list .small { color: var(--text-secondary) !important; }
+:is(.content-area, .tg-scope) .autocomplete-list .text-muted { color: var(--text-muted) !important; }
+:is(.content-area, .tg-scope) .autocomplete-list .fw-semibold { color: var(--mc-primary) !important; }
+
+/* Lain-lain */
+.progress { background: var(--mc-sage); }
+.progress-bar { background: var(--mc-primary); }
+.accordion {
+    --bs-accordion-bg: var(--glass-bg);
+    --bs-accordion-color: var(--text-primary);
+    --bs-accordion-border-color: var(--glass-border);
+    --bs-accordion-btn-color: var(--text-primary);
+    --bs-accordion-btn-bg: transparent;
+    --bs-accordion-active-bg: var(--mc-teal-soft);
+    --bs-accordion-active-color: var(--mc-forest);
+}
+.tooltip { --bs-tooltip-bg: var(--mc-forest); --bs-tooltip-color: #fff; }
+hr { border-color: var(--glass-border); opacity: 1; }
+:is(.content-area, .tg-scope) code { color: var(--mc-primary-hover); }
+:is(.content-area, .tg-scope) pre { color: var(--text-primary); }
+:is(.content-area, .tg-scope) .shadow, :is(.content-area, .tg-scope) .shadow-sm { box-shadow: var(--glass-shadow) !important; }
+.spinner-border { color: var(--accent); }
+
+/* flatpickr (kalender di luar .content-area, ditempel ke body) */
+.flatpickr-calendar {
+    background: var(--glass-solid) !important;
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: 0 16px 40px rgba(23, 63, 53, .18) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+}
+.flatpickr-calendar.arrowTop::after, .flatpickr-calendar.arrowTop::before { border-bottom-color: var(--mc-surface) !important; }
+.flatpickr-calendar.arrowBottom::after, .flatpickr-calendar.arrowBottom::before { border-top-color: var(--mc-surface) !important; }
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year,
+span.flatpickr-weekday,
+.flatpickr-day,
+.flatpickr-time input,
+.flatpickr-time .flatpickr-am-pm,
+.flatpickr-time .flatpickr-time-separator { color: var(--mc-text) !important; fill: var(--mc-text) !important; background: transparent !important; }
+.flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-months .flatpickr-next-month svg { fill: var(--mc-text) !important; }
+/* Dropdown bulan = <select> bawaan. flatpickr.css memberi <option> latar
+   transparent, jadi popup bawaan peramban tampil putih dengan teks putih.
+   Latar option HARUS solid, dan color-scheme dark membuat popup ikut gelap. */
+.flatpickr-calendar { color-scheme: light; }
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    color-scheme: light;
+    border-radius: 6px;
+}
+.flatpickr-current-month .flatpickr-monthDropdown-months:hover,
+.flatpickr-current-month input.cur-year:hover { background: var(--glass-bg-hover) !important; }
+.flatpickr-current-month .flatpickr-monthDropdown-months option,
+.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
+    background-color: #FFFFFF !important;
+    color: var(--mc-text) !important;
+}
+.flatpickr-current-month .flatpickr-monthDropdown-months option:checked { background-color: var(--mc-primary) !important; color: #fff !important; }
+.numInputWrapper span.arrowUp::after { border-bottom-color: var(--mc-text) !important; }
+.numInputWrapper span.arrowDown::after { border-top-color: var(--mc-text) !important; }
+.numInputWrapper span:hover { background: var(--glass-bg-hover) !important; }
+.flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay,
+.flatpickr-day.flatpickr-disabled { color: var(--text-muted) !important; }
+.flatpickr-day:hover, .flatpickr-day:focus,
+.flatpickr-time input:hover, .flatpickr-time input:focus { background: var(--glass-bg-hover) !important; border-color: transparent !important; }
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange,
+.flatpickr-day.selected:hover { background: var(--accent) !important; border-color: var(--accent) !important; color: #fff !important; }
+.flatpickr-day.inRange { background: var(--mc-teal-soft) !important; box-shadow: none !important; border-color: transparent !important; }
+.flatpickr-day.today { border-color: var(--accent) !important; }
+.flatpickr-time { border-top-color: var(--glass-border) !important; }
+.flatpickr-time .numInputWrapper span.arrowUp::after { border-bottom-color: var(--mc-text) !important; }
+.flatpickr-time .numInputWrapper span.arrowDown::after { border-top-color: var(--mc-text) !important; }
+
+
+/* ---------- 6b. PENYESUAIAN KECERAHAN HALAMAN KERJA ----------
+   body.page-dense = semua halaman kecuali dashboard ({% block body_class %}
+   di new_base.html; dashboard.html menimpanya jadi "page-dashboard").
+   Selektor memakai :where(.page-dense) supaya spesifisitasnya SAMA dengan
+   aturan lain di file ini; blok ini sengaja diletakkan SEBELUM bagian 7
+   (kertas), jadi area kertas tetap menang dan tetap putih. */
+/* Bulatan diredupkan di SEMUA halaman, termasuk dashboard (permintaan user
+   2026-10-14: bulatan dashboard "mengikuti halaman yang lain"). Kelas
+   page-dashboard tetap ada untuk panel/banner dashboard, bukan untuk bulatan. */
+.bg-orbs span { display: none; }
+
+/* Panel utama lebih pekat supaya latar di belakangnya tidak membuat warna
+   panel belang. Panel di DALAM panel cukup sedikit lebih terang, tanpa blur. */
+:where(.page-dense) :is(.content-area, .tg-scope) :is(.card, .glass, .panel, .menu-section, .ok-card, .ok-topbar, .ob-card, .sg-card, .sg-sheet:not(.paper), .pb-card, .pb-sheet, .rm-card, .pg-sheet:not(.paper), .bg-white, .hospital-file-sidebar, .klaim-compact-card, .compact-doc-card, .summary-card) {
+    background: var(--mc-surface) !important;
+    border: 1px solid var(--mc-border) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+:where(.page-dense) :is(.content-area, .tg-scope) :where(.card, .glass, .panel, .menu-section, .ok-card, .ok-topbar, .ob-card, .sg-card, .sg-sheet:not(.paper), .pb-card, .pb-sheet, .rm-card, .pg-sheet:not(.paper), .bg-white, .hospital-file-sidebar, .klaim-compact-card, .compact-doc-card, .summary-card) :is(.card, .glass, .panel, .menu-section, .ok-card, .ok-topbar, .ob-card, .sg-card, .sg-sheet:not(.paper), .pb-card, .pb-sheet, .rm-card, .pg-sheet:not(.paper), .bg-white, .hospital-file-sidebar, .klaim-compact-card, .compact-doc-card, .summary-card) {
+    background: var(--mc-sage) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+:where(.page-dense) .kd-app { --kd-surface: var(--mc-surface); --kd-surface-muted: var(--mc-sage); }
+/* elemen kaca kecil di topbar tetap kaca tipis */
+.content-area .topbar .glass {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+}
+
+/* Input/textarea: latar rata satu nilai di seluruh form */
+:where(.page-dense) :is(.content-area, .tg-scope) :is(.form-control, .form-select, .ok-search-input, .ok-date-input, .pg-input),
+:where(.page-dense) :is(.content-area, .tg-scope) :is(textarea, select):not([class]),
+:where(.page-dense) :is(.content-area, .tg-scope) input:not([class]):is([type="text"], [type="search"], [type="number"], [type="date"], [type="time"], [type="datetime-local"], [type="email"], [type="password"], [type="tel"], :not([type])) {
+    background-color: var(--mc-surface) !important;
+    color: var(--text-primary) !important;
+}
+.content-area .topbar .search-box input.form-control { background: transparent !important; }
+
+/* Kotak peringatan: rona amber di atas dasar gelap. rgba(...,.10) polos di
+   atas bulatan biru menghasilkan kotak keunguan, jadi diberi lapisan dasar. */
+.alert {
+    background: rgba(var(--al-rgb), .10) !important;
+    border: 1px solid rgba(var(--al-rgb), .30) !important;
+}
+.alert-warning,
+:is(.content-area, .tg-scope) .bg-warning-subtle {
+    --al-rgb: 180, 83, 9;
+    --al-fg: #92400E;
+    background: rgba(180, 83, 9, .10) !important;
+    border: 1px solid rgba(180, 83, 9, .30) !important;
+    color: #92400E !important;
+}
+:is(.alert-warning, .bg-warning-subtle) :is(i, .bi, strong, b, span, small, p) { color: #92400E !important; }
+
+/* BUG item daftar pasien terpilih: elemen di dalamnya (span, div, small,
+   badge, td) punya latar sendiri dari CSS modul (casemix.css memberi badge
+   rgba(255,255,255,.15), new_base.css memberi td latar), jadi muncul kotak
+   gelap di balik teks. Hanya KONTAINER item yang berlatar; isinya transparan. */
+:is(.content-area, .tg-scope) :is(.pasien-row, .patient-item, .pb-plist-item, .casemix-patient-item, .ok-pasien-item, .list-group-item, .patient-table tbody tr, .table tbody tr):is(.active, .table-active, .sdipilih, .selected) {
+    background: var(--mc-teal-soft) !important;
+    border: 1px solid rgba(8, 127, 91, .40) !important;
+    box-shadow: inset 3px 0 0 var(--mc-primary) !important;
+    color: var(--mc-forest) !important;
+    --bs-table-bg-state: transparent;
+    --bs-table-accent-bg: transparent;
+}
+:is(.content-area, .tg-scope) :is(.pasien-row, .patient-item, .pb-plist-item, .casemix-patient-item, .ok-pasien-item, .list-group-item, .patient-table tbody tr, .table tbody tr):is(.active, .table-active, .sdipilih, .selected) * {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
+:is(.content-area, .tg-scope) :is(.pasien-row, .patient-item, .pb-plist-item, .casemix-patient-item, .ok-pasien-item, .list-group-item, .patient-table tbody tr, .table tbody tr):is(.active, .table-active, .sdipilih, .selected) :is(.badge, .rounded-pill) { border: 1px solid rgba(8, 127, 91, .30) !important; color: var(--mc-forest) !important; }
+
+/* ---------- 6b. DAFTAR PASIEN: KETERBACAAN ----------
+   Keluhan: "list pasien OBGYN / informasi IGD / poliklinik belum jelas terang".
+
+   Kontras tokennya sendiri sebenarnya sudah aman (diukur di kartu kaca
+   rgb(17,20,34): --text-primary 16.2:1, --text-secondary 8.3:1,
+   --text-muted 6.1:1 — semua di atas ambang WCAG AA 4.5:1). Yang bikin
+   "kurang terang" itu dua hal lain, keduanya di sini:
+
+   1. Baris metadata (no.RM, tanggal, dokter) memakai `text-muted` DENGAN
+      `font-size: .74rem` — kecil DAN redup, dan kombinasi itulah yang
+      paling bikin baris itu terasa samar. Dinaikkan ke --text-secondary
+      dengan ukuran .8rem.
+   2. Latar baris hanya `rgba(255,255,255,.045)` di atas `--bg-base`, jadi
+      kartu=list nyaris tidak terpisah dari latar halaman. Dinaikkan ke
+      --glass-bg-strong (0.10) + garis tepi lebih terlihat.
+
+   `.pb-plist-*` didefinisikan di dalam `<style>` tiap template Obgyn/Y7.2/
+   Y7.4, dan blok itu dirender SETELAH theme-glass.css di body — jadi aturan
+   di sini wajib pakai `:is(.content-area, .tg-scope)` (spesifisitas 0,2,0)
+   untuk menang, bukan cuma urutan. Kalau nanti dipindah ke `<style>` template,
+   blok ini boleh dihapus. */
+:is(.content-area, .tg-scope) :is(.pb-plist-item, .pasien-sidebar-item):not(.active):not(.sdipilih) {
+    background: var(--mc-surface) !important;
+    border-color: var(--mc-border) !important;
+}
+:is(.content-area, .tg-scope) :is(.pb-plist-meta, .pb-plist-dokter) {
+    color: var(--text-secondary) !important;
+    font-size: .8rem !important;
+}
+:is(.content-area, .tg-scope) .pb-plist-nama { font-size: .92rem; }
+:is(.content-area, .tg-scope) .pb-plist-badge {
+    background: rgba(14, 116, 144, .14) !important;
+    color: #155E75 !important;
+}
+
+/* Daftar sidebar Ralan/Ranap (poliklinik) */
+:is(.content-area, .tg-scope) .pasien-sidebar-item .text-muted {
+    color: var(--text-secondary) !important;
+    font-size: .8rem;
+}
+:is(.content-area, .tg-scope) .pasien-sidebar-item .fw-semibold { font-size: .88rem; }
+
+/* Tabel pasien IGD */
+:is(.content-area, .tg-scope) #igdPasienTable tbody td { color: var(--text-primary) !important; }
+:is(.content-area, .tg-scope) #igdPasienTable tbody td .text-muted {
+    color: var(--text-secondary) !important;
+    font-size: .78rem;
+}
+:is(.content-area, .tg-scope) #igdPasienTable tbody td .fw-semibold { font-size: .88rem; }
+
+/* Badge nama poliklinik (data-tone dipilih `poli_tone`, lihat templatetag).
+   Nama poli panjang ("Klinik Spesialis Jantung") jadi sempit kalau dibungkus
+   pill, jadi `white-space: nowrap` + ukuran kecil: satu baris penuh. */
+:is(.content-area, .tg-scope) .badge-poli {
+    display: inline-block;
+    background: rgba(var(--tone-rgb), .22) !important;
+    color: var(--tone-fg) !important;
+    border: 1px solid rgba(var(--tone-rgb), .45) !important;
+    border-radius: 999px;
+    padding: .3em .62em;
+    font-size: .72rem;
+    font-weight: 600;
+    line-height: 1.35;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+
+/* ---------- 7. AREA KERTAS: tetap terang ----------
+   Pratinjau dokumen (berkas casemix, resume, surat) mewakili hasil cetak.
+   Tandai wadahnya dengan class="paper" data-bs-theme="light".
+   Setiap aturan di sini memakai `:is(.content-area, .tg-scope, .modal)`: modal
+   Bootstrap ditempel ke <body>, DI LUAR .content-area. Dulu hanya wadah kertas di
+   modal yang diputihkan, isinya (td, h5, .text-muted) tetap warna tema terang ->
+   preview Resume Medis Ralan/Ranap tampil teks rgb(238,240,255) di atas putih,
+   kontras 1,1 ("tulisannya samar", 2026-10-18). */
+.paper,
+.document-page,
+.document-page-eklaim,
+.surat-page,
+.pgp-page,
+.sgp-page,
+.bv-doc,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc),
+.modal :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) {
+    background: #fff !important;
+    color: #1e293b !important;
+    border-radius: 6px;
+}
+/* new_base.css: `.bg-white td, th, h5, h6, p, span, label, .small, .fw-semibold
+   { color: var(--text-primary) !important }`. Kertas yang berada DI DALAM .bg-white
+   (mis. .modal-body.bg-white preview Resume Medis) ikut kena: teks hampir putih di
+   atas kertas putih. Dinetralkan HANYA untuk kertas di dalam .bg-white — kertas lain
+   (berkas casemix) tetap memakai warna inline-nya (merah "Pasien Belum Pulang").
+   Diletakkan SEBELUM aturan .text-* kertas supaya kelas warna itu tetap menang. */
+.bg-white :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) :is(label, .form-label, .small, .fw-semibold, td, th, h5, h6, p, span) { color: inherit !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .text-muted { color: #64748b !important; }
+/* Aturan gelap umum `pre`/`code` (bagian 6) menulis warna terang langsung ke
+   elemennya, jadi tidak tertimpa oleh warna kertas yang diwariskan: narasi
+   laporan operasi (<pre>) tampil putih di atas putih = tidak terlihat. */
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) pre { color: inherit; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) code { color: #be185d; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .text-dark,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .text-body { color: #1e293b !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .text-primary { color: #0d6efd !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .text-success { color: #198754 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .text-danger { color: #dc3545 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .text-warning { color: #b45309 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .text-info { color: #0369a1 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .bg-white,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .card,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .bg-light { background: #fff !important; color: #1e293b !important; border-color: #d1d9e6 !important; box-shadow: none; backdrop-filter: none; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .bg-light { background: #f8fafc !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .card label,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .card td,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .card th,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .card span,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .card p { color: inherit !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .table {
+    --bs-table-color: #1e293b;
+    --bs-table-border-color: #cbd5e1;
+    --bs-table-hover-color: #1e293b;
+    --bs-table-hover-bg: rgba(0, 0, 0, .04);
+    --bs-table-striped-color: #1e293b;
+    --bs-table-striped-bg: rgba(0, 0, 0, .03);
+}
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .table > :not(caption) > * > * { color: #1e293b; border-color: #cbd5e1; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .table thead th,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .table thead td,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .table-light,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) thead.table-light th { background: #f1f5f9 !important; color: #1e293b !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .badge.bg-light { background: #f1f5f9 !important; color: #1e293b !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .border { border-color: #cbd5e1 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) input,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) textarea,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) select { background-color: #fff !important; color: #1e293b !important; border-color: #cbd5e1 !important; }
+
+
+/* Komponen Bootstrap di dalam kertas kembali ke gaya terang */
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) :is(label, .form-label, .card label, .card .form-label) { color: #334155 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) :is(.card-header, .card-footer) { background: #f1f5f9 !important; color: #0f172a !important; border-color: #e2e8f0 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .btn-outline-secondary, :is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .btn-light, :is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .btn-outline-dark {
+    --bs-btn-color: #334155; --bs-btn-border-color: #cbd5e1; --bs-btn-bg: #fff;
+    --bs-btn-hover-color: #0f172a; --bs-btn-hover-bg: #f1f5f9; --bs-btn-hover-border-color: #94a3b8;
+    --bs-btn-active-color: #0f172a; --bs-btn-active-bg: #e2e8f0; --bs-btn-active-border-color: #94a3b8;
+}
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .btn-outline-primary { --bs-btn-color: #4F46E5; --bs-btn-border-color: #a5b4fc; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .btn-outline-success { --bs-btn-color: #047857; --bs-btn-border-color: #6ee7b7; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .btn-outline-danger { --bs-btn-color: #b91c1c; --bs-btn-border-color: #fca5a5; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .btn-outline-info { --bs-btn-color: #0369a1; --bs-btn-border-color: #7dd3fc; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .btn-outline-warning { --bs-btn-color: #b45309; --bs-btn-border-color: #fcd34d; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) :is(.btn-outline-success, .btn-outline-danger, .btn-outline-info, .btn-outline-warning) { background: transparent; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .nav-tabs { border-bottom-color: #e2e8f0 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .nav-tabs .nav-link,
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .nav-link:not(.sidebar-menu .nav-link) { color: #475569 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .nav-tabs .nav-link:hover { background: #f1f5f9 !important; color: #0f172a !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .nav-tabs .nav-link.active { color: #4F46E5 !important; border-bottom-color: #4F46E5 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .list-group-item { background: #fff !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .list-group-item.active { background: var(--accent-grad) !important; color: #fff !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .badge.bg-secondary { background: #e2e8f0 !important; color: #334155 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .alert { background: #f8fafc !important; color: #1e293b !important; border-color: #e2e8f0 !important; backdrop-filter: none; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) a:not(.btn) { color: #4F46E5; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) :is(input, textarea, select)::placeholder { color: #94a3b8 !important; }
+/* <html data-bs-theme="dark"> mewariskan color-scheme dark; tanpa ini
+   radio/checkbox/select bawaan browser di kertas tergambar versi gelap
+   (bulatan hitam). */
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) { color-scheme: light; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) :is(input[type="radio"], input[type="checkbox"]):not(.form-check-input) { accent-color: #4F46E5; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .form-check-input { background-color: #fff; border-color: #94a3b8; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .input-group-text { background: #f1f5f9 !important; color: #475569 !important; border-color: #cbd5e1 !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) .form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) :is(input, textarea, select):focus { background-color: #fff !important; color: #0f172a !important; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) input[type="date"]::-webkit-calendar-picker-indicator { filter: none; }
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) select option { background: #fff; color: #1e293b; }
+
+/* Kerangka berkas casemix (hospital-file.css): wadah & sidebar gelap,
+   halaman dokumennya (.document-page) tetap kertas. */
+.hospital-file-container { background: transparent !important; }
+.hospital-file-sidebar {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+}
+.hospital-file-sidebar .nav-link.active {
+    background: var(--mc-primary) !important;
+    color: #fff !important;
+    border-left-color: transparent !important;
+}
+
+/* Keterbacaan pratinjau berkas casemix (LAYAR saja; PDF tidak memuat file ini).
+   Warna teks dokumen sudah gelap; yang membuatnya "samar" adalah ukuran:
+   mayoritas teks 11px Arial, alamat kop 10px, cetakan kecil SEP/SPRI 9-10px.
+   `zoom` membesarkan SELURUH halaman secara seragam (tata letak, QR, logo ikut),
+   jadi tidak perlu menimpa font-size puluhan selektor di hospital-file/lab/
+   sep/spri/eklaim.css. Lebar tetap pas: lebar auto dihitung ulang terhadap
+   wadah. Cakupan .hospital-file-content = hanya _berkas_section.html casemix. */
+:is(.content-area, .tg-scope) .hospital-file-content :is(.document-page, .document-page-eklaim) {
+    zoom: 1.05;
+    color: #0f172a !important;
+}
+/* Abu-abu terang bawaan CSS dokumen (#666 alamat kop, #475569 label tabel,
+   dst.) digelapkan satu tingkat. */
+:is(.content-area, .tg-scope) .hospital-file-content .header-info p { color: #334155 !important; }
+:is(.content-area, .tg-scope) .hospital-file-content .document-page td.label { color: #1e293b !important; }
+/* Nama item lab (WBC, RBC, ...) 10px di lab.css, lebih kecil dari angkanya. */
+:is(.content-area, .tg-scope) .hospital-file-content .lab-sub-item { font-size: 11px; }
+
+
+/* Teks redup di baris terpilih (latar mint-teal): naikkan kontras */
+:is(.content-area, .tg-scope) :is(.active, .table-active, .selected, .sdipilih, .pasien-row.active) :is(.text-muted, .text-secondary, .small, small) {
+    color: var(--mc-text) !important;
+}
+:is(.content-area, .tg-scope) :is(.active, .table-active, .selected, .sdipilih) .text-primary { color: var(--mc-forest) !important; }
+
+/* Primitif isian surat Obgyn (_surat_obgyn.css) di LAYAR. File CSS itu juga
+   dipakai PDF, jadi versi gelapnya ditulis di sini (PDF tidak memuat file ini). */
+:is(.content-area, .tg-scope) :is(input, textarea).sg-f { color: var(--text-primary) !important; border-bottom-color: var(--mc-border) !important; background: transparent !important; border-top: 0 !important; border-left: 0 !important; border-right: 0 !important; border-radius: 0 !important; }
+:is(.content-area, .tg-scope) :is(input, textarea).sg-f:focus { background: var(--mc-teal-soft) !important; border-bottom-color: var(--accent) !important; box-shadow: none !important; }
+:is(.content-area, .tg-scope) :is(input, textarea).sg-f::placeholder { color: var(--text-muted) !important; }
+:is(.content-area, .tg-scope) .sg-lbl { color: var(--text-secondary); }
+:is(.content-area, .tg-scope) .sg-sep { color: var(--text-muted); }
+
+
+/* Form klaim INACBG/iDRG (klaimidrg/klaim_detail.css): palet --kd-* digelapkan.
+   Hanya di layar (tg-scope = base.html legacy). */
+:is(.content-area, .tg-scope) .kd-app {
+    --kd-ink: var(--mc-text);
+    --kd-muted: var(--mc-text-muted);
+    --kd-faint: #5A7269;
+    --kd-primary: var(--mc-primary);
+    --kd-primary-dark: var(--mc-primary-hover);
+    --kd-navy: var(--mc-forest);
+    --kd-navy-dark: #0F2C24;
+    --kd-page: transparent;
+    --kd-surface: var(--mc-surface);
+    --kd-surface-muted: var(--mc-sage);
+    --kd-border: var(--mc-border);
+    --kd-border-strong: #A9D3C4;
+    --kd-info-bg: rgba(14, 116, 144, .10);
+    --kd-warning-bg: rgba(180, 83, 9, .10);
+    --kd-warning-ink: #92400E;
+    --kd-danger: var(--mc-danger);
+    --kd-danger-bg: rgba(185, 28, 28, .10);
+    --kd-success: var(--mc-success);
+    --kd-success-bg: rgba(21, 128, 61, .10);
+    --kd-line-info: rgba(14, 116, 144, .35);
+    --kd-line-warn: rgba(180, 83, 9, .35);
+    --kd-line-danger: rgba(185, 28, 28, .35);
+    --kd-line-success: rgba(21, 128, 61, .35);
+    --kd-radius: 12px;
+    color: var(--kd-ink);
+}
+
+/* Kanvas tanda tangan: tinta gelap butuh latar putih */
+canvas.sg-pad,
+:is(.content-area, .tg-scope) canvas[class*="pad"],
+:is(.content-area, .tg-scope) .ttd-pad canvas,
+:is(.content-area, .tg-scope) canvas.pb-pad,
+:is(.content-area, .tg-scope) canvas.pn-pad { background: #fff !important; }
+
+/* ---------- 8. AKSESIBILITAS ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+        scroll-behavior: auto !important;
+    }
+    .dash-stat:hover, .dash-menu:hover, .menu-card:hover, .btn-primary:hover { transform: none !important; }
+    .dash-bento .icon-tile, .dash-stat:hover .icon-tile, .menu-tile:hover .icon-tile { transform: none !important; }
+    .dash-bento .icon-tile::after { display: none; }
+}
+
+/* Tab aktif berlatar warna (mis. pemilih Skala triase igd.css #1565C0):
+   aturan .nav-link konten memberi teks --text-secondary yang redup di atasnya */
+:is(.content-area, .tg-scope) .nav-link.active:not(.sidebar-link) { color: var(--mc-primary) !important; }
+/* ...tapi NAV-PILLS aktif punya latar hijAu SOLID (bagian 6), jadi teksnya
+   harus putih. Tanpa baris ini: teks hijau di atas hijau = 1.00:1 (tab
+   "Register Pasien" di /operasi/register/ lenyap). Spesifisitas sama,
+   ditulis SESUDAH agar menang. */
+:is(.content-area, .tg-scope) .nav-pills .nav-link.active,
+:is(.content-area, .tg-scope) .nav-pills .show > .nav-link,
+.modal .nav-pills .nav-link.active { color: #fff !important; }
+
+/* Di bawah 992px hero membungkus jadi dua baris dan kartu jam jatuh ke baris
+   kedua dengan lebar min 220px — di tablet itu jadi kotak kecil menganga di
+   kiri. Di rentang ini jam dibuat selebar baris: tanggal di kiri, angka di
+   kanan, supaya tidak ada ruang kosong besar di bawahnya. */@media (max-width: 991.98px) {
+    .dash-clock {
+        width: 100%;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 20px !important;
+    }
+    .dash-clock-time { font-size: 40px; margin: 0; }
+}
+
+@media (max-width: 575.98px) {
+    .dash-hero { padding: 24px 20px !important; }
+    .dash-hero h1 { font-size: 28px; }
+    .dash-semangat { padding: 10px 12px; gap: 9px; }
+    .dash-semangat-ikon { font-size: 20px; }
+    .dash-semangat-judul { font-size: 13.5px; }
+    .dash-semangat-kalimat { font-size: 12.5px; }
+    .dash-motto { font-size: 11.5px; gap: 4px 14px; }
+    .dash-clock { min-width: 0; width: 100%; }
+    .dash-clock-time { font-size: 44px; }
+    .dash-panel { padding: 20px 16px !important; }
+    .dash-panel-head h2 { font-size: 18px; }
+    /* Grafik 7 kolom di layar 360px: label "Rab" + angka masih muat, tapi
+       jarak 10px membuat batangnya hanya ~20px. Tanpa ini bar kecil hampir
+       tak terlihat. */
+    .dash-tren { gap: 5px; height: 190px; padding: 12px 8px 8px; }
+    .dash-tren-label { font-size: 10.5px; }
+    .dash-tren-val { font-size: 11px; }
+}
+/* Animasi dimatikan kalau pengguna minta penghematan gerak (heading dari
+   `.new-patient`, sudah ada di blok ini sejak 2026-10-14). */
+@media (prefers-reduced-motion: reduce) {
+    .dash-hero-glow,
+    .dash-hero-aurora,
+    .dash-live { animation: none !important; }
+}
+
+/* responsive-small.css mengecilkan .btn-sm (11px) di layar HP */
+.sidebar .sidebar-help-box .btn { font-size: 13px !important; padding: 7px 10px !important; }
+
+/* Baris pasien TERPILIH (tabel .patient-table / .pasien-row.active, mis. /ralan/): new_base.css
+   memaksa teks putih (sisa tema gelap) sementara latar baris aktif tema terang hampir putih
+   (~1,2:1). Teks ikut token tema terang; tema gelap tidak terpengaruh (awalan data-bs-theme). */
+html[data-bs-theme="light"] .patient-table tbody tr.active td,
+html[data-bs-theme="light"] .patient-table tbody tr.table-active td,
+html[data-bs-theme="light"] .pasien-row.active td {
+  color: var(--mc-text, #17352D) !important;
+}

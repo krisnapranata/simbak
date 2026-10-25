@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block judul %}Target Pokja{% endblock %}
+{% block konten %}
+<div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+  <div><h1 class="judul-halaman">Target Pokja</h1>
+    <p class="sub-halaman">Capaian setiap pokja dibanding target dan jadwalnya.</p></div>
+  <div class="ms-auto d-flex flex-wrap align-items-center gap-2">
+    {% include "penilaian/partials/pilih_periode.html" %}
+    {% if periode %}<a href="?periode={{ periode.pk }}&format=xlsx" class="btn btn-sm btn-outline-primary"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Ekspor Excel</a>{% endif %}
+    {% if bisa_kelola %}<a href="{% url 'penilaian:target_baru' %}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Tetapkan target</a>{% endif %}
+  </div>
+</div>
+
+{% if not periode %}
+  <div class="alert alert-warning">Belum ada periode akreditasi aktif.</div>
+{% else %}
+<div class="row g-2 mb-3">
+  <div class="col-6 col-md"><a href="?periode={{ periode.pk }}" class="tugas-item h-100{% if not status_dipilih %} border-primary{% endif %}"><span class="jumlah angka">{{ jumlah_semua }}</span><span class="fw-semibold">Semua status</span></a></div>
+  {% for kode, label, warna, n in ringkas %}
+    <div class="col-6 col-md"><a href="?periode={{ periode.pk }}&status={{ kode }}" class="tugas-item h-100{% if status_dipilih == kode %} border-primary{% endif %}">
+      <span class="jumlah angka badge {{ warna }}">{{ n }}</span><span class="fw-semibold">{{ label }}</span></a></div>
+  {% endfor %}
+</div>
+
+<div class="card"><div class="table-responsive">
+<table class="table table-hover align-middle mb-0">
+  <thead><tr><th>Pokja</th><th>Ukuran</th><th style="min-width: 220px">Progres</th><th class="text-end">Aktual</th><th class="text-end">Seharusnya</th><th class="text-end">Target</th><th>Tenggat</th><th>Status</th>{% if bisa_kelola %}<th></th>{% endif %}</tr></thead>
+  <tbody>
+  {% for h in daftar %}
+    <tr>
+      <td class="fw-semibold">{{ h.target.pokja.kode }}<div class="small text-secondary fw-normal">{{ h.target.pokja.nama }}</div></td>
+      <td class="small">{{ h.target.get_ukuran_display }}{% if h.target.keterangan %}<div class="text-secondary">{{ h.target.keterangan }}</div>{% endif %}</td>
+      <td>{% include "penilaian/partials/progres_target.html" %}</td>
+      <td class="text-end angka fw-semibold">{{ h.aktual|floatformat:1 }}%</td>
+      <td class="text-end angka text-secondary">{{ h.harapan|floatformat:1 }}%</td>
+      <td class="text-end angka">{{ h.nilai_target|floatformat:0 }}%</td>
+      <td class="text-nowrap small">{{ h.target.tenggat|date:"d M Y" }}
+        <div class="{% if h.sisa_hari < 0 %}text-danger{% else %}text-secondary{% endif %}">{% if h.sisa_hari < 0 %}lewat {{ h.hari_lewat }} hari{% elif h.sisa_hari == 0 %}hari ini{% else %}{{ h.sisa_hari }} hari lagi{% endif %}</div></td>
+      <td><span class="badge {{ h.warna }}">{{ h.label_status }}</span></td>
+      {% if bisa_kelola %}<td class="text-end text-nowrap">
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'penilaian:target_ubah' h.target.pk %}" title="Ubah"><i class="bi bi-pencil"></i></a>
+        <form class="d-inline" method="post" action="{% url 'penilaian:target_hapus' h.target.pk %}" onsubmit="return confirm('Hapus target ini?')">{% csrf_token %}<button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="bi bi-trash"></i></button></form>
+      </td>{% endif %}
+    </tr>
+  {% empty %}
+    <tr><td colspan="9" class="text-center text-secondary py-4">{% if bisa_kelola %}Belum ada target. Klik <b>Tetapkan target</b> untuk memulai.{% else %}Belum ada target untuk pokja Anda pada periode ini.{% endif %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+<p class="small text-secondary mt-3 mb-0">
+  <b>Seharusnya</b> = capaian yang semestinya sudah diraih hari ini bila kemajuan merata dari tanggal mulai sampai tenggat.
+  Pada bar: <span class="penanda-contoh harapan"></span> posisi seharusnya, <span class="penanda-contoh target"></span> target.
+  <b>Berisiko</b> = capaian di bawah posisi seharusnya; <b>Terlambat</b> = tenggat lewat dan target belum tercapai.
+</p>
+{% endif %}
+{% endblock %}

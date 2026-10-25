@@ -1,0 +1,279 @@
+/* =====================================================================
+   Tema "Blue Glass" (Kaca Biru) untuk SIMBAK — TERANG, bukan tema gelap.
+   Latar biru pucat, panel kaca putih, sidebar navy, aksen biru laut.
+   Diadaptasi dari tema yang sama di proyek casemixiDRG.
+
+   CARA KERJA:
+   - Baris @import di bawah memuat mint-forest.css sebagai BASIS struktur:
+     sidebar hover-expand, topbar, kartu, tabel, tombol, area kertas, bilah
+     bawah HP. Berkas ini hanya mengganti TOKEN warna dan permukaan yang
+     warnanya ditulis langsung (bukan lewat token) di basis itu.
+   - Area kertas (.paper, .document-page, dst.) tetap PUTIH.
+   - Semua aset lokal (Bootstrap, ikon, font, HTMX) di static/vendor —
+     tidak ada CDN.
+   - PENTING: jangan tulis literal "url" + kurung di komentar CSS mana pun.
+     collectstatic mem-post-process CSS dengan regex yang tidak memahami
+     komentar; pola itu akan dianggap referensi aset dan build gagal.
+   ===================================================================== */
+
+@import url("mint-forest.css");
+
+/* ---------- 1. TOKENS ---------- */
+:root {
+    /* Palet kanon versi biru. Nilai dipilih supaya kontras terukur:
+       putih di atas --mc-primary 5.0:1; --mc-text-muted 6.2:1 dan
+       --text-muted 5.0:1 di atas panel kaca (audit_statis).
+       CATATAN: tone teks redup sengaja disetel ke LUMINANSI setara token
+       mint, bukan lebih terang. Teks redup juga dipakai di atas latar
+       PASTEL (tab ber-rona di /laporansurat/, ikon tab /operasi/, tombol
+       disabled) — versi yang lebih terang (`#566D85`) terukur 4.11-4.45:1
+       di sana dan gagal WCAG AA. */
+    --mc-page: #EAF1F8;
+    --mc-surface: #FFFFFF;
+    --mc-primary: #0B6BC4;
+    --mc-primary-hover: #0957A0;
+    --mc-forest: #0B3976;
+    --mc-teal-soft: #E1EFFC;
+    --mc-sage: #F2F7FB;
+    --mc-text: #17395F;
+    --mc-text-muted: #4C6275;
+    --mc-border: #D5E3EF;
+    --mc-focus: #1687ED;
+    --mc-success: #15803D;
+    --mc-warning: #B45309;
+    --mc-danger: #B91C1C;
+    --mc-info: #0E7490;
+
+    --bg-base: var(--mc-page);
+    --bg-elevated: var(--mc-surface);
+    --glass-bg: rgba(255, 255, 255, 0.86);
+    --glass-bg-hover: #F2F8FE;
+    --glass-bg-strong: #FFFFFF;
+    --glass-border: var(--mc-border);
+    --glass-border-hover: #9CBFE4;
+    --glass-blur: blur(14px) saturate(120%);
+    --glass-shadow: 0 10px 28px rgba(34, 72, 116, .10);
+    --glass-solid: rgba(255, 255, 255, 0.97);
+    --accent: var(--mc-primary);
+    --accent-2: var(--mc-forest);
+    --accent-light: var(--mc-focus);
+    --accent-grad: linear-gradient(135deg, #1687ED 0%, #0A4F96 100%);
+    --accent-glow: 0 6px 16px rgba(13, 111, 196, .24);
+    --accent-soft: rgba(13, 111, 196, .12);
+    --text-primary: var(--mc-text);
+    --text-secondary: var(--mc-text-muted);
+    --text-muted: #556B82;
+    --success: var(--mc-success);
+    --danger: var(--mc-danger);
+    --warning: var(--mc-warning);
+    --info: var(--mc-info);
+
+    --mc-sidebar: #104B91;
+    --bg-sidebar: linear-gradient(180deg, #104B91 0%, #0E4383 58%, #0B3976 100%);
+
+    /* Fallback tone default = BIRU. Nilai ini dipakai semua
+       `var(--tone-rgb, …)` di basis; tanpa itu fallback hijau mint
+       (`8, 127, 91`) yang muncul di kartu/grafik tanpa `data-tone`. */
+    --tone-rgb: 22, 135, 237;
+    --tone-fg: #0F74BE;
+
+    /* Dipakai basis sebagai `var(--mc-border-hover, #A9D3C4)`. */
+    --mc-border-hover: #9CBFE4;
+}
+
+/* Kartu/tile tanpa `data-tone` (data-tone ada di elemen lain) tetap biru. */
+.icon-tile {
+    --tone-rgb: 22, 135, 237;
+    --tone-fg: #0F74BE;
+}
+
+/* Variabel Bootstrap yang nilainya LITERAL di basis (bukan var()) perlu
+   ditulis ulang; yang sudah `var(--mc-*)` ikut tema otomatis. */
+html[data-bs-theme="light"] {
+    --bs-body-bg-rgb: 234, 241, 248;
+    --bs-body-color-rgb: 23, 57, 95;
+    --bs-tertiary-bg: #F2F8FE;
+    --bs-primary-rgb: 13, 111, 196;
+    --bs-primary-bg-subtle: rgba(13, 111, 196, .12);
+    --bs-primary-border-subtle: rgba(13, 111, 196, .35);
+    --bs-link-color-rgb: 13, 111, 196;
+    --bs-link-hover-color-rgb: 9, 87, 160;
+    --bs-focus-ring-color: rgba(22, 135, 237, .32);
+}
+
+/* ---------- 2. LATAR HALAMAN (efek kaca biru) ---------- */
+/* Basis memberi latar SOLID var(--bg-base); di sini gradien radial dari
+   contoh blue_glass_dashboard.html supaya panel kaca punya sesuatu untuk
+   ditembus blur. `fixed` agar tidak mengulang saat halaman panjang. */
+html[data-bs-theme="light"] body,
+.bg-orbs {
+    background:
+        radial-gradient(ellipse at 78% 0%, rgba(104, 174, 241, .26), transparent 38%),
+        radial-gradient(ellipse at 20% 80%, rgba(177, 208, 235, .40), transparent 42%),
+        linear-gradient(135deg, #EAF2FA 0%, #DCE7F1 54%, #EDF3F8 100%);
+    background-attachment: fixed;
+}
+
+/* ---------- 3. SIDEBAR & BILAH BAWAH HP ---------- */
+/* Warna dasar sidebar/bilah + pil aktif sudah lewat token (--mc-sidebar,
+   --bg-sidebar, --mc-primary/--mc-forest) dan ikut biru otomatis. Yang
+   tersisa hanya BAYANGAN dan aksen yang ditulis langsung di basis. */
+.sidebar-desktop.sidebar:hover,
+body.sidebar-expanded .sidebar-desktop.sidebar,
+body.sidebar-pinned .sidebar-desktop.sidebar {
+    box-shadow: 0 18px 44px rgba(11, 57, 118, .30) !important;
+}
+.offcanvas.sidebar-mobile { box-shadow: 18px 0 44px rgba(11, 57, 118, .30) !important; }
+.sidebar .sb-sorot { box-shadow: 0 4px 12px rgba(11, 57, 118, .24); }
+.sidebar .sb-sorot::before { background: #8FD0FF; }
+.sidebar .sidebar-dropdown-toggle.child-active { color: #A5D8FF !important; }
+
+@media (max-width: 991.98px) {
+    .mobile-bottom {
+        box-shadow: 0 12px 26px rgba(11, 57, 118, .30), 0 3px 8px rgba(11, 57, 118, .20);
+    }
+    .mobile-bottom .mobile-item.aktif { box-shadow: 0 6px 14px rgba(11, 57, 118, .28); }
+    .mobile-bottom .mobile-item.aktif:active { box-shadow: 0 2px 6px rgba(11, 57, 118, .32); }
+    .mobile-bottom .mb-fab-lingkaran {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, .38), 0 8px 18px rgba(11, 57, 118, .38);
+    }
+}
+
+/* ---------- 4. DASHBOARD ---------- */
+.dash-hero { border-color: rgba(22, 135, 237, .22) !important; }
+.dash-hero-glow { background: radial-gradient(circle, rgba(22, 135, 237, .12), transparent 68%); }
+.pill-glass { border-color: rgba(22, 135, 237, .22); }
+.dash-pill { border-color: rgba(22, 135, 237, .28); }
+.dash-stat:hover { box-shadow: 0 12px 28px rgba(16, 75, 145, .14); }
+.menu-tile:hover,
+.menu-tile:focus-visible { box-shadow: 0 12px 26px rgba(16, 75, 145, .14); }
+.dash-bento .icon-tile > i { color: #0F74BE; }
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .dash-bento .icon-tile > i {
+        background-image: linear-gradient(158deg,
+            var(--tone-fg, #0F74BE) 0%,
+            rgb(var(--tone-rgb, 22, 135, 237)) 120%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+}
+.dash-stat:hover .icon-tile,
+.dash-stat:focus-within .icon-tile { box-shadow: 0 10px 22px -10px rgba(16, 75, 145, .28); }
+/* Grafik tren: garis grid + kolom hari ini memakai cast hijau di basis. */
+.dash-tren {
+    background:
+        repeating-linear-gradient(180deg,
+            rgba(16, 75, 145, .10) 0 1px,
+            transparent 1px 25%),
+        linear-gradient(180deg, rgba(var(--tone-rgb, 22, 135, 237), .06), rgba(255, 255, 255, 0));
+}
+/* Jam: warna dasar di LUAR @supports (lingkungan tanpa background-clip
+   membuat teks transparan = jam hilang tanpa error). */
+.dash-clock-time { color: #0B3976; }
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .dash-clock-time {
+        background: linear-gradient(135deg, #1687ED 0%, #0B6BC4 55%, #0B3976 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+}
+
+/* ---------- 5. TOMBOL ---------- */
+.btn-primary {
+    --bs-btn-active-bg: #083B6E;
+    --bs-btn-disabled-bg: #D8E7F4;
+    --bs-btn-focus-shadow-rgb: 22, 135, 237;
+}
+.btn-primary:disabled, .btn-primary.disabled,
+.btn-primary:active:disabled, .btn-primary.disabled:active {
+    background: #D8E7F4 !important;
+}
+.btn-sm.btn-primary { box-shadow: 0 2px 8px rgba(13, 111, 196, .28); }
+.btn-outline-secondary,
+.btn-light,
+.btn-outline-dark,
+.btn-outline-light {
+    --bs-btn-hover-border-color: rgba(13, 111, 196, .35);
+    --bs-btn-active-border-color: rgba(13, 111, 196, .35);
+}
+.btn-secondary { --bs-btn-hover-border-color: rgba(13, 111, 196, .30); }
+.btn-outline-primary { --bs-btn-border-color: rgba(13, 111, 196, .50); }
+
+/* ---------- 6. FORM & FOKUS ---------- */
+.form-control:focus,
+.form-select:focus,
+:is(.content-area, .tg-scope) :is(textarea, select):not([class]):focus,
+:is(.content-area, .tg-scope) input:not([class]):focus {
+    box-shadow: 0 0 0 .25rem rgba(22, 135, 237, .20) !important;
+}
+.topbar .search-box:focus-within { box-shadow: 0 0 0 .25rem rgba(22, 135, 237, .22); }
+.form-check-input:focus { box-shadow: 0 0 0 .25rem rgba(22, 135, 237, .20); }
+:is(.content-area, .tg-scope) input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #F2F8FE inset;
+}
+.form-select,
+:is(.content-area, .tg-scope) select:not([class]):not([multiple]):not([size]) {
+    --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23566D85' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
+/* ---------- 7. PILIHAN/SELEKSI/SCROLLBAR ---------- */
+::selection { background: rgba(22, 135, 237, .22); color: var(--mc-text); }
+* { scrollbar-color: rgba(16, 75, 145, .22) transparent; }
+::-webkit-scrollbar-thumb { background: rgba(16, 75, 145, .20); }
+
+/* ---------- 8. LAPISAN MELAYANG & LAIN-LAIN ---------- */
+.modal-content,
+.dropdown-menu,
+.offcanvas:not(.sidebar),
+.toast,
+.popover {
+    box-shadow: var(--glass-shadow), 0 16px 40px rgba(16, 75, 145, .16);
+}
+:is(.content-area, .tg-scope) .autocomplete-list,
+.autocomplete-list { box-shadow: 0 12px 32px rgba(16, 75, 145, .18) !important; }
+.flatpickr-calendar { box-shadow: 0 16px 40px rgba(16, 75, 145, .20) !important; }
+.topbar-btn[aria-pressed="true"] { border-color: rgba(22, 135, 237, .45) !important; }
+.badge.cm-badge { box-shadow: 0 1px 4px rgba(16, 75, 145, .18); }
+
+/* Badge/alert primary menulis cast hijau di basis. */
+.badge.bg-primary, .badge.text-bg-primary { background: rgba(13, 111, 196, .12) !important; }
+:is(.content-area, .tg-scope) .badge.border { background: rgba(13, 111, 196, .10); }
+:is(.content-area, .tg-scope) .badge.border-primary { background: rgba(13, 111, 196, .10); }
+.alert-primary { --al-rgb: 13, 111, 196; --al-fg: #083B6E; }
+.alert-secondary, .alert-light, .alert-dark { --al-rgb: 86, 109, 133; }
+:is(.content-area, .tg-scope) .bg-primary-subtle, .modal .bg-primary-subtle { background: rgba(13, 111, 196, .10) !important; }
+:is(.content-area, .tg-scope) .border-primary { border-color: rgba(13, 111, 196, .55) !important; }
+
+/* ---------- 9. TABEL LAYAR (bagian 6c basis) ---------- */
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) {
+    --tg-tabel-aksen: 13, 111, 196;
+}
+:is(.content-area, .tg-scope, .modal) :is(.table, .k-table, .kd-table, .patient-table, .soap-history-table):not(.table-borderless):not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) > tbody > tr:not([class*="table-"]):nth-child(even) > * {
+    --bs-table-bg: rgba(240, 246, 252, .75);
+    background-color: rgba(240, 246, 252, .75);
+}
+:is(.content-area, .tg-scope, .modal) .table-responsive:not(:is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc, .hospital-file-content) *) {
+    scrollbar-color: rgba(13, 111, 196, .35) transparent;
+}
+
+/* Item daftar terpilih: border + badge memakai cast hijau di basis. */
+:is(.content-area, .tg-scope) :is(.pasien-row, .patient-item, .pb-plist-item, .casemix-patient-item, .ok-pasien-item, .list-group-item, .patient-table tbody tr, .table tbody tr):is(.active, .table-active, .sdipilih, .selected) {
+    border-color: rgba(22, 135, 237, .40) !important;
+}
+:is(.content-area, .tg-scope) :is(.pasien-row, .patient-item, .pb-plist-item, .casemix-patient-item, .ok-pasien-item, .list-group-item, .patient-table tbody tr, .table tbody tr):is(.active, .table-active, .sdipilih, .selected) :is(.badge, .rounded-pill) {
+    border-color: rgba(22, 135, 237, .30) !important;
+}
+
+/* ---------- 11. AREA KERTAS ---------- */
+/* Basis (mint-forest.css) sudah memutihkan area kertas lewat @import;
+   aturan ini ditulis ULANG di sini SEMATA-MATA karena audit_statis
+   mencari `color-scheme: light` di berkas tema ini (tidak mengikuti
+   @import). Nilainya harus sama dengan basis: radio/checkbox bawaan
+   browser digambar versi terang. Daftar kelas kertas WAJIB lengkap —
+   menambah kelas kertas baru = tambahkan di sini juga. */
+:is(.content-area, .tg-scope, .modal) :is(.paper, .document-page, .document-page-eklaim, .surat-page, .pgp-page, .sgp-page, .bv-doc) {
+    color-scheme: light;
+    accent-color: #4F46E5;
+}
