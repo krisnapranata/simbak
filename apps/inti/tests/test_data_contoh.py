@@ -73,3 +73,21 @@ def test_reset_dan_tolak_saat_produksi(settings):
     call_command("data_contoh", "reset", "--paksa", verbosity=0)
     call_command("data_contoh", "reset", "--paksa", verbosity=0)
     assert Dokumen.objects.filter(status=StatusDokumen.KEDALUWARSA).count() == 1
+
+
+def test_produksi_memakai_sandi_acak_bukan_sandi_publik(settings, capsys):
+    settings.DEBUG = False
+    call_command("data_contoh", "isi", "--paksa")
+    keluaran = capsys.readouterr().out
+    admin = User.objects.get(username="demo.admin")
+    assert not admin.check_password(data_contoh.PASSWORD)
+    sandi = keluaran.rsplit("kata sandi: ", 1)[1].strip()
+    assert admin.check_password(sandi)
+
+
+def test_kata_sandi_ditentukan_sendiri(settings):
+    settings.DEBUG = False
+    call_command("data_contoh", "isi", "--paksa", "--kata-sandi", "LatihanRS-2026", verbosity=0)
+    assert User.objects.get(username="demo.komite").check_password("LatihanRS-2026")
+    with pytest.raises(CommandError, match="minimal 10"):
+        call_command("data_contoh", "reset", "--paksa", "--kata-sandi", "pendek", verbosity=0)

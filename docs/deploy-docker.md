@@ -151,7 +151,15 @@ docker run --rm -v simbak_media_private:/data -v /srv/backup/simbak:/backup alpi
 
 ## 6. Catatan
 
-- `data_contoh` ditolak di produksi (`DEBUG=False`); jangan dipakai di server produksi.
+- **Data contoh untuk latihan** (sebelum go-live):
+  ```bash
+  docker compose exec web python manage.py data_contoh isi --paksa     # kata sandi acak ditampilkan sekali
+  docker compose exec web python manage.py data_contoh reset --paksa   # ulang dari awal
+  docker compose exec web python manage.py data_contoh hapus --paksa   # WAJIB sebelum dipakai sungguhan
+  ```
+  Di produksi kata sandi akun `demo.*` dibuat acak (atau `--kata-sandi <minimal 10 karakter>`),
+  karena sandi bawaan development tertulis di repo publik. Data contoh mengaktifkan periode
+  `[CONTOH]`; bila sudah ada periode asli yang aktif, aktifkan kembali setelah `hapus`.
 - `check --deploy` menyisakan peringatan HSTS `includeSubDomains`/`preload`: sengaja dimatikan
   (bisa memaksa HTTPS di subdomain RS lain). Aktifkan via `SECURE_HSTS_INCLUDE_SUBDOMAINS=True`
   bila semua subdomain sudah HTTPS.

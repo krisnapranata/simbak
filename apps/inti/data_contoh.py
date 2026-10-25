@@ -36,7 +36,7 @@ PREFIX_USER = "demo."
 PREFIX_KODE = "DEMO-"
 SUFIKS_STANDAR = " (contoh)"
 PREFIX_PERIODE = "[CONTOH]"
-PASSWORD = "SimbakContoh2026"
+PASSWORD = "SimbakContoh2026"  # hanya untuk development; produksi memakai sandi acak
 
 UNIT = [
     ("DEMO-IGD", "Instalasi Gawat Darurat (contoh)"),
@@ -112,7 +112,7 @@ def _png(judul: str) -> SimpleUploadedFile:
 # ---------------------------------------------------------------------------
 
 
-def _master(log):
+def _master(log, kata_sandi):
     if not Bab.objects.filter(kode__in=POKJA).count() == len(POKJA):
         call_command("loaddata", "bab_starkes_awal", verbosity=0)
         log("Data awal bab STARKES dimuat.")
@@ -138,7 +138,7 @@ def _master(log):
         )
         if Peran.TAMU_SURVEIOR in peran:
             u.aktif_sampai = timezone.now() + datetime.timedelta(days=30)
-        u.set_password(PASSWORD)
+        u.set_password(kata_sandi)
         u.save()
         u.groups.set([Group.objects.get_or_create(name=p)[0] for p in peran])
         u.pokja.set([pokja[b] for b in pokja_bab])
@@ -397,13 +397,13 @@ def _target(pokja, user, periode, log):
     log(f"{len(POLA_TARGET)} target pokja dibuat (tercapai, sesuai jadwal, berisiko, terlambat).")
 
 
-def isi(*, log=print):
+def isi(*, log=print, kata_sandi=PASSWORD):
     if ada_data_contoh():
         raise DataContohSudahAda("Data contoh sudah ada. Gunakan `reset` untuk mengulang.")
     # Email notifikasi tidak dikirim/ditampilkan saat mengisi data contoh.
     with override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend"):
         with transaction.atomic():
-            unit, pokja, user, ep = _master(log)
+            unit, pokja, user, ep = _master(log, kata_sandi)
             _dokumen(unit, pokja, user, ep, log)
             periode = _penilaian(user, ep, log)
             _pps(user, periode, log)
