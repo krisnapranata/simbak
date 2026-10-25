@@ -43,6 +43,7 @@ services:
 
   jadwal:
     image: simbak-web:latest
+    pull_policy: never   # image dibangun oleh service web, jangan dicari di Docker Hub
     container_name: simbak_jadwal
     restart: unless-stopped
     command: ["jadwal"]

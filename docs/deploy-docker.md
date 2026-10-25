@@ -47,6 +47,9 @@ Bangun dan jalankan:
 docker compose up -d --build
 docker compose ps                   # tunggu simbak_web "healthy"
 ```
+Bila muncul `failed to resolve reference "docker.io/library/simbak-web:latest"` (compose versi
+lama yang mencoba menarik image sebelum membangunnya), jalankan
+`docker compose build web && docker compose up -d`.
 
 Data awal dan akun admin (**sekali saja**, jangan diulang setiap deploy karena fixture
 menimpa grup/izin dan nama bab):
