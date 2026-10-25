@@ -4,8 +4,8 @@
 <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
   <div><h1 class="judul-halaman">Kekurangan Bukti</h1>
     <p class="sub-halaman">EP yang jenis buktinya belum punya dokumen <b>disetujui</b>. {{ jumlah }} EP{% if jumlah_proses %}, {{ jumlah_proses }} di antaranya sudah ada dokumen yang tinggal diverifikasi{% endif %}.</p></div>
-  <form method="get" class="ms-auto d-flex align-items-center gap-2">
-    <select name="bab" onchange="this.form.submit()" class="form-select form-select-sm w-auto">
+  <form method="get" class="ms-auto d-flex flex-wrap align-items-center gap-2 mw-100">
+    <select name="bab" onchange="this.form.submit()" class="form-select form-select-sm w-auto mw-100">
       <option value="">Semua bab</option>
       {% for b in daftar_bab %}<option value="{{ b.pk }}" {% if bab and b.pk == bab.pk %}selected{% endif %}>{{ b.kode }} – {{ b.nama }}</option>{% endfor %}
     </select>
