@@ -65,6 +65,17 @@ services:
     depends_on:
       web:
         condition: service_healthy
+    networks:
+      - default
+      - npm   # supaya Nginx Proxy Manager bisa memanggil "simbak_nginx:80" tanpa IP
+
+networks:
+  # Network milik Nginx Proxy Manager (container proxy-npm-1 → project "proxy").
+  # Cek nama di server: docker inspect proxy-npm-1 -f '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+  # Bila berbeda: NPM_NETWORK=nama_network docker compose up -d  (atau tulis di file .env)
+  npm:
+    external: true
+    name: ${NPM_NETWORK:-proxy_default}
 
 volumes:
   db_data:

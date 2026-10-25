@@ -62,31 +62,43 @@ Uji dari server: `curl http://localhost:8030/sehat/` → `ok`.
 
 ## 2. Nginx Proxy Manager (http://<IP server>:81)
 
+`simbak_nginx` otomatis bergabung ke network Docker milik NPM, sehingga NPM memanggilnya
+dengan **nama container** (tidak bergantung IP server yang bisa berubah).
+
+Pastikan nama network NPM (default di compose: `proxy_default`):
+```bash
+docker inspect proxy-npm-1 -f '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+```
+Bila hasilnya bukan `proxy_default`, tulis di file `.env` (di folder docker-compose.yml):
+`NPM_NETWORK=<nama_network>`, lalu `docker compose up -d`.
+
 **Hosts → Proxy Hosts → Add Proxy Host**
-- Domain Names: `simbak.<domain-rs>` (harus sama dengan `ALLOWED_HOSTS`)
-- Scheme: `http` · Forward Hostname/IP: **IP LAN server** (bukan `localhost`, karena NPM
-  berjalan di container lain) · Forward Port: **8030**
-- Centang *Block Common Exploits*
-- Tab **SSL**: Request a new SSL Certificate, *Force SSL*, *HTTP/2 Support*.
+- **Details**
+  - Domain Names: `simbak.<domain-rs>` (harus sama dengan `ALLOWED_HOSTS`)
+  - Scheme: `http`
+  - Forward Hostname / IP: **`simbak_nginx`**
+  - Forward Port: **`80`**
+  - Centang *Block Common Exploits*
+- **SSL**: Request a new SSL Certificate, centang *Force SSL* dan *HTTP/2 Support*.
   Jangan centang *HSTS Subdomains* kecuali semua subdomain RS sudah HTTPS.
-- Tab **Advanced** (custom Nginx configuration):
+- **Advanced** (Custom Nginx Configuration):
   ```nginx
   client_max_body_size 30m;
   proxy_read_timeout 180s;
   ```
 
+Uji dari server: `docker exec proxy-npm-1 curl -s -H "Host: simbak.<domain-rs>" http://simbak_nginx/sehat/` → `ok`.
+
 NPM mengirim `X-Forwarded-Proto: https` dan `X-Real-IP`; SIMBAK memakainya untuk redirect
 HTTPS, cookie aman, log unduhan, dan penguncian login (per username + IP).
+
+Port host **8030** tetap terbuka untuk uji/diagnosis langsung (`http://<IP server>:8030`).
+Bila ingin semua akses wajib lewat HTTPS NPM, hapus bagian `ports:` pada `simbak_nginx`
+(port yang dipublikasikan Docker tidak tunduk pada aturan `ufw` biasa).
 
 > Uji coba sebelum domain siap: set `SECURE_SSL_REDIRECT=False` dan `COOKIE_SECURE=False`
 > di `.env.production`, tambahkan IP server ke `ALLOWED_HOSTS` dan `http://<IP>:8030` ke
 > `CSRF_TRUSTED_ORIGINS`, lalu `docker compose up -d`. Kembalikan ke `True` setelah domain HTTPS aktif.
-
-Port 8030 (HTTP biasa) bisa dibuka siapa pun di LAN. Catatan: port yang dipublikasikan Docker
-**tidak** tunduk pada aturan `ufw` biasa. Bila ingin pengguna wajib lewat HTTPS, hapus bagian
-`ports:` di `simbak_nginx` dan sambungkan NPM ke network SIMBAK:
-`docker network connect simbak_default proxy-npm-1`, lalu di NPM isi Forward Hostname
-`simbak_nginx`, port `80`.
 
 ## 3. Pembaruan aplikasi
 
