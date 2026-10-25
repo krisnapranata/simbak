@@ -161,6 +161,22 @@ docker run --rm -v simbak_media_private:/data -v /srv/backup/simbak:/backup alpi
   Di produksi kata sandi akun `demo.*` dibuat acak (atau `--kata-sandi <minimal 10 karakter>`),
   karena sandi bawaan development tertulis di repo publik. Data contoh mengaktifkan periode
   `[CONTOH]`; bila sudah ada periode asli yang aktif, aktifkan kembali setelah `hapus`.
+
+  Akun yang dibuat (semua memakai kata sandi yang sama):
+
+  | Username | Peran | Pokja | Untuk mencoba |
+  |---|---|---|---|
+  | `demo.admin` | super-admin (akses Admin) | – | Pengguna, pokja, pengaturan, kriteria predikat |
+  | `demo.direktur` | direktur | – | Menyetujui regulasi, memantau target pokja |
+  | `demo.komite` | komite-mutu | – | Verifikasi dokumen, periode, target, impor standar |
+  | `demo.ketua.tkrs` | ketua-pokja | TKRS | Mengajukan verifikasi, menilai EP |
+  | `demo.anggota.tkrs` | anggota-pokja | TKRS | Mengunggah bukti, memperbaiki dokumen dikembalikan |
+  | `demo.ketua.pmkp` | ketua-pokja | PMKP | idem, bab PMKP |
+  | `demo.anggota.pmkp` | anggota-pokja | PMKP | idem, bab PMKP |
+  | `demo.ketua.skp` | ketua-pokja | SKP | idem, bab SKP |
+  | `demo.anggota.skp` | anggota-pokja | SKP | idem, bab SKP |
+  | `demo.surveior` | surveior-internal | – | Mode survei, catatan EP, ekspor PDF/ZIP |
+  | `demo.tamu` | tamu-surveior (aktif 30 hari) | – | Tampilan tamu: hanya dokumen disetujui |
 - `check --deploy` menyisakan peringatan HSTS `includeSubDomains`/`preload`: sengaja dimatikan
   (bisa memaksa HTTPS di subdomain RS lain). Aktifkan via `SECURE_HSTS_INCLUDE_SUBDOMAINS=True`
   bila semua subdomain sudah HTTPS.
