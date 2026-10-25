@@ -154,6 +154,7 @@ docker run --rm -v simbak_media_private:/data -v /srv/backup/simbak:/backup alpi
 - **Data contoh untuk latihan** (sebelum go-live):
   ```bash
   docker compose exec web python manage.py data_contoh isi --paksa     # kata sandi acak ditampilkan sekali
+  docker compose exec web python manage.py data_contoh isi --paksa --kata-sandi LatihanRS-2026   # kata sandi ditentukan sendiri
   docker compose exec web python manage.py data_contoh reset --paksa   # ulang dari awal
   docker compose exec web python manage.py data_contoh hapus --paksa   # WAJIB sebelum dipakai sungguhan
   ```
